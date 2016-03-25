@@ -1,0 +1,34 @@
+{
+    "pair": {
+		"panel": {
+			"name": "Add Visonic PowerMax panel",
+			"explain": "This application can connect to a Visonic PowerMax panel that communicates serial data via TCP/IP. Please specify the location of the panel in the network.",
+			"network": {
+				"title": "Network",
+				"ip": "IP address : port",
+				"submit": "Search"
+			},
+			"search": {
+				"title": "Searching for Visonic PowerMax on __addr__...",
+				"success": "Found your Visonic PowerMax. Device will be added.",
+				"failed": "Unable to locate the Visonic PowerMax on __addr__!"
+			}
+		},
+		"add_panel": "Please pair a panel first before adding sensors.",
+		"contact": {
+			"name": "Add Visonic PowerMax door/window sensor",
+			"title": "Panel",
+			"explain": "Select the panel for which to add door/window sensors."
+		},
+		"motion": {
+			"name": "Add Visonic PowerMax motion sensor",
+			"title": "Panel",
+			"explain": "Select the panel for which to add motion sensors."
+		},
+		"smoke": {
+			"name": "Add Visonic PowerMax smoke detector",
+			"title": "Panel",
+			"explain": "Select the panel for which to add smoke detectors."
+		}
+	}
+}

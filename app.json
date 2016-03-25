@@ -1,0 +1,166 @@
+{
+	"id": "com.visonic.powermax",
+    "name": {
+        "en": "Visonic PowerMax"
+    },
+    "version": "0.0.1",
+	"compatibility": "*",
+	"description": {
+		"en": "Control your Visonic PowerMax via Homey",
+		"nl": "Bestuur je Visonic PowerMax met Homey"
+	},
+	"author": {
+		"name": "Ramon Baas",
+		"website": "http://www.visonic.com/"
+	},
+	"category": "security",
+	"images": {
+		"large": "assets/images/large.png",
+		"small": "assets/images/small.png"
+	},
+	"drivers": [
+		{
+			"id": "powermax",
+			"name": {
+				"en": "Alarm panel",
+				"nl": "Alarmsysteem"
+			},
+			"class": "homealarm",
+			"capabilities": [ "homealarm_state" ],
+			"images": {
+				"large": "drivers/powermax/assets/images/large.png",
+				"small": "drivers/powermax/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "powermax"
+				}
+			],
+			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Network settings"
+                    },
+					"children": [
+                        {
+                            "id": "ip",
+                            "type": "text",
+                            "label": {
+                                "en": "IP address"
+                            },
+                            "value": "0.0.0.0"
+                        },
+						{
+                            "id": "port",
+                            "type": "text",
+                            "label": {
+                                "en": "IP port number"
+                            },
+                            "value": "23"
+                        }
+					]
+				}
+			]
+		},
+		{
+			"id": "contact",
+			"name": {
+				"en": "Door/Window Sensor",
+				"nl": "Deur-/Raamsensor"
+			},
+			"class": "sensor",
+			"capabilities": [ "alarm_contact", "alarm_battery" ],
+			"images": {
+				"large": "drivers/contact/assets/images/large.png",
+				"small": "drivers/contact/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_sensors"
+					}
+				},
+				{
+					"id": "list_sensors",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_sensors"
+					}
+				},
+				{
+					"id": "add_sensors",
+					"template": "add_devices"
+				}
+			]
+		},
+		{
+			"id": "motion",
+			"name": {
+				"en": "Motion Sensor",
+				"nl": "Bewegingssensor"
+			},
+			"class": "sensor",
+			"capabilities": [ "alarm_motion", "alarm_battery" ],
+			"images": {
+				"large": "drivers/motion/assets/images/large.png",
+				"small": "drivers/motion/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_sensors"
+					}
+				},
+				{
+					"id": "list_sensors",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_sensors"
+					}
+				},
+				{
+					"id": "add_sensors",
+					"template": "add_devices"
+				}
+			]
+		},
+		{
+			"id": "smoke",
+			"name": {
+				"en": "Smoke Sensor",
+				"nl": "Rookmelder"
+			},
+			"class": "sensor",
+			"capabilities": [ "alarm_smoke", "alarm_battery" ],
+			"images": {
+				"large": "drivers/smoke/assets/images/large.png",
+				"small": "drivers/smoke/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_sensors"
+					}
+				},
+				{
+					"id": "list_sensors",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_sensors"
+					}
+				},
+				{
+					"id": "add_sensors",
+					"template": "add_devices"
+				}
+			]
+		}
+	],
+	"dependencies": {
+		"visonic-api": "*"
+	}
+}
