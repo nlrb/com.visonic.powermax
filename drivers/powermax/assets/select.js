@@ -7,7 +7,7 @@ function startPanelSelection(title) {
 				var panel = panels[i];
 				var checked = i == 0 ? ' checked' : '';
 				var radioBtn = $('<input type="radio" name="select" id="' + panel.id + '" value="' + panel.id + '"' + checked + '>' +
-					' <label>' + panel.model + ' (' + panel.serial + ')</label><br>');
+					' <label>' + panel.type + ' (' + panel.serial + ')</label><br>');
 				radioBtn.appendTo('#panelList');
 			}
 			$("input").on('click', function() {

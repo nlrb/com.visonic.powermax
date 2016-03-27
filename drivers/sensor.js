@@ -19,7 +19,6 @@ function createSensorDriver(driver) {
 		capabilities: {
 			alarm_contact: {
 				get: function(device, callback) {
-						// Assumption: sensor devices have only one value
 						if (typeof callback == 'function') {
 							pm.getValue('alarm_contact', device.panel, device.zone, function(err, val) {
 								callback(err, val);
@@ -29,7 +28,6 @@ function createSensorDriver(driver) {
 			},
 			alarm_motion: {
 				get: function(device, callback) {
-						// Assumption: sensor devices have only one value
 						if (typeof callback == 'function') {
 							pm.getValue('alarm_motion', device.panel, device.zone, function(err, val) {
 								callback(err, val);
@@ -39,7 +37,6 @@ function createSensorDriver(driver) {
 			},
 			alarm_smoke: {
 				get: function(device, callback) {
-						// Assumption: sensor devices have only one value
 						if (typeof callback == 'function') {
 							pm.getValue('alarm_smoke', device.panel, device.zone, function(err, val) {
 								callback(err, val);
@@ -49,9 +46,17 @@ function createSensorDriver(driver) {
 			},
 			alarm_battery: {
 				get: function(device, callback) {
-						// Assumption: sensor devices have only one value
 						if (typeof callback == 'function') {
 							pm.getValue('alarm_battery', device.panel, device.zone, function(err, val) {
+								callback(err, val);
+							});
+						}
+				}
+			},
+			alarm_tamper: {
+				get: function(device, callback) {
+						if (typeof callback == 'function') {
+							pm.getValue('alarm_tamper', device.panel, device.zone, function(err, val) {
 								callback(err, val);
 							});
 						}

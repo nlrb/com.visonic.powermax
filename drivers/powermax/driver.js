@@ -45,13 +45,20 @@ var self = module.exports = {
 	
 	pair: function(socket) {
 		Homey.log('PowerMax panel pairing has started...');
+		var panel_id;
 
 		// Search for the PowerMax once we received IP address and port
 		socket.on('search', function(data, callback) {
-			var id = data.ip + ':' + data.port;
-			pm.debug('Request to search for PowerMax on ' + id);
+			panel_id = data.ip + ':' + data.port;
+			pm.debug('Request to search for PowerMax on ' + panel_id);
 			pm.addPanel(data.ip, data.port);
 			callback(null, true);
+		});
+		
+		// Return configuration data to front-end
+		socket.on('getDetails', function(data, callback) {
+			var result = pm.getPanelDetails(panel_id);
+			callback(null, result);
 		});
 		
 		// Fully add panel when successful
@@ -64,12 +71,11 @@ var self = module.exports = {
 		// Notify the front-end if a PowerMax has been found
 		Homey.on('found', function(data) {
 			socket.emit('found', data);
-			if (data.found) {
-				// Update driver administration when a device is added
-				pm.debug('*** device added ***');
-				pm.debug(data.device);
-				pm.addDevice(self, data.device, 'panel');
-			}
+		});
+
+		// Notify the front-end on enrollment/download progress
+		Homey.on('download', function(data) {
+			socket.emit('download', data);
 		});
 	}
 }

@@ -1,0 +1,75 @@
+<!--
+
+NOTE: We inherit everything from the previous page. So we re-use those styles & use message(Content)2.
+
+-->
+<script type="application/javascript"> 
+	var msgPromise;
+	var timer;
+	var showItems = ['type', 'name', 'serial', 'software'];
+	
+	// Display message to the user
+	function displayMessage(text, remove) {
+		if (msgPromise != null) {
+			clearTimeout(msgPromise);
+		}
+		$('#messageContent2').text(text);
+		$('#message2').slideDown();
+		if (remove) {
+			msgPromise = setTimeout(function() {
+				$('#messageContent2').text('');
+				$('#message2').slideUp();
+			}, 5000);
+		}
+	}
+	
+	Homey.setTitle(__('pair.download.name')); 
+
+	Homey.on("download", function(data) {
+		console.log(data);
+		// data.state: download state ('enroll', 'failed', 'start', 'done')
+		// data.device: device data to add
+		if (data.state == 'done') { 
+			clearInterval(timer);
+			Homey.addDevice(data.device, function(err, result) {
+				if (err) { console.log(err); }
+			});
+			Homey.done();
+		} else if (data.state == 'failed') {
+			displayMessage(__('pair.download.failed'), false);
+		} else if (data.state == 'enroll') {
+			displayMessage(__('pair.download.wait'), false);
+		} else { // start (= downloading info)
+			displayMessage(__('pair.download.download'), false);
+			$('#config').show();
+			timer = setInterval(function() {
+				Homey.emit('getDetails', {}, function(err, state) {
+					if (!err) {
+						// Display configuration items
+						for (var i in state) {
+							var item = state[i];
+							if ($('#' + i).length == 0) {
+								var newItem = $('<div id="' + i + '">' + item.name + ': ' + item.val + '</div>');
+								newItem.appendTo('#configuration');
+							}
+						}
+					}
+				});
+			}, 500);
+		}
+	}); 
+</script> 
+
+<div id="all">
+	<img src="../assets/icon.svg" align="left" style="margin-right: 10px;" width="150px"><p data-i18n="pair.download.explain"></p> 
+	<fieldset id="message2" class="message">
+		<legend>Message</legend>
+		<div id="messageContent2" class="message-bar">
+		</div>
+	</fieldset>
+	<fieldset id="config">
+		<legend data-i18n="pair.download.config"></legend>
+		<div id="configuration">
+		</div>
+	</fieldset>
+</div>

@@ -34,6 +34,9 @@
 			"pair": [
 				{
 					"id": "powermax"
+				},
+				{
+					"id": "download"
 				}
 			],
 			"settings": [
@@ -53,11 +56,65 @@
                         },
 						{
                             "id": "port",
-                            "type": "text",
+                            "type": "number",
                             "label": {
                                 "en": "IP port number"
                             },
-                            "value": "23"
+                            "value": "23",
+							"attr": {
+								"min": 0,
+								"max": 65535
+							}
+                        }
+					]
+				},
+				{
+                    "type": "group",
+                    "label": {
+                        "en": "Application options"
+                    },
+					"children": [
+						{
+							"id": "allowArm",
+							"type": "radio",
+							"value": "all",
+							"label": {
+								"en": "Allow application arming & disarming"
+							},
+							"values": [
+								{
+									"id": "none",
+									"label": {
+										"en": "No arm/disarm allowed"
+									}
+								},
+								{
+									"id": "stay",
+									"label": {
+										"en": "Only arm away allowed"
+									}
+								},
+								{
+									"id": "arm",
+									"label": {
+										"en": "Arm (Home) allowed"
+									}
+								},
+								{
+									"id": "all",
+									"label": {
+										"en": "Arm & disarm allowed"
+									}
+								}
+							]
+						},
+                        {
+                            "id": "syncTime",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Synchronize panel time from Homey"
+                            },
+                            "value": "true"
                         }
 					]
 				}
