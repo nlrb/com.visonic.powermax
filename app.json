@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "0.0.1",
+    "version": "0.1.0",
 	"compatibility": "*",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -32,12 +32,8 @@
 				"small": "drivers/powermax/assets/images/small.png"
 			},
 			"pair": [
-				{
-					"id": "powermax"
-				},
-				{
-					"id": "download"
-				}
+				{ "id": "powermax" },
+				{ "id": "download" }
 			],
 			"settings": [
                 {
@@ -108,6 +104,18 @@
 								}
 							]
 						},
+						{
+                            "id": "motionTime",
+                            "type": "number",
+                            "label": {
+                                "en": "Seconds to show motion detected"
+                            },
+                            "value": "8",
+							"attr": {
+								"min": 1,
+								"max": 120
+							}
+                        },
                         {
                             "id": "syncTime",
                             "type": "checkbox",
