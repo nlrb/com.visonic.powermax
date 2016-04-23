@@ -87,4 +87,5 @@ When the needed devices are available in Homey, you can use them to create some 
 ![flow2](http://www.ramonbaas.nl/Homey/visonic/flow_away.png)
 
 ### Version history
+* 0.2.0 First App store release
 * 0.1.0 Initial release

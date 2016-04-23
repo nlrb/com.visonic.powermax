@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "0.1.0",
+    "version": "0.2.0",
 	"compatibility": "*",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
