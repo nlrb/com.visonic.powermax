@@ -53,6 +53,7 @@ Each panel device has a number of settings that control the behavior of the devi
 * *Seconds to show motion detected*: Here you can specify how long (in seconds) the sensor should show a motion alarm once a motion sensor has been tripped. [default: 8 seconds]
 * *Synchronize panel time from Homey*: When this option is checked, the time as set in Homey will be programmed in the panel as well. [default: on]
 
+
 #### Door/window, motion sensors and smoke detectors
 After a panel device has been created, the following sensors can be added.
 

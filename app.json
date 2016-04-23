@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "0.2.0",
+    "version": "0.3.0",
 	"compatibility": "*",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -206,7 +206,7 @@
 		{
 			"id": "smoke",
 			"name": {
-				"en": "Smoke Sensor",
+				"en": "Smoke Detector",
 				"nl": "Rookmelder"
 			},
 			"class": "sensor",
