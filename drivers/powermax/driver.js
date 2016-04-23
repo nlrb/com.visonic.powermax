@@ -39,7 +39,7 @@ var self = module.exports = {
 	},
 	
 	deleted: function(device_data) {
-		// run when the user has deleted the device from Homey
+		// run when the user has deleted the panel from Homey
 		pm.deletePanel(device_data.id);
 	},
 	

@@ -9,7 +9,7 @@ function createSensorDriver(driver) {
 
 		init: function(devices, callback) {
 			devices.forEach(function(device) {
-				pm.addDevice(self, device);
+				pm.addSensor(self, device);
 			});
 			
 			// we're ready
@@ -66,7 +66,7 @@ function createSensorDriver(driver) {
 
 		deleted: function(device_data) {
 			// run when the user has deleted the device from Homey
-			pm.deleteDevice(device_data);
+			pm.deleteSensor(device_data);
 		},
 		
 		pair: function(socket) {
@@ -92,7 +92,7 @@ function createSensorDriver(driver) {
 			// Update driver administration when a device is added
 			socket.on('add_device', function(device_data, callback) {
 				var device = device_data['data'];
-				pm.addDevice(self, device);
+				pm.addSensor(self, device);
 
 				callback();
 			});

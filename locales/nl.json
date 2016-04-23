@@ -1,0 +1,42 @@
+{
+    "pair": {
+		"panel": {
+			"name": "Voeg Visonic PowerMax paneel toe",
+			"explain": "Deze applicatie kan verbinding maken met een Visonic PowerMax paneel die seriele data verstuurt via TCP/IP. Geef aan op welk adres in het netwerk het paneel gevonden kan worden.",
+			"network": {
+				"title": "Netwerk",
+				"ip": "IP adres : poort",
+				"submit": "Zoek"
+			},
+			"search": {
+				"title": "Zoeken naar Visonic PowerMax op __addr__...",
+				"success": "Je Visonic PowerMax is gevonden. Paneel wordt toegevoegd.",
+				"failed": "De Visonic PowerMax kan niet gevonden worden op __addr__!"
+			}
+		},
+		"download": {
+			"name": "Registreer het paneel in PowerLink mode & lees instellingen",
+			"explain": "Om te zorgen dat de applicatie alle sensorsen en andere informatie kan vinden, moet de applicatie geregisteerd worden met het paneel. Dit werkt via de PowerLink mode. Nieuwere versies van de Visonic PowerMax (beginnend met de PowerMax Pro met partities) gaat de registratie automatisch. Bij oudere modellen moet dit handmatig via het paneel menu gebeuren. Lees de Visonic gebruikershandleiding voor instructies als het niet automatisch werkt. Zodra de applicatie geregistreerd is, worden de instelling van het paneel opgehaald.",
+			"wait": "Wachten tot dat registratie voltooid is...",
+			"download": "Registratie voltooid. Paneel informatie wordt opgehaald... Even wachten a.u.b.",
+			"config": "Paneel informatie"
+		},
+		"add_panel": "Er moet eerst een paneel aanwezig zijn voor er sensors kunnen worden toegevoegd.",
+		"contact": {
+			"name": "Voeg Visonic PowerMax raam-/deursensor toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar raam-/deursensoren voor moeten worden toegevoegd."
+		},
+		"motion": {
+			"name": "Voeg Visonic PowerMax bewegingssensor toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar bewegingssensoren voor moeten worden toegevoegd."
+		},
+		"smoke": {
+			"name": "Voeg Visonic PowerMax rookdetector toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar rookdetectors voor moeten worden toegevoegd."
+		}
+	},
+	"no_panel": "Paneel niet beschikbaar"
+}

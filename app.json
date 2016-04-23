@@ -10,7 +10,7 @@
 		"nl": "Bestuur je Visonic PowerMax met Homey"
 	},
 	"author": {
-		"name": "Ramon Baas",
+		"name": "Ramón Baas",
 		"website": "http://www.visonic.com/"
 	},
 	"category": "security",
@@ -22,7 +22,7 @@
 		{
 			"id": "powermax",
 			"name": {
-				"en": "Alarm panel",
+				"en": "Alarm Panel",
 				"nl": "Alarmsysteem"
 			},
 			"class": "homealarm",
@@ -39,14 +39,16 @@
                 {
                     "type": "group",
                     "label": {
-                        "en": "Network settings"
+                        "en": "Network settings",
+						"nl": "Netwerk instellingen"
                     },
 					"children": [
                         {
                             "id": "ip",
                             "type": "text",
                             "label": {
-                                "en": "IP address"
+                                "en": "IP address",
+								"nl": "IP adres"
                             },
                             "value": "0.0.0.0"
                         },
@@ -54,7 +56,8 @@
                             "id": "port",
                             "type": "number",
                             "label": {
-                                "en": "IP port number"
+                                "en": "IP port number",
+								"nl": "IP poort nummer"
                             },
                             "value": "23",
 							"attr": {
@@ -67,7 +70,8 @@
 				{
                     "type": "group",
                     "label": {
-                        "en": "Application options"
+                        "en": "Panel options in Homey",
+						"nl": "Paneel opties in Homey"
                     },
 					"children": [
 						{
@@ -75,31 +79,36 @@
 							"type": "radio",
 							"value": "all",
 							"label": {
-								"en": "Allow application arming & disarming"
+								"en": "Allow flow arming & disarming",
+								"nl": "In- en uitschakelen vanuit Flow toestaan"
 							},
 							"values": [
 								{
 									"id": "none",
 									"label": {
-										"en": "No arm/disarm allowed"
+										"en": "No arm/disarm allowed",
+										"nl": "In-/uitschakelen niet toegestaan"
 									}
 								},
 								{
 									"id": "stay",
 									"label": {
-										"en": "Only arm away allowed"
+										"en": "Only arm away allowed",
+										"nl": "Alleen deel-inschakelen toegestaan"
 									}
 								},
 								{
 									"id": "arm",
 									"label": {
-										"en": "Arm (Home) allowed"
+										"en": "Arm (Home) allowed",
+										"nl": "Inschakelen toegestaan"
 									}
 								},
 								{
 									"id": "all",
 									"label": {
-										"en": "Arm & disarm allowed"
+										"en": "Arm & disarm allowed",
+										"nl": "In- en uitschakelen toegstaan"
 									}
 								}
 							]
@@ -108,7 +117,8 @@
                             "id": "motionTime",
                             "type": "number",
                             "label": {
-                                "en": "Seconds to show motion detected"
+                                "en": "Seconds to show motion detected",
+								"nl": "Aantal seconden dat beweging actief blijft"
                             },
                             "value": "8",
 							"attr": {
@@ -120,7 +130,8 @@
                             "id": "syncTime",
                             "type": "checkbox",
                             "label": {
-                                "en": "Synchronize panel time from Homey"
+                                "en": "Synchronize panel time from Homey",
+								"nl": "Synchonizeer Homey tijd met paneel"
                             },
                             "value": "true"
                         }
