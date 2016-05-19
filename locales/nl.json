@@ -12,14 +12,17 @@
 				"title": "Zoeken naar Visonic PowerMax op __addr__...",
 				"success": "Je Visonic PowerMax is gevonden. Paneel wordt toegevoegd.",
 				"failed": "De Visonic PowerMax kan niet gevonden worden op __addr__!"
-			}
+			},
+			"add": "Voeg toe"
 		},
 		"download": {
 			"name": "Registreer het paneel in PowerLink mode & lees instellingen",
 			"explain": "Om te zorgen dat de applicatie alle sensorsen en andere informatie kan vinden, moet de applicatie geregisteerd worden met het paneel. Dit werkt via de PowerLink mode. Nieuwere versies van de Visonic PowerMax (beginnend met de PowerMax Pro met partities) gaat de registratie automatisch. Bij oudere modellen moet dit handmatig via het paneel menu gebeuren. Lees de Visonic gebruikershandleiding voor instructies als het niet automatisch werkt. Zodra de applicatie geregistreerd is, worden de instelling van het paneel opgehaald.",
 			"wait": "Wachten tot dat registratie voltooid is...",
 			"download": "Registratie voltooid. Paneel informatie wordt opgehaald... Even wachten a.u.b.",
-			"config": "Paneel informatie"
+			"complete": "Alle informatie is opgehaald. Het paneel kan nu toegevoegd worden.",
+			"config": "Paneel informatie",
+			"receive": "Instellingen ophalen: "
 		},
 		"add_panel": "Er moet eerst een paneel aanwezig zijn voor er sensors kunnen worden toegevoegd.",
 		"contact": {

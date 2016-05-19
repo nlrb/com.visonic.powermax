@@ -5,6 +5,7 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 -->
 <script type="application/javascript"> 
 	var msgPromise;
+	var device;
 	
 	// Display message to the user
 	function displayMessage(text, remove) {
@@ -21,23 +22,29 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 		}
 	}
 	
+	// Add the device when the user gives the OK
+	function addDevice() {
+		Homey.addDevice(device, function(err, result) {
+			if (err) { 
+				console.log(err); 
+			} else {
+				Homey.emit('completed', device);
+			}
+			Homey.done();
+		});
+	}
+	
 	Homey.setTitle(__('pair.download.name')); 
 
 	Homey.on("download", function(data) {
-		// data.state: download state ('enroll', 'failed', 'start', 'done', 'process:...')
+		// data.state: download state ('enroll', 'failed', 'start', 'done', 'process:...', 'received:...')
 		// data.device: device data to add
 		// data.show: information to show (during 'process' & 'done')
-		if (data.state == 'done') { 
-			Homey.addDevice(data.device, function(err, result) {
-				if (err) { 
-					console.log(err); 
-				} else {
-					Homey.emit('completed', data.device);
-				}
-				Homey.done();
-			});
-		} else if (data.state == 'enroll' || data.state == 'failed') {
+		if (data.state == 'enroll' || data.state == 'failed') {
 			displayMessage(__('pair.download.wait'), false);
+		} else if (data.state.slice(0, 8) == 'received') {
+			var content = __('pair.download.receive') + data.state.slice(9);
+			$('#received').text(content);
 		} else { // start (= downloading info) or 'process:...'
 			displayMessage(__('pair.download.download'), false);
 			$('#config').show();
@@ -49,6 +56,12 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 					newItem.appendTo('#configuration');
 				}
 			}
+		}
+		if (data.state == 'done') { 
+			displayMessage(__('pair.download.complete'), true);
+			$('#add_button').show();
+			$('#received').hide();
+			device = data.device;
 		}
 	}); 
 </script> 
@@ -62,7 +75,8 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 	</fieldset>
 	<fieldset id="config">
 		<legend data-i18n="pair.download.config"></legend>
-		<div id="configuration">
-		</div>
+		<div id="configuration"></div>
+		<div id="received"></div>
 	</fieldset>
+	<button type="submit" id="add_button" class="button" data-i18n="pair.panel.add" onClick="javascript:addDevice()" style="display:none"></button>
 </div>

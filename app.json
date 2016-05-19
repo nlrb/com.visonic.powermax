@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "0.2.0",
+    "version": "0.3.0",
 	"compatibility": "*",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -236,6 +236,298 @@
 			]
 		}
 	],
+	"flow": {
+		"triggers": [
+			{
+				"id": "status",
+				"title": {
+					"en": "Status changes",
+					"nl": "Status verandert"
+				},
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    }
+                ],
+				"tokens": [
+					{
+						"name": "status",
+						"title": { 
+							"en": "Status"
+						}
+					}
+				]
+			},
+			{
+				"id": "zonealarm",
+				"title": {
+					"en": "Zone alarm becomes",
+					"nl": "Zone alarm wordt"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "on",
+								"label": {
+										"en": "active",
+										"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+										"en": "inactive",
+										"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [
+					{
+						"name": "zone",
+						"title": { 
+							"en": "Status flag",
+							"nl": "Statusvlag"
+						}
+					},
+					{
+						"name": "name",
+						"title": { 
+							"en": "Name zone",
+							"nl": "Naam zone"
+						}
+					}
+				]
+			},
+			{
+				"id": "panelalarm",
+				"title": {
+					"en": "Panel alarm becomes",
+					"nl": "Paneel alarm wordt"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "on",
+								"label": {
+										"en": "active",
+										"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+										"en": "inactive",
+										"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [
+					{
+						"name": "type",
+						"title": { 
+							"en": "Type"
+						}
+					},
+					{
+						"name": "name",
+						"title": { 
+							"en": "Alarm type name",
+							"nl": "Naam alarm type"
+						}
+					}
+				]
+			},
+			{
+				"id": "paneltrouble",
+				"title": {
+					"en": "Panel trouble becomes",
+					"nl": "Paneel probleem wordt"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "on",
+								"label": {
+										"en": "active",
+										"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+										"en": "inactive",
+										"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [
+					{
+						"name": "type",
+						"title": { 
+							"en": "Type"
+						}
+					},
+					{
+						"name": "name",
+						"title": { 
+							"en": "Trouble type name",
+							"nl": "Naam probleem"
+						}
+					}
+				]
+			},
+			{
+				"id": "battery",
+				"title": {
+					"en": "Low battery",
+					"nl": "Lage batterijspanning"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "on",
+								"label": {
+										"en": "active",
+										"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+										"en": "inactive",
+										"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [
+					{
+						"name": "zone",
+						"title": { 
+							"en": "Zone"
+						}
+					},
+					{
+						"name": "name",
+						"title": { 
+							"en": "Name zone",
+							"nl": "Naam zone"
+						}
+					}
+				]
+			}
+		],
+		"conditions": [
+			{
+				"id": "sysflags",
+				"title": {
+					"en": "Panel !{{indicates|doesn't indicate}}",
+					"nl": "Paneel !{{geeft aan|geeft niet aan}}"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "flag",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "ready",
+								"label": {
+										"en": "ready for use",
+										"nl": "klaar voor gebruik"
+								}
+							},
+							{
+								"id": "trouble",
+								"label": {
+										"en": "there is trouble",
+										"nl": "er is een probleem"
+								}
+							},
+							{
+								"id": "alarm",
+								"label": {
+										"en": "an alarm is active",
+										"nl": "een alarm is actief"
+								}
+							},
+							{
+								"id": "memory",
+								"label": {
+										"en": "an alarm in memory",
+										"nl": "een alarm in geheugen"
+								}
+							}
+						]
+					}
+				]
+			}
+		],
+		"actions": [
+			{
+				"id": "setClock",
+				"title": {
+					"en": "Set current time",
+					"nl": "Zet huidige tijd"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    }
+				]
+			}
+		]
+    },
+	"permissions": [
+        "homey:manager:speech-output"
+    ],
 	"dependencies": {
 		"visonic-api": "*"
 	}
