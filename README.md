@@ -35,7 +35,7 @@ As soon as communication with a PowerMax panel has been established, the pairing
 
 ![add panel](http://www.ramonbaas.nl/Homey/visonic/enroll_download.png)
 
-Please wait until all information is downloaded. Once that is completed, the panel device will be added automatically.
+Please wait until all information is downloaded. Once that is completed, click the 'Add panel' button to add the panel device to Homey.
 
 ![add panel](http://www.ramonbaas.nl/Homey/visonic/device_panel.png)
 
@@ -87,6 +87,53 @@ When the needed devices are available in Homey, you can use them to create some 
 
 ![flow2](http://www.ramonbaas.nl/Homey/visonic/flow_away.png)
 
+##### Actions
+The following actions are available:
+
+- Status changes
+  * token 'Status': the new status, which can be
+    	- *Disarmed, Home Exit Delay, Away Exit Delay, Entry Delay, Armed Home, Armed Away, User Test, Downloading, Programming, Installer, Home Bypass, Away Bypass, Ready, Not Ready, Disarmed Instant, Home Instant Exit Delay, Away Instant Exit Delay, Entry Delay Instant, Armed Home Instant, Armed Away Instant*
+
+	![](http://homey.ramonbaas.nl/visonic/flow_when_status.png)
+
+- Zone alarm becomes (active or inactive)
+	- token 'Zone': the zone number
+	- token 'Name': the zone name
+	
+	![](http://homey.ramonbaas.nl/visonic/flow_when_zone_alarm.png)
+
+- Panel alarm becomes (active or inactive)
+	- token 'Type', which can be 
+		- *Intruder*, *Tamper*, *Panic*, *Fire*, *Emergency*, *Gas*, *Flood*
+	- token 'Alarm type name', which is the type of the alarm (see above) in the current language
+
+	![](http://homey.ramonbaas.nl/visonic/flow_when_panel_alarm.png)
+
+- Panel trouble becomes (active or inactive)
+	- token 'Type', which can be 
+		- *Communication, General, Battery, Power, Jamming, Telephone*
+	- token 'Trouble type name', which is the type of the trouble (see above) in the current language
+
+	![](http://homey.ramonbaas.nl/visonic/flow_when_trouble.png)
+
+- Low battery (active or inactive)
+	- token 'Zone': the zone number
+	- token 'Name': the zone name
+
+	![](http://homey.ramonbaas.nl/visonic/flow_when_low_battery.png)
+
+##### Conditions
+It is possible to check the panel status flags, to see whether (or not) the panel is
+
+- Ready for use
+- Has a trouble condition
+- Currently has an alarm
+- Has an alarm in memory
+
+![](http://homey.ramonbaas.nl/visonic/flow_condition_panel.png)
+
+
 ### Version history
+* 0.3.0 Added flow support, improved pairing feedback, bug fixes
 * 0.2.0 First App store release
 * 0.1.0 Initial release

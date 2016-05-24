@@ -297,8 +297,8 @@
 					{
 						"name": "zone",
 						"title": { 
-							"en": "Status flag",
-							"nl": "Statusvlag"
+							"en": "Zone number",
+							"nl": "Zone nummer"
 						}
 					},
 					{
@@ -445,7 +445,8 @@
 					{
 						"name": "zone",
 						"title": { 
-							"en": "Zone"
+							"en": "Zone number",
+							"nl": "Zone nummer"
 						}
 					},
 					{
