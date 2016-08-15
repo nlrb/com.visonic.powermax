@@ -45,7 +45,7 @@ Each panel device has a number of settings that control the behavior of the devi
 ![add panel](http://www.ramonbaas.nl/Homey/visonic/device_settings.png)
 > Network settings
 
-**NOTE**: In the current application version changing the network settings has no effect, until Homey reboots.
+If the address of the Visonic panel in the network has changed, then this can be adapted in the device settings. If either the IP address or port changes, the current connection will be closed and a new connection will be established on the new network address.
 
 > Homey options
 
