@@ -27,4 +27,5 @@ function startPanelSelection(title) {
 			$('#all').show();
 		}
 	});
+	Homey.emit('loaded');
 }

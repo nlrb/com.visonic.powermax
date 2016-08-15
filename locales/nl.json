@@ -41,5 +41,6 @@
 			"explain": "Selecteer het paneel waar rookdetectors voor moeten worden toegevoegd."
 		}
 	},
-	"no_panel": "Paneel niet beschikbaar"
+	"no_panel": "Paneel niet beschikbaar",
+	"unreachable": "Verbinding verbroken"
 }

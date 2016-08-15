@@ -4,12 +4,13 @@
 
 var pm = require('powermax-api');
 
-function registerEvents(device) {
+function registerEvents(driver, device) {
 	var panel = pm.getPanel(device.id);
 	if (panel != null) {
 		pm.debug('Adding events for panel ' + device.id);
+		// Catch system events
 		panel.events.on('system', function(field, newVal) {
-				pm.debug(newVal);
+			pm.debug(newVal);
 			if (field == 'status') {
 				Homey.manager('flow').triggerDevice('status', { status: newVal.txt }, { panel: device.id, status: newVal.nr }, device);
 			} else if (field == 'alarm') {
@@ -20,6 +21,7 @@ function registerEvents(device) {
 						Homey.manager('flow').triggerDevice('zonealarm', { zone: i, name: name }, { state: newVal }, device);
 					}
 				}
+				driver.realtime(device, field, newVal);
 			} else if (field == 'alarmType') { // e.g. Intruder, Tamper, Panic, Fire, Emergency, Gas, Flood
 				var text = newVal.txt || '';
 				Homey.manager('flow').triggerDevice('panelalarm', { type: newVal.alarmType, name: text }, { state: text != '' }, device);
@@ -27,8 +29,11 @@ function registerEvents(device) {
 				var text = newVal.txt || '';
 				pm.debug('Triggering device trouble ' + text);
 				Homey.manager('flow').triggerDevice('paneltrouble', { type: newVal.troubleType, name: text }, { state: text != '' }, device);
+			} else { // nready, memory, trouble
+				driver.realtime(device, field, newVal);
 			}
 		});
+		// Catch battery events
 		panel.events.on('battery', function(newVal) {
 			var name = pm.getZoneName(device.id, newVal.zone);
 			Homey.manager('flow').triggerDevice('battery', { zone: newVal.zone, name: name }, { state: newVal.low }, device);
@@ -44,7 +49,7 @@ var self = module.exports = {
 			self.getSettings(device, function(err, settings){
 				pm.addPanel(self, device, settings);
 				// Register handlers
-				registerEvents(device);
+				registerEvents(self, device);
 			})
 		});
 		
@@ -66,10 +71,41 @@ var self = module.exports = {
 							callback(null, success);
 							//self.realtime(device, 'homealarm_state', new_state);
 						} else {
-							Homey.log(err);
 							callback(err, null);
 						}
 					});
+			}
+		},
+		nready: {
+			get: function(device, callback) {
+					if (typeof callback == 'function') {
+						var val = pm.getPanelValue(device.id, 'nready');
+						callback(null, val);
+					}
+			}
+		},
+		trouble: {
+			get: function(device, callback) {
+					if (typeof callback == 'function') {
+						var val = pm.getPanelValue(device.id, 'trouble');
+						callback(null, val);
+					}
+			}
+		},
+		alarm: {
+			get: function(device, callback) {
+					if (typeof callback == 'function') {
+						var val = pm.getPanelValue(device.id, 'alarm');
+						callback(null, val);
+					}
+			}
+		},
+		memory: {
+			get: function(device, callback) {
+					if (typeof callback == 'function') {
+						var val = pm.getPanelValue(device.id, 'memory');
+						callback(null, val);
+					}
 			}
 		}
 	},
@@ -112,17 +148,21 @@ var self = module.exports = {
 		});
 		
 		// Fully add panel when successful
-		socket.on('completed', function(device_data) {
+		socket.on('completed', function(device_data, callback) {
 			var device = device_data.data;
 			completed = true;
 			pm.addPanelActions(self, device);
 			// Register handlers
-			registerEvents(device);
+			registerEvents(self, device);
+			// Let the front-end know we are done
+			pm.debug(completed);
+			callback();
 		});
 		
 		// Check if the pairing was finished, otherwise remove the panel
 		socket.on('disconnect', function() {
 			if (!completed) {
+				pm.debug('Pairing not completed, deleting panel ' + panel_id);
 				pm.deletePanel(panel_id);
 			}
 		});

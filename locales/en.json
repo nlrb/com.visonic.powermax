@@ -41,5 +41,6 @@
 			"explain": "Select the panel for which to add smoke detectors."
 		}
 	},
-	"no_panel": "Panel not available"
+	"no_panel": "Panel not available",
+	"unreachable": "Communication lost"
 }

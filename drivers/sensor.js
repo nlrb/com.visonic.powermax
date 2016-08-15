@@ -74,7 +74,11 @@ function createSensorDriver(driver) {
 			var selectedPanel;
 
 			// Let the front-end know which panels there are
-			socket.emit('start', pm.getPanels());
+			var panels = pm.getPanels();
+			// Make sure the page has fully loaded
+			socket.on('loaded', function() {
+				socket.emit('start', panels);
+			});
 
 			socket.on('selected', function(id, callback) {
 				selectedPanel = id;

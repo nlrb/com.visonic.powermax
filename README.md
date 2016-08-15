@@ -134,6 +134,7 @@ It is possible to check the panel status flags, to see whether (or not) the pane
 
 
 ### Version history
+* 0.5.0 Added mobile card, various fixes & stability improvements
 * 0.3.0 Added flow support, improved pairing feedback, bug fixes
 * 0.2.0 First App store release
 * 0.1.0 Initial release

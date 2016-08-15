@@ -27,10 +27,12 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 		Homey.addDevice(device, function(err, result) {
 			if (err) { 
 				console.log(err); 
+				Homey.done();
 			} else {
-				Homey.emit('completed', device);
+				Homey.emit('completed', device, function() {
+					Homey.done();
+				});
 			}
-			Homey.done();
 		});
 	}
 	
