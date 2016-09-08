@@ -7,9 +7,12 @@ var pm = require('powermax-api');
 function createSensorDriver(driver) {
 	var self = {
 
-		init: function(devices, callback) {
-			devices.forEach(function(device) {
-				pm.addSensor(self, device);
+		init: function(devices_data, callback) {
+			devices_data.forEach(function(device_data) {
+				// Get the Homey name of the device
+				self.getName(device_data, function(err, name) {
+					pm.addSensorDevice(self, device_data, name);
+				});
 			});
 			
 			// we're ready
@@ -18,45 +21,45 @@ function createSensorDriver(driver) {
 		
 		capabilities: {
 			alarm_contact: {
-				get: function(device, callback) {
+				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
-							pm.getZoneValue('alarm_contact', device.panel, device.zone, function(err, val) {
+							pm.getZoneValue('alarm_contact', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
 				}
 			},
 			alarm_motion: {
-				get: function(device, callback) {
+				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
-							pm.getZoneValue('alarm_motion', device.panel, device.zone, function(err, val) {
+							pm.getZoneValue('alarm_motion', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
 				}
 			},
 			alarm_smoke: {
-				get: function(device, callback) {
+				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
-							pm.getZoneValue('alarm_smoke', device.panel, device.zone, function(err, val) {
+							pm.getZoneValue('alarm_smoke', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
 				}
 			},
 			alarm_battery: {
-				get: function(device, callback) {
+				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
-							pm.getZoneValue('alarm_battery', device.panel, device.zone, function(err, val) {
+							pm.getZoneValue('alarm_battery', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
 				}
 			},
 			alarm_tamper: {
-				get: function(device, callback) {
+				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
-							pm.getZoneValue('alarm_tamper', device.panel, device.zone, function(err, val) {
+							pm.getZoneValue('alarm_tamper', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
@@ -64,9 +67,22 @@ function createSensorDriver(driver) {
 			}
 		},
 
+		added: function(device_data, callback) {
+			// Update driver administration when a device is added
+			self.getName(device_data, function(err, name) {
+				pm.addSensorDevice(self, device_data, name);
+			});
+
+			callback();
+		},
+		
+		renamed: function(device_data, new_name) {
+			pm.updateDeviceName(device_data, new_name);
+		},
+		
 		deleted: function(device_data) {
 			// run when the user has deleted the device from Homey
-			pm.deleteSensor(device_data);
+			pm.deleteDevice(device_data);
 		},
 		
 		pair: function(socket) {
@@ -91,14 +107,6 @@ function createSensorDriver(driver) {
 				var devices = pm.getSensors(selectedPanel, driver);
 				// err, result style
 				callback(null, devices);
-			});
-
-			// Update driver administration when a device is added
-			socket.on('add_device', function(device_data, callback) {
-				var device = device_data['data'];
-				pm.addSensor(self, device);
-
-				callback();
 			});
 		}
 	}

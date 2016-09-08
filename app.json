@@ -3,8 +3,8 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "0.5.0",
-	"compatibility": ">=0.9.2",
+    "version": "1.0.0",
+	"compatibility": ">=0.9.3",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
@@ -19,6 +19,34 @@
 		"small": "assets/images/small.png"
 	},
 	"capabilities": {
+		"arm_state": {
+			"type": "enum",
+			"title": { "en": "Arm state", "nl": "Inschakelstatus" },
+			"values": [
+				{ "id": "0", "title": { "en": "Disarmed", "nl": "Uitgeschakeld" } }, 
+				{ "id": "1", "title": { "en": "Home Exit Delay", "nl": "Deel Uitloopvertraging" } },
+				{ "id": "2", "title": { "en": "Away Exit Delay", "nl": "Totaal Uitloopvertraging" } },
+				{ "id": "3", "title": { "en": "Entry Delay", "nl": "Inloopvertraging" } },
+				{ "id": "4", "title": { "en": "Armed Home", "nl": "Deel Ingeschakeld" } },
+				{ "id": "5", "title": { "en": "Armed Away", "nl": "Totaal Ingeschakeld" } },
+				{ "id": "6", "title": { "en": "User Test", "nl": "Gebruiker Test" } },
+				{ "id": "7", "title": { "en": "Downloading", "nl": "Downloaden" } },
+				{ "id": "8", "title": { "en": "Programming", "nl": "Programmeren" } },
+				{ "id": "9", "title": { "en": "Installer", "nl": "Monteurmode" } },
+				{ "id": "10", "title": { "en": "Home Bypass", "nl": "Deel Met Overbrugging" } },
+				{ "id": "11", "title": { "en": "Away Bypass", "nl": "Totaal Met Overbrugging" } },
+				{ "id": "12", "title": { "en": "Ready", "nl": "Klaar" } },
+				{ "id": "13", "title": { "en": "Not Ready", "nl": "Niet Klaar" } },
+				{ "id": "16", "title": { "en": "Disarmed Instant", "nl": "Direct uitschakelen" } },
+				{ "id": "17", "title": { "en": "Home Instant Exit Delay", "nl": "Direct Deel Uitloopvertraging" } },
+				{ "id": "18", "title": { "en": "Away Instant Exit Delay", "nl": "Direct Totaal Uitloopvertraging" } },
+				{ "id": "19", "title": { "en": "Entry Delay Instant", "nl": "Direct Inloopvertraging" } },
+				{ "id": "20", "title": { "en": "Armed Home Instant", "nl": "Direct Deel" } },
+				{ "id": "21", "title": { "en": "Armed Away Instant", "nl": "Direct Totaal" } }
+			],
+			"getable": true,
+			"setable": false
+		},
 		"nready": {
 			"type": "boolean",
 			"title": { "en": "Not ready", "nl": "Niet klaar" },
@@ -42,6 +70,17 @@
 			"title": { "en": "Alarm in memory", "nl": "Alarm in geheugen" },
 			"getable": true,
 			"setable": false
+		},
+		"dim_oneway": {
+			"type": "enum",
+			"title": { "en": "X10 control", "nl": "X10 controle" },
+			"values": [
+				{ "id": "brighten", "title": { "en": "Brighten", "nl": "Feller" } }, 
+				{ "id": "toggle", "title": { "en": "On/off", "nl": "Aan/uit" } },
+				{ "id": "dim", "title": { "en": "Dim", "nl": "Zwakker" } }
+			],
+			"getable": true,
+			"setable": true
 		}
 	},
 	"drivers": [
@@ -52,7 +91,7 @@
 				"nl": "Alarmsysteem"
 			},
 			"class": "homealarm",
-			"capabilities": [ "homealarm_state", "nready", "trouble", "alarm", "memory" ],
+			"capabilities": [ "homealarm_state", "arm_state", "nready", "trouble", "alarm", "memory" ],
 			"mobile": {
 				"components": [
 					{
@@ -74,6 +113,10 @@
 								"bottom": "disarmed"
 							}
 						}
+					},
+					{
+						"id": "picker",
+						"capabilities": [ "arm_state" ]
 					},
 					{
 						"id": "sensor",
@@ -98,6 +141,60 @@
 				{ "id": "download" }
 			],
 			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Panel information",
+						"nl": "Paneel informatie"
+                    },
+					"children": [
+                        {
+                            "id": "type",
+                            "type": "label",
+                            "label": {
+                                "en": "Panel type",
+								"nl": "Paneel type"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "model",
+                            "type": "label",
+                            "label": {
+                                "en": "Panel model",
+								"nl": "Paneel model"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "serial",
+                            "type": "label",
+                            "label": {
+                                "en": "Serial number",
+								"nl": "Serienummer"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "firmware",
+                            "type": "label",
+                            "label": {
+                                "en": "Firmware version",
+								"nl": "Firmware versie"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "event",
+                            "type": "label",
+                            "label": {
+                                "en": "Last event",
+								"nl": "Laaste gebeurtenis"
+                            },
+                            "value": ""
+                        }
+					]
+				},
                 {
                     "type": "group",
                     "label": {
@@ -141,40 +238,57 @@
 							"type": "radio",
 							"value": "all",
 							"label": {
-								"en": "Allow flow arming & disarming",
-								"nl": "In- en uitschakelen vanuit Flow toestaan"
+								"en": "Allow Homey arming & disarming",
+								"nl": "In- en uitschakelen door Homey toestaan"
 							},
 							"values": [
 								{
 									"id": "none",
 									"label": {
-										"en": "No arm/disarm allowed",
-										"nl": "In-/uitschakelen niet toestaan"
+										"en": "Don't allow arming or disarming",
+										"nl": "In- en uitschakelen niet toestaan"
 									}
 								},
 								{
 									"id": "stay",
 									"label": {
-										"en": "Only arm away allowed",
-										"nl": "Alleen deel-inschakelen toestaan"
+										"en": "Only allow arming away",
+										"nl": "Alleen deel inschakelen toestaan"
 									}
 								},
 								{
 									"id": "arm",
 									"label": {
-										"en": "Arm (Home) allowed",
-										"nl": "Inschakelen toestaan"
+										"en": "Only allow arming (home & away)",
+										"nl": "Alleen inschakelen toestaan"
 									}
 								},
 								{
 									"id": "all",
 									"label": {
-										"en": "Arm & disarm allowed",
+										"en": "Allow arming & disarming",
 										"nl": "In- en uitschakelen toestaan"
 									}
 								}
 							]
 						},
+						{
+                            "id": "armUser",
+                            "type": "number",
+                            "label": {
+                                "en": "User to arm/disarm",
+								"nl": "Gebruiker die in-/uitschakelt"
+                            },
+                            "value": 1,
+							"attr": {
+								"min": 1,
+								"max": 8
+							},
+                            "hint": {
+                                "en": "The PIN code of this user will be used to arm/disarm the system via Homey.",
+								"nl": "De pincode van deze gebruiker wordt gebruikt om het alarm in/uit te schakelen."
+                            }
+                        },
 						{
                             "id": "motionTime",
                             "type": "number",
@@ -182,7 +296,7 @@
                                 "en": "Seconds to show motion detected",
 								"nl": "Aantal seconden dat beweging actief blijft"
                             },
-                            "value": 8,
+                            "value": 15,
 							"attr": {
 								"min": 1,
 								"max": 120
@@ -192,10 +306,32 @@
                             "id": "syncTime",
                             "type": "checkbox",
                             "label": {
-                                "en": "Synchronize panel time from Homey",
+                                "en": "Synchronize Homey time with panel",
 								"nl": "Synchonizeer Homey tijd met paneel"
                             },
                             "value": true
+                        }
+					]
+				},
+				{
+                    "type": "group",
+                    "label": {
+                        "en": "Safety check",
+						"nl": "Beveiliging"
+                    },
+					"children": [
+                        {
+                            "id": "pin",
+                            "type": "password",
+                            "label": {
+                                "en": "Enter master PIN to update settings",
+								"nl": "Voer hoofd installatiecode in om instellingen aan te passen"
+                            },
+                            "hint": {
+                                "en": "As a safety precaution, the settings can only be updated if the user enters the panel master PIN code.",
+								"nl": "Als beveiliging kunnen de instellingen alleen gewijzigd worden als de hoofd installatiecode ingevuld wordt."
+                            },
+							"value": ""
                         }
 					]
 				}
@@ -217,11 +353,11 @@
 				{
 					"id": "select",
 					"navigation": {
-						"next": "list_sensors"
+						"next": "list_devices"
 					}
 				},
 				{
-					"id": "list_sensors",
+					"id": "list_devices",
 					"template": "list_devices",
 					"navigation": {
 						"next": "add_sensors"
@@ -230,6 +366,88 @@
 				{
 					"id": "add_sensors",
 					"template": "add_devices"
+				}
+			],
+			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor information",
+						"nl": "Sensor informatie"
+                    },
+					"children": [
+                        {
+                            "id": "trip",
+                            "type": "label",
+                            "label": {
+                                "en": "Last contact alarm",
+								"nl": "Laaste contact alarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "battery",
+                            "type": "label",
+                            "label": {
+                                "en": "Last low battery alarm",
+								"nl": "Laaste batterij alarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "tamper",
+                            "type": "label",
+                            "label": {
+                                "en": "Last tamper alarm",
+								"nl": "Laatste sabotage alarm"
+                            },
+                            "value": ""
+                        }
+					]
+				},
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor configuration",
+						"nl": "Sensor configuratie"
+                    },
+					"children": [
+                        {
+                            "id": "location",
+                            "type": "label",
+                            "label": {
+                                "en": "Location",
+								"nl": "Locatie"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "type",
+                            "type": "label",
+                            "label": {
+                                "en": "Type"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "chime",
+                            "type": "label",
+                            "label": {
+                                "en": "Chime",
+								"nl": "Deurbel"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "partition",
+                            "type": "label",
+                            "label": {
+                                "en": "Partition",
+								"nl": "Partitie"
+                            },
+                            "value": ""
+                        }
+					]
 				}
 			]
 		},
@@ -249,11 +467,11 @@
 				{
 					"id": "select",
 					"navigation": {
-						"next": "list_sensors"
+						"next": "list_devices"
 					}
 				},
 				{
-					"id": "list_sensors",
+					"id": "list_devices",
 					"template": "list_devices",
 					"navigation": {
 						"next": "add_sensors"
@@ -262,6 +480,97 @@
 				{
 					"id": "add_sensors",
 					"template": "add_devices"
+				}
+			],
+			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor information",
+						"nl": "Sensor informatie"
+                    },
+					"children": [
+                        {
+                            "id": "zone",
+                            "type": "label",
+                            "label": {
+                                "en": "Zone number",
+								"nl": "Zone nummer"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "trip",
+                            "type": "label",
+                            "label": {
+                                "en": "Last motion alarm",
+								"nl": "Laaste bewegingsalarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "battery",
+                            "type": "label",
+                            "label": {
+                                "en": "Last low battery alarm",
+								"nl": "Laaste batterij alarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "tamper",
+                            "type": "label",
+                            "label": {
+                                "en": "Last tamper alarm",
+								"nl": "Laatste sabotage alarm"
+                            },
+                            "value": ""
+                        }
+					]
+				},
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor configuration",
+						"nl": "Sensor configuratie"
+                    },
+					"children": [
+                        {
+                            "id": "location",
+                            "type": "label",
+                            "label": {
+                                "en": "Location",
+								"nl": "Locatie"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "type",
+                            "type": "label",
+                            "label": {
+                                "en": "Type"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "chime",
+                            "type": "label",
+                            "label": {
+                                "en": "Chime",
+								"nl": "Deurbel"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "partition",
+                            "type": "label",
+                            "label": {
+                                "en": "Partition",
+								"nl": "Partitie"
+                            },
+                            "value": ""
+                        }
+					]
 				}
 			]
 		},
@@ -281,11 +590,11 @@
 				{
 					"id": "select",
 					"navigation": {
-						"next": "list_sensors"
+						"next": "list_devices"
 					}
 				},
 				{
-					"id": "list_sensors",
+					"id": "list_devices",
 					"template": "list_devices",
 					"navigation": {
 						"next": "add_sensors"
@@ -293,6 +602,196 @@
 				},
 				{
 					"id": "add_sensors",
+					"template": "add_devices"
+				}
+			],
+			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor information",
+						"nl": "Sensor informatie"
+                    },
+					"children": [
+                        {
+                            "id": "zone",
+                            "type": "label",
+                            "label": {
+                                "en": "Zone number",
+								"nl": "Zone nummer"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "trip",
+                            "type": "label",
+                            "label": {
+                                "en": "Last smoke alarm",
+								"nl": "Laaste rookmelding"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "battery",
+                            "type": "label",
+                            "label": {
+                                "en": "Last low battery alarm",
+								"nl": "Laaste batterij alarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "tamper",
+                            "type": "label",
+                            "label": {
+                                "en": "Last tamper alarm",
+								"nl": "Laatste sabotage alarm"
+                            },
+                            "value": ""
+                        }
+					]
+				},
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor configuration",
+						"nl": "Sensor configuratie"
+                    },
+					"children": [
+                        {
+                            "id": "location",
+                            "type": "label",
+                            "label": {
+                                "en": "Location",
+								"nl": "Locatie"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "type",
+                            "type": "label",
+                            "label": {
+                                "en": "Type"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "chime",
+                            "type": "label",
+                            "label": {
+                                "en": "Chime",
+								"nl": "Deurbel"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "partition",
+                            "type": "label",
+                            "label": {
+                                "en": "Partition",
+								"nl": "Partitie"
+                            },
+                            "value": ""
+                        }
+					]
+				}
+			]
+		},
+		{
+			"id": "pgm",
+			"name": {
+				"en": "Programmable output",
+				"nl": "Programmeerbare uitgang"
+			},
+			"class": "socket",
+			"capabilities": [ "onoff" ],
+			"mobile": {
+				"components": [
+					{
+						"id": "icon",
+						"capabilities": [ "onoff" ]
+					},
+					{
+						"id": "toggle",
+						"capabilities": [ "onoff" ]
+					}
+				]
+			},
+			"images": {
+				"large": "drivers/pgm/assets/images/large.png",
+				"small": "drivers/pgm/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_devices"
+					}
+				},
+				{
+					"id": "list_devices",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_pgm"
+					}
+				},
+				{
+					"id": "add_pgm",
+					"template": "add_devices"
+				}
+			]
+		},
+		{
+			"id": "x10",
+			"name": {
+				"en": "X10 Device",
+				"nl": "X10 Apparaat"
+			},
+			"class": "socket",
+			"capabilities": [ "onoff", "dim_oneway" ],
+			"mobile": {
+				"components": [
+					{
+						"id": "icon",
+						"capabilities": [ "onoff" ]
+					},
+					{
+						"id": "toggle",
+						"capabilities": [ "onoff" ]
+					},
+					{
+						"id": "ternary",
+						"capabilities": [ "dim_oneway" ],
+						"options": {
+							"values": {
+								"top": "brighten",
+								"middle": "toggle",
+								"bottom": "dim"
+							}
+						}
+					}
+				]
+			},
+			"images": {
+				"large": "drivers/x10/assets/images/large.png",
+				"small": "drivers/x10/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_devices"
+					}
+				},
+				{
+					"id": "list_devices",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_x10"
+					}
+				},
+				{
+					"id": "add_x10",
 					"template": "add_devices"
 				}
 			]
@@ -316,8 +815,38 @@
 				"tokens": [
 					{
 						"name": "status",
-						"title": { 
+						"title": {
 							"en": "Status"
+						}
+					}
+				]
+			},
+			{
+				"id": "event",
+				"title": {
+					"en": "An event occurs",
+					"nl": "Bij gebeurtenis"
+				},
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    }
+                ],
+				"tokens": [
+					{
+						"name": "type",
+						"title": {
+							"en": "Event",
+							"nl": "Gebeurtenis"
+						}
+					},
+					{
+						"name": "trigger",
+						"title": {
+							"en": "Triggered by",
+							"nl": "Veroorzaakt door"
 						}
 					}
 				]
@@ -591,6 +1120,49 @@
 	"permissions": [
         "homey:manager:speech-output"
     ],
+	"speech": [
+		{
+			"id": "panel",
+			"importance": 0.5,
+			"triggers": {
+				"en": [ "alarm", "panel" ],
+				"nl": [ "alarm", "paneel", "alarmpaneel" ]
+			}
+		},
+		{
+			"id": "zone",
+			"importance": 0.5,
+			"triggers": {
+				"en": [ "zone", "zones", "sensor", "sensors" ],
+				"nl": [ "zone", "zones", "zonde", "zoons", "sensor", "sensors", "sensoren" ]
+			}
+		},
+		{
+			"id": "open",
+			"importance": 0.5,
+			"triggers": {
+				"en": [ "open" ],
+				"nl": [ "open" ]
+			}
+		},
+		{
+			"id": "status",
+			"importance": 0.5,
+			"triggers": {
+				"en": [ "state", "status" ],
+				"nl": [ "status" ]
+			}
+		},
+		{
+			
+			"id": "trouble",
+			"importance": 0.5,
+			"triggers": {
+				"en": [ "trouble", "troubles", "broken", "error", "fault", "problem" ],
+				"nl": [ "fout", "fouten", "kapot", "probleem" ]
+			}
+		}
+	],
 	"dependencies": {
 		"visonic-api": "*"
 	}

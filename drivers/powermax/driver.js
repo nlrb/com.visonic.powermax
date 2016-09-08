@@ -2,55 +2,20 @@
 
 // Visonic PowerMax Panel Driver
 
-var pm = require('powermax-api');
-
-function registerEvents(driver, device) {
-	var panel = pm.getPanel(device.id);
-	if (panel != null) {
-		pm.debug('Adding events for panel ' + device.id);
-		// Catch system events
-		panel.events.on('system', function(field, newVal) {
-			pm.debug(newVal);
-			if (field == 'status') {
-				Homey.manager('flow').triggerDevice('status', { status: newVal.txt }, { panel: device.id, status: newVal.nr }, device);
-			} else if (field == 'alarm') {
-				// For all zones in alarm
-				for (var i in panel.zone) {
-					if (panel.zone[i].alarm) {
-						var name = pm.getZoneName(device.id, i);
-						Homey.manager('flow').triggerDevice('zonealarm', { zone: i, name: name }, { state: newVal }, device);
-					}
-				}
-				driver.realtime(device, field, newVal);
-			} else if (field == 'alarmType') { // e.g. Intruder, Tamper, Panic, Fire, Emergency, Gas, Flood
-				var text = newVal.txt || '';
-				Homey.manager('flow').triggerDevice('panelalarm', { type: newVal.alarmType, name: text }, { state: text != '' }, device);
-			} else if (field == 'troubleType') { // e.g. Communication, General, Battery, Power, Jamming, Telephone
-				var text = newVal.txt || '';
-				pm.debug('Triggering device trouble ' + text);
-				Homey.manager('flow').triggerDevice('paneltrouble', { type: newVal.troubleType, name: text }, { state: text != '' }, device);
-			} else { // nready, memory, trouble
-				driver.realtime(device, field, newVal);
-			}
-		});
-		// Catch battery events
-		panel.events.on('battery', function(newVal) {
-			var name = pm.getZoneName(device.id, newVal.zone);
-			Homey.manager('flow').triggerDevice('battery', { zone: newVal.zone, name: name }, { state: newVal.low }, device);
-		});
-	}
-}
+const pm = require('powermax-api');
 
 
 var self = module.exports = {
 	
-	init: function(devices, callback) {
-		devices.forEach(function(device) {
-			self.getSettings(device, function(err, settings){
-				pm.addPanel(self, device, settings);
-				// Register handlers
-				registerEvents(self, device);
-			})
+	init: function(devices_data, callback) {
+		devices_data.forEach(function(device_data) {
+			// Get device settings
+			self.getSettings(device_data, function(err, settings) {
+				// Get the Homey name of the device
+				self.getName(device_data, function(err, name) {
+					pm.addPanel(self, device_data, name, settings);
+				});
+			});
 		});
 		
 		// we're ready
@@ -59,55 +24,81 @@ var self = module.exports = {
 	
 	capabilities: {
 		homealarm_state: {
-			get: function(device, callback) {
+			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelState(device.id);
+						var val = pm.getPanelState(device_data.id, 'arm');
 						callback(null, val);
 					}
 			},
-			set: function(device, new_state, callback) {
-					pm.setPanelState(device.id, new_state, function(err, success) {
+			set: function(device_data, new_state, callback) {
+					pm.setPanelState(device_data.id, new_state, function(err, success) {
 						if (success) {
-							callback(null, success);
-							//self.realtime(device, 'homealarm_state', new_state);
+							// Show the actual state (Homey issue #187)
+							setTimeout(function() {
+								var state = pm.getPanelState(device_data.id, 'arm');
+								Homey.log("REALTIME", state);
+								self.realtime(device_data, 'homealarm_state', state);
+							}, 5000);
+							callback(null);
 						} else {
 							callback(err, null);
 						}
 					});
 			}
 		},
-		nready: {
-			get: function(device, callback) {
+		arm_state: {
+			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelValue(device.id, 'nready');
+						var val = pm.getPanelState(device_data.id, 'detail');
+						callback(null, val);
+					}
+			}
+		},
+		nready: {
+			get: function(device_data, callback) {
+					if (typeof callback == 'function') {
+						var val = !pm.getPanelValue(device_data.id, 'ready');
 						callback(null, val);
 					}
 			}
 		},
 		trouble: {
-			get: function(device, callback) {
+			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelValue(device.id, 'trouble');
+						var val = pm.getPanelValue(device_data.id, 'trouble');
 						callback(null, val);
 					}
 			}
 		},
 		alarm: {
-			get: function(device, callback) {
+			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelValue(device.id, 'alarm');
+						var val = pm.getPanelValue(device_data.id, 'alarm');
 						callback(null, val);
 					}
 			}
 		},
 		memory: {
-			get: function(device, callback) {
+			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelValue(device.id, 'memory');
+						var val = pm.getPanelValue(device_data.id, 'memory');
 						callback(null, val);
 					}
 			}
 		}
+	},
+	
+	added: function(device_data, callback) {
+		// Update panel name when a device is added
+		self.getName(device_data, function(err, name) {
+			pm.updatePanelName(device_data.id, name);
+		});
+
+		callback();
+	},
+
+	renamed: function(device_data, new_name) {
+		pm.updatePanelName(device_data.id, new_name);
 	},
 	
 	deleted: function(device_data) {
@@ -118,52 +109,47 @@ var self = module.exports = {
 	settings: function(device_data, newSettingsObj, oldSettingsObj, changedKeysArr, callback) {
 		// run when the user has changed the device's settings in Homey.
 		// changedKeysArr contains an array of keys that have been changed, for your convenience :)
-		pm.updateSettings(device_data.id, changedKeysArr, newSettingsObj);
-		// always fire the callback, or the settings won't change!
-		// if the settings must not be saved for whatever reason:
-		// callback( "Your error message", null );
-		// else
-		callback(null, true);
+		var result = pm.updatePanelSettings(device_data.id, changedKeysArr, newSettingsObj);
+		// Make sure Homey doesn't change the settings - we do that!
+		self.setSettings(device_data, result.updates);
+		callback(result.msg, null);
 	},
 	
 	pair: function(socket) {
 		Homey.log('PowerMax panel pairing has started...');
 		var completed = false;
-		var panel_id;
+		var panel_ip;
 
 		// Search for the PowerMax once we received IP address and port
 		socket.on('search', function(data, callback) {
-			panel_id = data.ip + ':' + data.port;
-			pm.debug('Request to search for PowerMax on ' + panel_id);
+			panel_ip = data.ip + ':' + data.port;
+			pm.debug('Request to search for PowerMax on ' + panel_ip);
 			// Add default settings
 			var settings = {
 				ip: data.ip,
 				port: Number(data.port),
-				allowArm: 'all',
-				motionTime: 8,
+				allowArm: 'arm',
+				armUser: 1,
+				motionTime: 15,
 				syncTime: true
 			}
-			pm.addPanel(self, null, settings);
-			callback(null, true);
+			var err = pm.addPanel(self, null, null, settings);
+			callback(err, err == null);
 		});
 		
 		// Fully add panel when successful
-		socket.on('completed', function(device_data, callback) {
-			var device = device_data.data;
+		socket.on('completed', function(device, callback) {
+			var device_data = device.data;
 			completed = true;
-			pm.addPanelActions(self, device);
-			// Register handlers
-			registerEvents(self, device);
 			// Let the front-end know we are done
-			pm.debug(completed);
 			callback();
 		});
 		
 		// Check if the pairing was finished, otherwise remove the panel
 		socket.on('disconnect', function() {
 			if (!completed) {
-				pm.debug('Pairing not completed, deleting panel ' + panel_id);
-				pm.deletePanel(panel_id);
+				pm.debug('Pairing not completed, closing connection on ' + panel_ip);
+				pm.cancelPanelSearch();
 			}
 		});
 
@@ -174,7 +160,6 @@ var self = module.exports = {
 
 		// Notify the front-end on enrollment/download progress
 		Homey.on('download', function(data) {
-			panel_id = data.id;
 			socket.emit('download', data);
 		});
 	}

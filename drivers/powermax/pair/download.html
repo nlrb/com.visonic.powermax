@@ -54,7 +54,11 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 			for (var i in data.show) {
 				var item = data.show[i];
 				if ($('#' + i).length == 0) {
-					var newItem = $('<div id="' + i + '">' + item.name + ': ' + item.val + '</div>');
+					var newItem = item.name;
+					if (item.val != null) {
+						newItem += ': ' + item.val;
+					}
+					newItem = $('<div id="' + i + '">' + newItem + '</div>');
 					newItem.appendTo('#configuration');
 				}
 			}

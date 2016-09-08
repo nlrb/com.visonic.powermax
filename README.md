@@ -42,17 +42,30 @@ Please wait until all information is downloaded. Once that is completed, click t
 ##### Settings
 Each panel device has a number of settings that control the behavior of the device.
 
-![add panel](http://www.ramonbaas.nl/Homey/visonic/device_settings.png)
+![add panel](http://www.ramonbaas.nl/Homey/visonic/panel_settings.png)
+> Panel information
+
+Shows information on the Visonic panel like type, model, serial number and firmware version (the EEPROM and the software). Furthermore it displays the last panel event (as one would find it in the event log).
+
 > Network settings
 
 If the address of the Visonic panel in the network has changed, then this can be adapted in the device settings. If either the IP address or port changes, the current connection will be closed and a new connection will be established on the new network address.
 
 > Homey options
 
-* *Allow flow arming and disarming*: This option controls whether you can arm and/or disarm the panel via a flow in Homey. From a security perspective one might opt to e.g. only allow arming or to disallow arming & disarming all together. [default: allow all]
-* *Seconds to show motion detected*: Here you can specify how long (in seconds) the sensor should show a motion alarm once a motion sensor has been tripped. [default: 8 seconds]
+* *Allow Homey arming and disarming*: This option controls whether you can arm and/or disarm the panel via a flow in Homey and/or the device mobile card. From a security perspective one might opt to e.g. only allow arming or to disallow arming & disarming all together. [default: allow arming]
+* *User to arm/disarm*: Select a number between 1-8 of the panel user that is used to arm/disarm via Homey. [default: 1]
+* *Seconds to show motion detected*: Here you can specify how long (in seconds) the sensor should show a motion alarm once a motion sensor has been tripped. [default: 15 seconds]
 * *Synchronize panel time from Homey*: When this option is checked, the time as set in Homey will be programmed in the panel as well. [default: on]
 
+> Safety check
+
+To make sure that someone cannot just change a setting and e.g. turn on the option to disarm the alarm, it is mandatory to enter the master pin code. This is the master code as present on the Visonic panel. Only if the code matches, the settings will be updated.
+
+##### Controlling the panel
+When it is allowed in the panel settings, it is possible to arm or disarm the panel. This can be done either via a Flow, or directly via the device control. The card also shows the status flags of the panel, i.e. whether it is ready or not, trouble, alarm etc.
+
+![panel_mobile](http://www.ramonbaas.nl/Homey/visonic/panel_mobile.png)
 
 #### Door/window, motion sensors and smoke detectors
 After a panel device has been created, the following sensors can be added.
@@ -63,22 +76,38 @@ After a panel device has been created, the following sensors can be added.
 
 The sensors will show whether it is tripped (contact/motion/smoke alarm in Homey), whether the battery of the sensor is low and it will show a tamper alarm when the sensor is being tampered with.
 
-![sensor](http://www.ramonbaas.nl/Homey/visonic/battery_alarm.png)
+![battery](http://www.ramonbaas.nl/Homey/visonic/tamper_alarm.png)
 
 ##### Pairing
 In case multiple panels are present in Homey, you will first need to select the panel for which you want to pair extra sensors. The panels can be identified by their model name and serial number. In case only one panel device is present, this selection step is skipped.
 
-![sensor](http://www.ramonbaas.nl/Homey/visonic/select_panel.png)
+![selectp](http://www.ramonbaas.nl/Homey/visonic/select_panel.png)
 
-A list of sensors will be displayed with their name (as present in the panel) and their zone number. Names for the devices can be changed in this screen. Select the sensors you want to have added in Homey and press 'Next'.
+A list of sensors will be displayed with their name (as present in the panel) and their zone number. Names for the devices can be changed in this screen. Select the sensors you want to have added in Homey and press 'Next' (hold SHIFT to select all at once).
 
-![sensor](http://www.ramonbaas.nl/Homey/visonic/select_devices.png)
+![delectd](http://www.ramonbaas.nl/Homey/visonic/select_devices.png)
 
 The devices will now be shown in Homey.
 
 ![magnet](http://www.ramonbaas.nl/Homey/visonic/device_magnet.png)
 ![motion](http://www.ramonbaas.nl/Homey/visonic/device_motion.png)
 ![smoke](http://www.ramonbaas.nl/Homey/visonic/device_smoke.png)
+
+###### Sensor settings
+The sensor have a settings page, which shows some valuable sensor information. Currently the sensor configuration is read-only and cannot be changed through Homey. Changes have to be made on the Visonic panel.
+
+![flow1](http://www.ramonbaas.nl/Homey/visonic/sensor_settings.png)
+
+
+#### PGM and X10 devices
+After a panel device has been created, it is also possible to add a PGM and X10 devices. The PGM device will show whether it is on or off - and you can also toggle it on or off. The X10 devices also have the option to dim the device (up or down in 5% steps).
+
+![pgm](http://www.ramonbaas.nl/Homey/visonic/device_pgm.png)
+![x10](http://www.ramonbaas.nl/Homey/visonic/device_x10.png)
+![x10_mobile](http://www.ramonbaas.nl/Homey/visonic/x10_mobile.png)
+
+The devices can be paired in the same way as door/window and other sensors.
+
 
 ### Flows
 When the needed devices are available in Homey, you can use them to create some cool flows. See a couple of simple examples below.
@@ -96,29 +125,35 @@ The following actions are available:
 
 	![](http://homey.ramonbaas.nl/visonic/flow_when_status.png)
 
+- An event occurs
+  * token 'Event': the event text (in user locale), e.g. 'Disarm', 'Tamper Restore' etc.
+  * token 'Trigger': the trigger text (in user locale), e.g. 'User 1', 'Zone 2' etc.
+
+	![](http://homey.ramonbaas.nl/visonic/flow_when_event.png)
+
 - Zone alarm becomes (active or inactive)
-	- token 'Zone': the zone number
-	- token 'Name': the zone name
+	* token 'Zone': the zone number
+	* token 'Name': the zone name
 	
 	![](http://homey.ramonbaas.nl/visonic/flow_when_zone_alarm.png)
 
 - Panel alarm becomes (active or inactive)
-	- token 'Type', which can be 
+	* token 'Type', which can be 
 		- *Intruder*, *Tamper*, *Panic*, *Fire*, *Emergency*, *Gas*, *Flood*
-	- token 'Alarm type name', which is the type of the alarm (see above) in the current language
+	* token 'Alarm type name', which is the type of the alarm (see above) in the current language
 
 	![](http://homey.ramonbaas.nl/visonic/flow_when_panel_alarm.png)
 
 - Panel trouble becomes (active or inactive)
-	- token 'Type', which can be 
+	* token 'Type', which can be 
 		- *Communication, General, Battery, Power, Jamming, Telephone*
-	- token 'Trouble type name', which is the type of the trouble (see above) in the current language
+	* token 'Trouble type name', which is the type of the trouble (see above) in the current language
 
 	![](http://homey.ramonbaas.nl/visonic/flow_when_trouble.png)
 
 - Low battery (active or inactive)
-	- token 'Zone': the zone number
-	- token 'Name': the zone name
+	* token 'Zone': the zone number
+	* token 'Name': the zone name
 
 	![](http://homey.ramonbaas.nl/visonic/flow_when_low_battery.png)
 
@@ -132,9 +167,19 @@ It is possible to check the panel status flags, to see whether (or not) the pane
 
 ![](http://homey.ramonbaas.nl/visonic/flow_condition_panel.png)
 
+### Speech
+
+You can ask Homey a couple of questions regarding your alarm panel(s), e.g.
+
+* "What is the state of the alarm panel?"
+* "Which zones are open?" ("Which sensors are open?")
+* "Does the alarm have a problem?"
+
+### Comments, remarks etc.
+Please enter bugs or feature request on [GitHub](https://github.com/nlrb/com.visonic.powermax/issues "GitHub"). For other things you can reach out to "homey.powermax _at_ gmail.com".
 
 ### Version history
-* 0.5.0 Added mobile card, various fixes & stability improvements
+* 1.0.0 Added mobile cards, speech, X10/PGM, various fixes & stability improvements 
 * 0.3.0 Added flow support, improved pairing feedback, bug fixes
 * 0.2.0 First App store release
 * 0.1.0 Initial release

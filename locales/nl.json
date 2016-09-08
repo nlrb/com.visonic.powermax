@@ -16,7 +16,7 @@
 			"add": "Voeg toe"
 		},
 		"download": {
-			"name": "Registreer het paneel in PowerLink mode & lees instellingen",
+			"name": "Registreer paneel in PowerLink mode & lees instellingen",
 			"explain": "Om te zorgen dat de applicatie alle sensorsen en andere informatie kan vinden, moet de applicatie geregisteerd worden met het paneel. Dit werkt via de PowerLink mode. Nieuwere versies van de Visonic PowerMax (beginnend met de PowerMax Pro met partities) gaat de registratie automatisch. Bij oudere modellen moet dit handmatig via het paneel menu gebeuren. Lees de Visonic gebruikershandleiding voor instructies als het niet automatisch werkt. Zodra de applicatie geregistreerd is, worden de instelling van het paneel opgehaald.",
 			"wait": "Wachten tot dat registratie voltooid is...",
 			"download": "Registratie voltooid. Paneel informatie wordt opgehaald... Even wachten a.u.b.",
@@ -24,7 +24,7 @@
 			"config": "Paneel informatie",
 			"receive": "Instellingen ophalen: "
 		},
-		"add_panel": "Er moet eerst een paneel aanwezig zijn voor er sensors kunnen worden toegevoegd.",
+		"add_panel": "Er moet eerst een paneel aanwezig zijn voor er verder iets kan worden toegevoegd.",
 		"contact": {
 			"name": "Voeg Visonic PowerMax raam-/deursensor toe",
 			"title": "Paneel",
@@ -39,8 +39,56 @@
 			"name": "Voeg Visonic PowerMax rookdetector toe",
 			"title": "Paneel",
 			"explain": "Selecteer het paneel waar rookdetectors voor moeten worden toegevoegd."
+		},
+		"pgm": {
+			"name": "Voeg Visonic PowerMax programmeerbare uitgang (PGM) toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar de programmeerbare uitgang voor moeten worden toegevoegd."
+		},
+		"x10": {
+			"name": "Voeg Visonic PowerMax X10 apparaat toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar de X10 apparaten voor moeten worden toegevoegd."
 		}
 	},
-	"no_panel": "Paneel niet beschikbaar",
-	"unreachable": "Verbinding verbroken"
+	"settings": {
+		"no_pin": "Geen pincode ingevuld. Instellingen zijn niet bijgewerkt.",
+		"invalid_pin": "Verkeerde pincode ingevuld. Instellingen zijn niet bijgewerkt.",
+		"invalid_user": "Gebruiker __user__ bestaat niet. Instellingen zijn niet bijgewerkt.",
+		"saved": "Apparaatinstellingen bijgewerkt."
+	},
+	"speech": {
+		"open": {
+			"none": "__panel__ heeft geen open zones.",
+			"one": "Zone __item__ van __panel__ is open.",
+			"more": "De volgende __cnt__ zones van __panel__ zijn open: __items__."
+		},
+		"status": { 
+			"general": "De status van paneel __panel__ is momenteel __status__.",
+			"open": {
+				"one": "er is één zone open",
+				"more": "er zijn __cnt__ zones open"
+			},
+			"ready": "het is klaar voor gebruik",
+			"trouble": "het heeft een probleem",
+			"alarm": "er is een alarm actief",
+			"memory": "er is een alarm in het geheugen",
+			"and": " en "
+		},
+		"trouble": {
+			"none": "Voor zover ik weet is er geen probleem met __panel__.",
+			"panel": "__panel__ heeft het volgende probleem: ",
+			"sensor": {
+				"one": "Sensor __sensor__ van __panel__ heeft een __type__ probleem",
+				"more": "Deze sensoren van __panel__ hebben een __type__ probleem: __sensor__"
+			}
+		}
+	},
+	"error": {
+		"no_panel": "Paneel niet beschikbaar",
+		"invalid_panel": "Paneel __panel__ bestaat niet!",
+		"already_present": "Paneel __panel__ bestaat al!",
+		"unreachable": "Verbinding verbroken sinds __time__",
+		"sensor_removed": "De sensor is niet meer met het paneel verbonden."
+	}
 }

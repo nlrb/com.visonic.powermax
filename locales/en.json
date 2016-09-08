@@ -24,7 +24,7 @@
 			"config": "Panel information",
 			"receive": "Receiving panel settings: "
 		},
-		"add_panel": "Please pair a panel first before adding sensors.",
+		"add_panel": "Please pair a panel first before adding something else.",
 		"contact": {
 			"name": "Add Visonic PowerMax door/window sensor",
 			"title": "Panel",
@@ -39,8 +39,56 @@
 			"name": "Add Visonic PowerMax smoke detector",
 			"title": "Panel",
 			"explain": "Select the panel for which to add smoke detectors."
+		},
+		"pgm": {
+			"name": "Add Visonic PowerMax programmable output (PGM)",
+			"title": "Panel",
+			"explain": "Select the panel for which to add the programmable output."
+		},
+		"x10": {
+			"name": "Add Visonic PowerMax X10 device",
+			"title": "Panel",
+			"explain": "Select the panel for which to add X10 devices."
 		}
 	},
-	"no_panel": "Panel not available",
-	"unreachable": "Communication lost"
+	"settings": {
+		"no_pin": "No pin code entered. Settings have not been saved.",
+		"invalid_pin": "Wrong pin code entered. Settings have not been saved.",
+		"invalid_user": "User __user__ does not exist. Settings have not been saved.",
+		"saved": "Device settings have been saved."
+	},
+	"speech": {
+		"open": {
+			"none": "Panel __panel__ has no open zones.",
+			"one": "Panel __panel__ has zone __item__ open.",
+			"more": "Panel __panel__ has the following __cnt__ zones open: __items__."
+		},
+		"status": { 
+			"general": "The status of panel __panel__ is currently __status__.",
+			"open": {
+				"one": "there is one zone open",
+				"more": "there are __cnt__ zones open"
+			},
+			"ready": "it is ready for use",
+			"trouble": "it has a problem",
+			"alarm": "there is an alarm active",
+			"memory": "there is an alarm in memory",
+			"and": " and "
+		},
+		"trouble": {
+			"none": "There is no problem with __panel__ that I'm aware of.",
+			"panel": "__panel__ has the following problem: ",
+			"sensor": {
+				"one": "Sensor __sensor__ of __panel__ has a __type__ problem",
+				"more": "These sensors of __panel__ have a __type__ problem: __sensor__"
+			}
+		}
+	},
+	"error": {
+		"no_panel": "Panel not available",
+		"invalid_panel": "Panel __panel__ does not exist!",
+		"already_present": "Panel __panel__ already exists!",
+		"unreachable": "Communication lost since __time__",
+		"sensor_removed": "The sensor is no longer enrolled."
+	}
 }

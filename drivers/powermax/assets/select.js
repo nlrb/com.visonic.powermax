@@ -19,7 +19,7 @@ function startPanelSelection(title) {
 		} else if (panels.length == 1) {
 			Homey.emit('selected', panels[0].id, function(err, selection) {
 				if (!err) {
-					Homey.showView('list_sensors');
+					Homey.showView('list_devices');
 				}
 			});
 		} else {
