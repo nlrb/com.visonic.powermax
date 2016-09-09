@@ -88,7 +88,7 @@ function statusSpeechHandler(idx, speech) {
 			if (opencnt == 1) {
 				state.push(__('speech.status.open.one'));
 			} else if (opencnt > 1) {
-				state.push(('speech.status.open.more', { cnt: opencnt }));
+				state.push(__('speech.status.open.more', { cnt: opencnt }));
 			}
 			for (var i = 0; i < flags.length; i++) {
 				if (result[flags[i]]) {
