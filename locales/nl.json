@@ -77,7 +77,10 @@
 		},
 		"trouble": {
 			"none": "Voor zover ik weet is er geen probleem met __panel__.",
-			"panel": "__panel__ heeft het volgende probleem: ",
+			"panel": {
+				"one": "__panel__ heeft een __type__ probleem",
+				"more": "__panel__ heeft de volgende problemen: __type__"
+			},
 			"sensor": {
 				"one": "Sensor __sensor__ van __panel__ heeft een __type__ probleem",
 				"more": "Deze sensoren van __panel__ hebben een __type__ probleem: __sensor__"

@@ -2,7 +2,7 @@
 
 const powermax = require('powermax-api');
 const triggers = [ 'zonealarm', 'panelalarm', 'paneltrouble', 'battery' ]; // triggers that need state check
-
+const locale = Homey.manager('i18n').getLanguage() == 'nl' ? 'nl' : 'en'; // only Dutch & English supported
 
 // Handler for open zones question
 function openZoneSpeechHandler(id, speech) {
@@ -108,7 +108,12 @@ function statusSpeechHandler(idx, speech) {
 
 // Trouble handler
 function troubleSpeechHandler(idx, speech) {
-	const items = [ 'panel', 'alarm', 'battery', 'tamper' ];
+	const items = {
+		panel: { en: 'panel', nl: 'paneel' }, 
+		alarm: { en: 'alarm', nl: 'alarm' }, 
+		battery: { en: 'low battery', nl: 'lage batterijspanning' }, 
+		tamper: { en: 'tamper', nl: 'sabotage' }
+	};
 	// Check for each alarm panel
 	var panels = powermax.getPanels();
 	for (var p = 0; p < panels.length; p++) {
@@ -118,7 +123,7 @@ function troubleSpeechHandler(idx, speech) {
 		powermax.debug(result);
 		var state = [];
 		for (var i in items) {
-			var elem = result[items[i]];
+			var elem = result[i];
 			powermax.debug(i, elem);
 			if (elem != null && elem.length > 0) {
 				var x = [];
@@ -126,13 +131,13 @@ function troubleSpeechHandler(idx, speech) {
 					x.push(elem[j].txt);
 				}
 				var cnt = x.length;
+				var nr = (cnt == 1 ? 'one' : 'more');
 				x.join(__('speech.status.and'));
 				powermax.debug(x);
-				if (items[i] == 'panel') {
-					state.push(__('speech.trouble.panel', { panel: name }) + x);
+				if (i == 'panel') {
+					state.push(__('speech.trouble.panel.' + nr, { panel: name, type: x }));
 				} else {
-					var nr = (cnt == 1 ? 'one' : 'more');
-					state.push(__('speech.trouble.sensor.' + nr, { panel: name, type: items[i], sensor: x }));
+					state.push(__('speech.trouble.sensor.' + nr, { panel: name, type: items[i][locale], sensor: x }));
 				}
 			}
 		}
