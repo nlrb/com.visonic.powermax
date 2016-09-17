@@ -36,11 +36,12 @@ var self = module.exports = {
 							// Show the actual state (Homey issue #187)
 							setTimeout(function() {
 								var state = pm.getPanelState(device_data.id, 'arm');
-								Homey.log("REALTIME", state);
+								pm.debug('REALTIME', state);
 								self.realtime(device_data, 'homealarm_state', state);
 							}, 5000);
 							callback(null);
 						} else {
+							pm.debug('setPanelState', err);
 							callback(err, null);
 						}
 					});
@@ -116,14 +117,14 @@ var self = module.exports = {
 	},
 	
 	pair: function(socket) {
-		Homey.log('PowerMax panel pairing has started...');
+		pm.debug('PowerMax panel pairing has started...');
 		var completed = false;
 		var panel_ip;
 
 		// Search for the PowerMax once we received IP address and port
 		socket.on('search', function(data, callback) {
 			panel_ip = data.ip + ':' + data.port;
-			pm.debug('Request to search for PowerMax on ' + panel_ip);
+			pm.debug('Request to search for PowerMax on', panel_ip);
 			// Add default settings
 			var settings = {
 				ip: data.ip,
@@ -148,7 +149,7 @@ var self = module.exports = {
 		// Check if the pairing was finished, otherwise remove the panel
 		socket.on('disconnect', function() {
 			if (!completed) {
-				pm.debug('Pairing not completed, closing connection on ' + panel_ip);
+				pm.debug('Pairing not completed, closing connection on', panel_ip);
 				pm.cancelPanelSearch();
 			}
 		});
