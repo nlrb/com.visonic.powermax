@@ -39,10 +39,6 @@ var self = module.exports = {
 		},
 		// We cannot use dim_level, as X10 does not provide it
 		dim_oneway: {
-			// TODO: remove get once Homey can handle it
-			get:  function(device_data, callback) {
-				callback(null, "toggle");
-			},
 			set:  function(device_data, state, callback) {
 				Homey.log('dim_oneway:set', state);
 				pm.sendX10Command(device_data.panel, device_data.nr, state);

@@ -50,12 +50,12 @@ var self = module.exports = {
 		arm_state: {
 			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
-						var val = pm.getPanelState(device_data.id, 'detail');
+						var val = pm.getPanelArmState(device_data.id);
 						callback(null, val);
 					}
 			}
 		},
-		nready: {
+		ready: {
 			get: function(device_data, callback) {
 					if (typeof callback == 'function') {
 						var val = !pm.getPanelValue(device_data.id, 'ready');

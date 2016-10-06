@@ -163,6 +163,7 @@ const speechTriggers = [
 // Start of the app
 function init() {
 	Homey.log("Starting PowerMax app!");
+	//powermax.setDebug(true);
 
 	// Catch triggers
 	for (var i = 0; i < triggers.length; i++) {

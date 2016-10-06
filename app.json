@@ -4,7 +4,7 @@
         "en": "Visonic PowerMax"
     },
     "version": "1.0.0",
-	"compatibility": ">=0.9.3",
+	"compatibility": ">=0.10",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
@@ -20,36 +20,14 @@
 	},
 	"capabilities": {
 		"arm_state": {
-			"type": "enum",
-			"title": { "en": "Arm state", "nl": "Inschakelstatus" },
-			"values": [
-				{ "id": "0", "title": { "en": "Disarmed", "nl": "Uitgeschakeld" } }, 
-				{ "id": "1", "title": { "en": "Home Exit Delay", "nl": "Deel Uitloopvertraging" } },
-				{ "id": "2", "title": { "en": "Away Exit Delay", "nl": "Totaal Uitloopvertraging" } },
-				{ "id": "3", "title": { "en": "Entry Delay", "nl": "Inloopvertraging" } },
-				{ "id": "4", "title": { "en": "Armed Home", "nl": "Deel Ingeschakeld" } },
-				{ "id": "5", "title": { "en": "Armed Away", "nl": "Totaal Ingeschakeld" } },
-				{ "id": "6", "title": { "en": "User Test", "nl": "Gebruiker Test" } },
-				{ "id": "7", "title": { "en": "Downloading", "nl": "Downloaden" } },
-				{ "id": "8", "title": { "en": "Programming", "nl": "Programmeren" } },
-				{ "id": "9", "title": { "en": "Installer", "nl": "Monteurmode" } },
-				{ "id": "10", "title": { "en": "Home Bypass", "nl": "Deel Met Overbrugging" } },
-				{ "id": "11", "title": { "en": "Away Bypass", "nl": "Totaal Met Overbrugging" } },
-				{ "id": "12", "title": { "en": "Ready", "nl": "Klaar" } },
-				{ "id": "13", "title": { "en": "Not Ready", "nl": "Niet Klaar" } },
-				{ "id": "16", "title": { "en": "Disarmed Instant", "nl": "Direct uitschakelen" } },
-				{ "id": "17", "title": { "en": "Home Instant Exit Delay", "nl": "Direct Deel Uitloopvertraging" } },
-				{ "id": "18", "title": { "en": "Away Instant Exit Delay", "nl": "Direct Totaal Uitloopvertraging" } },
-				{ "id": "19", "title": { "en": "Entry Delay Instant", "nl": "Direct Inloopvertraging" } },
-				{ "id": "20", "title": { "en": "Armed Home Instant", "nl": "Direct Deel" } },
-				{ "id": "21", "title": { "en": "Armed Away Instant", "nl": "Direct Totaal" } }
-			],
+			"type": "string",
+			"title": { "en": "Arm state", "nl": "Status" },
 			"getable": true,
 			"setable": false
 		},
-		"nready": {
+		"ready": {
 			"type": "boolean",
-			"title": { "en": "Not ready", "nl": "Niet klaar" },
+			"title": { "en": "Ready", "nl": "Klaar" },
 			"getable": true,
 			"setable": false
 		},
@@ -79,7 +57,7 @@
 				{ "id": "toggle", "title": { "en": "On/off", "nl": "Aan/uit" } },
 				{ "id": "dim", "title": { "en": "Dim", "nl": "Zwakker" } }
 			],
-			"getable": true,
+			"getable": false,
 			"setable": true
 		}
 	},
@@ -91,7 +69,7 @@
 				"nl": "Alarmsysteem"
 			},
 			"class": "homealarm",
-			"capabilities": [ "homealarm_state", "arm_state", "nready", "trouble", "alarm", "memory" ],
+			"capabilities": [ "homealarm_state", "arm_state", "ready", "trouble", "alarm", "memory" ],
 			"mobile": {
 				"components": [
 					{
@@ -115,18 +93,18 @@
 						}
 					},
 					{
-						"id": "picker",
-						"capabilities": [ "arm_state" ]
-					},
-					{
 						"id": "sensor",
-						"capabilities": [ "nready", "trouble", "alarm", "memory" ],
+						"capabilities": [ "arm_state", "ready", "trouble", "alarm", "memory" ],
 						"options": {
 							"icons": {
-								"nready": "./drivers/powermax/assets/nready.svg",
+								"arm_state": "./drivers/powermax/assets/state.svg",
+								"ready": "./drivers/powermax/assets/ready.svg",
 								"trouble": "./drivers/powermax/assets/trouble.svg",
 								"alarm": "./drivers/powermax/assets/alarm.svg",
 								"memory": "./drivers/powermax/assets/memory.svg"
+							},
+							"ready": {
+								"invert": true
 							}
 						}
 					}
