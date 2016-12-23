@@ -3,8 +3,8 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "1.0.0",
-	"compatibility": ">=0.10",
+    "version": "1.0.1",
+	"compatibility": ">=1.0.0",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
@@ -1096,6 +1096,7 @@
 		]
     },
 	"permissions": [
+        "homey:manager:speech-input",
         "homey:manager:speech-output"
     ],
 	"speech": [
