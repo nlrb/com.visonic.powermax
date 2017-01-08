@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "1.0.1",
+    "version": "1.1.0",
 	"compatibility": ">=1.0.0",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -212,45 +212,6 @@
                     },
 					"children": [
 						{
-							"id": "allowArm",
-							"type": "radio",
-							"value": "all",
-							"label": {
-								"en": "Allow Homey arming & disarming",
-								"nl": "In- en uitschakelen door Homey toestaan"
-							},
-							"values": [
-								{
-									"id": "none",
-									"label": {
-										"en": "Don't allow arming or disarming",
-										"nl": "In- en uitschakelen niet toestaan"
-									}
-								},
-								{
-									"id": "stay",
-									"label": {
-										"en": "Only allow arming away",
-										"nl": "Alleen deel inschakelen toestaan"
-									}
-								},
-								{
-									"id": "arm",
-									"label": {
-										"en": "Only allow arming (home & away)",
-										"nl": "Alleen inschakelen toestaan"
-									}
-								},
-								{
-									"id": "all",
-									"label": {
-										"en": "Allow arming & disarming",
-										"nl": "In- en uitschakelen toestaan"
-									}
-								}
-							]
-						},
-						{
                             "id": "armUser",
                             "type": "number",
                             "label": {
@@ -294,10 +255,58 @@
 				{
                     "type": "group",
                     "label": {
-                        "en": "Safety check",
+                        "en": "Safety",
 						"nl": "Beveiliging"
                     },
 					"children": [
+						{
+							"id": "allowArm",
+							"type": "radio",
+							"value": "all",
+							"label": {
+								"en": "Allow Homey arming & disarming",
+								"nl": "In- en uitschakelen door Homey toestaan"
+							},
+							"values": [
+								{
+									"id": "none",
+									"label": {
+										"en": "Don't allow arming or disarming",
+										"nl": "In- en uitschakelen niet toestaan"
+									}
+								},
+								{
+									"id": "stay",
+									"label": {
+										"en": "Only allow arming away",
+										"nl": "Alleen deel inschakelen toestaan"
+									}
+								},
+								{
+									"id": "arm",
+									"label": {
+										"en": "Only allow arming (home & away)",
+										"nl": "Alleen inschakelen toestaan"
+									}
+								},
+								{
+									"id": "all",
+									"label": {
+										"en": "Allow arming & disarming",
+										"nl": "In- en uitschakelen toestaan"
+									}
+								}
+							]
+						},
+						{
+							"id": "allowBypass",
+							"type": "checkbox",
+							"value": false,
+							"label": {
+								"en": "Allow Homey updating sensor bypass",
+								"nl": "Sensor in- en uitschakelen door Homey toestaan"
+							}
+						},
                         {
                             "id": "pin",
                             "type": "password",
@@ -322,7 +331,7 @@
 				"nl": "Deur-/Raamsensor"
 			},
 			"class": "sensor",
-			"capabilities": [ "alarm_contact", "alarm_battery" ],
+			"capabilities": [],
 			"images": {
 				"large": "drivers/contact/assets/images/large.png",
 				"small": "drivers/contact/assets/images/small.png"
@@ -436,7 +445,7 @@
 				"nl": "Bewegingssensor"
 			},
 			"class": "sensor",
-			"capabilities": [ "alarm_motion", "alarm_battery" ],
+			"capabilities": [],
 			"images": {
 				"large": "drivers/motion/assets/images/large.png",
 				"small": "drivers/motion/assets/images/small.png"
@@ -559,7 +568,7 @@
 				"nl": "Rookmelder"
 			},
 			"class": "sensor",
-			"capabilities": [ "alarm_smoke", "alarm_battery" ],
+			"capabilities": [],
 			"images": {
 				"large": "drivers/smoke/assets/images/large.png",
 				"small": "drivers/smoke/assets/images/small.png"
@@ -606,6 +615,129 @@
                             "label": {
                                 "en": "Last smoke alarm",
 								"nl": "Laaste rookmelding"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "battery",
+                            "type": "label",
+                            "label": {
+                                "en": "Last low battery alarm",
+								"nl": "Laaste batterij alarm"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "tamper",
+                            "type": "label",
+                            "label": {
+                                "en": "Last tamper alarm",
+								"nl": "Laatste sabotage alarm"
+                            },
+                            "value": ""
+                        }
+					]
+				},
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor configuration",
+						"nl": "Sensor configuratie"
+                    },
+					"children": [
+                        {
+                            "id": "location",
+                            "type": "label",
+                            "label": {
+                                "en": "Location",
+								"nl": "Locatie"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "type",
+                            "type": "label",
+                            "label": {
+                                "en": "Type"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "chime",
+                            "type": "label",
+                            "label": {
+                                "en": "Chime",
+								"nl": "Deurbel"
+                            },
+                            "value": ""
+                        },
+						{
+                            "id": "partition",
+                            "type": "label",
+                            "label": {
+                                "en": "Partition",
+								"nl": "Partitie"
+                            },
+                            "value": ""
+                        }
+					]
+				}
+			]
+		},
+		{
+			"id": "gas",
+			"name": {
+				"en": "CO Detector",
+				"nl": "CO Melder"
+			},
+			"class": "sensor",
+			"capabilities": [],
+			"images": {
+				"large": "drivers/gas/assets/images/large.png",
+				"small": "drivers/gas/assets/images/small.png"
+			},
+			"pair": [
+				{
+					"id": "select",
+					"navigation": {
+						"next": "list_devices"
+					}
+				},
+				{
+					"id": "list_devices",
+					"template": "list_devices",
+					"navigation": {
+						"next": "add_sensors"
+					}
+				},
+				{
+					"id": "add_sensors",
+					"template": "add_devices"
+				}
+			],
+			"settings": [
+                {
+                    "type": "group",
+                    "label": {
+                        "en": "Sensor information",
+						"nl": "Sensor informatie"
+                    },
+					"children": [
+                        {
+                            "id": "zone",
+                            "type": "label",
+                            "label": {
+                                "en": "Zone number",
+								"nl": "Zone nummer"
+                            },
+                            "value": ""
+                        },
+                        {
+                            "id": "trip",
+                            "type": "label",
+                            "label": {
+                                "en": "Last CO alarm",
+								"nl": "Laaste CO melding"
                             },
                             "value": ""
                         },
@@ -830,56 +962,6 @@
 				]
 			},
 			{
-				"id": "zonealarm",
-				"title": {
-					"en": "Zone alarm becomes",
-					"nl": "Zone alarm wordt"
-				},
-				"args": [
-                    {
-                        "name": "device",
-                        "type": "device",
-						"filter": "driver_id=powermax"
-                    },
-					{
-						"name": "values",
-						"type": "dropdown",
-						"values": [
-							{
-								"id": "on",
-								"label": {
-										"en": "active",
-										"nl": "actief"
-								}
-							},
-							{
-								"id": "off",
-								"label": {
-										"en": "inactive",
-										"nl": "inactief"
-								}
-							}
-						]
-					}
-				],
-				"tokens": [
-					{
-						"name": "zone",
-						"title": { 
-							"en": "Zone number",
-							"nl": "Zone nummer"
-						}
-					},
-					{
-						"name": "name",
-						"title": { 
-							"en": "Name zone",
-							"nl": "Naam zone"
-						}
-					}
-				]
-			},
-			{
 				"id": "panelalarm",
 				"title": {
 					"en": "Panel alarm becomes",
@@ -978,7 +1060,57 @@
 				]
 			},
 			{
-				"id": "battery",
+				"id": "zoneTripAlarm",
+				"title": {
+					"en": "Zone alarm becomes",
+					"nl": "Zone alarm wordt"
+				},
+				"args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+						"filter": "driver_id=powermax"
+                    },
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [
+							{
+								"id": "on",
+								"label": {
+										"en": "active",
+										"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+										"en": "inactive",
+										"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [
+					{
+						"name": "zone",
+						"title": { 
+							"en": "Zone number",
+							"nl": "Zone nummer"
+						}
+					},
+					{
+						"name": "name",
+						"title": { 
+							"en": "Name zone",
+							"nl": "Naam zone"
+						}
+					}
+				]
+			},
+			{
+				"id": "zoneBattery",
 				"title": {
 					"en": "Low battery",
 					"nl": "Lage batterijspanning"

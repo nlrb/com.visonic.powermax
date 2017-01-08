@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 const powermax = require('powermax-api');
-const triggers = [ 'zonealarm', 'panelalarm', 'paneltrouble', 'battery' ]; // triggers that need state check
+const triggers = [ 'panelalarm', 'paneltrouble', 'zoneBattery', 'zoneTripAlarm' ]; // triggers that need state check
 const locale = Homey.manager('i18n').getLanguage() == 'nl' ? 'nl' : 'en'; // only Dutch & English supported
 
 // Handler for open zones question

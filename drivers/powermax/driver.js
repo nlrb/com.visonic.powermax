@@ -130,6 +130,7 @@ var self = module.exports = {
 				ip: data.ip,
 				port: Number(data.port),
 				allowArm: 'arm',
+				allowBypass: false,
 				armUser: 1,
 				motionTime: 15,
 				syncTime: true

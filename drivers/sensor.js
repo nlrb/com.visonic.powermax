@@ -20,6 +20,21 @@ function createSensorDriver(driver) {
 		},
 		
 		capabilities: {
+			'onoff': {
+				get: function(device_data, callback) {
+						if (typeof callback == 'function') {
+							pm.getZoneValue('onoff', device_data.panel, device_data.zone, function(err, val) {
+								callback(err, val);
+							});
+						}
+				},
+				set: function(device_data, newVal, callback) {
+						if (typeof callback == 'function') {
+							pm.setZoneBypass(device_data.panel, device_data.zone, !newVal); // invert for bypass
+							callback(__('no_bypass'), null);
+						}
+				}
+			},
 			alarm_contact: {
 				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
@@ -47,6 +62,15 @@ function createSensorDriver(driver) {
 						}
 				}
 			},
+			alarm_co: {
+				get: function(device_data, callback) {
+						if (typeof callback == 'function') {
+							pm.getZoneValue('alarm_co', device_data.panel, device_data.zone, function(err, val) {
+								callback(err, val);
+							});
+						}
+				}
+			},
 			alarm_battery: {
 				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
@@ -60,6 +84,15 @@ function createSensorDriver(driver) {
 				get: function(device_data, callback) {
 						if (typeof callback == 'function') {
 							pm.getZoneValue('alarm_tamper', device_data.panel, device_data.zone, function(err, val) {
+								callback(err, val);
+							});
+						}
+				}
+			},
+			alarm_generic: {
+				get: function(device_data, callback) {
+						if (typeof callback == 'function') {
+							pm.getZoneValue('alarm_generic', device_data.panel, device_data.zone, function(err, val) {
 								callback(err, val);
 							});
 						}
