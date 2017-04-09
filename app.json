@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "1.1.0",
+    "version": "1.1.1",
 	"compatibility": ">=1.0.0",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -1095,6 +1095,7 @@
 				"tokens": [
 					{
 						"name": "zone",
+						"type": "number",
 						"title": { 
 							"en": "Zone number",
 							"nl": "Zone nummer"
@@ -1145,6 +1146,7 @@
 				"tokens": [
 					{
 						"name": "zone",
+						"type": "number",
 						"title": { 
 							"en": "Zone number",
 							"nl": "Zone nummer"
