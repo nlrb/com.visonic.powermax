@@ -3,7 +3,7 @@
     "name": {
         "en": "Visonic PowerMax"
     },
-    "version": "1.1.1",
+    "version": "1.1.2",
 	"compatibility": ">=1.0.0",
 	"description": {
 		"en": "Control your Visonic PowerMax via Homey",
@@ -53,7 +53,7 @@
 			"type": "enum",
 			"title": { "en": "X10 control", "nl": "X10 controle" },
 			"values": [
-				{ "id": "brighten", "title": { "en": "Brighten", "nl": "Feller" } }, 
+				{ "id": "brighten", "title": { "en": "Brighten", "nl": "Feller" } },
 				{ "id": "toggle", "title": { "en": "On/off", "nl": "Aan/uit" } },
 				{ "id": "dim", "title": { "en": "Dim", "nl": "Zwakker" } }
 			],
@@ -997,13 +997,13 @@
 				"tokens": [
 					{
 						"name": "type",
-						"title": { 
+						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
-						"title": { 
+						"title": {
 							"en": "Alarm type name",
 							"nl": "Naam alarm type"
 						}
@@ -1046,13 +1046,13 @@
 				"tokens": [
 					{
 						"name": "type",
-						"title": { 
+						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
-						"title": { 
+						"title": {
 							"en": "Trouble type name",
 							"nl": "Naam probleem"
 						}
@@ -1096,14 +1096,14 @@
 					{
 						"name": "zone",
 						"type": "number",
-						"title": { 
+						"title": {
 							"en": "Zone number",
 							"nl": "Zone nummer"
 						}
 					},
 					{
 						"name": "name",
-						"title": { 
+						"title": {
 							"en": "Name zone",
 							"nl": "Naam zone"
 						}
@@ -1147,14 +1147,14 @@
 					{
 						"name": "zone",
 						"type": "number",
-						"title": { 
+						"title": {
 							"en": "Zone number",
 							"nl": "Zone nummer"
 						}
 					},
 					{
 						"name": "name",
-						"title": { 
+						"title": {
 							"en": "Name zone",
 							"nl": "Naam zone"
 						}
@@ -1267,7 +1267,7 @@
 			}
 		},
 		{
-			
+
 			"id": "trouble",
 			"importance": 0.5,
 			"triggers": {
