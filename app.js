@@ -117,9 +117,9 @@ function statusSpeechHandler(idx, speech) {
 // Trouble handler
 function troubleSpeechHandler(idx, speech) {
 	const items = {
-		panel: { en: 'panel', nl: 'paneel' }, 
-		alarm: { en: 'alarm', nl: 'alarm' }, 
-		battery: { en: 'low battery', nl: 'lage batterijspanning' }, 
+		panel: { en: 'panel', nl: 'paneel' },
+		alarm: { en: 'alarm', nl: 'alarm' },
+		battery: { en: 'low battery', nl: 'lage batterijspanning' },
 		tamper: { en: 'tamper', nl: 'sabotage' }
 	};
 	// Check for each alarm panel
@@ -181,21 +181,21 @@ function init() {
 			callback(null, result);
 		});
 	}
-	
+
 	// Check conditions
 	Homey.manager('flow').on('condition.sysflags', function(callback, args) {
 		let id = args.device.id;
 		let check = powermax.getPanelValue(id, args.flag);
 		callback(null, check);
 	});
-	
+
 	// Register actions
 	Homey.manager('flow').on('action.setClock', function(callback, args) {
 		powermax.debug('Action setClock ' + args.device.id);
 		let ok = powermax.setClock(args.device.id);
 		callback(null, ok);
 	});
-	
+
 	// Register speech actions
 	Homey.manager('speech-input').on('speech', function(speech, callback) {
 		let matched = false;
@@ -224,7 +224,7 @@ function init() {
 var api = {
 }
 
-module.exports = { 
+module.exports = {
 	init: init,
 	api: api
 }
