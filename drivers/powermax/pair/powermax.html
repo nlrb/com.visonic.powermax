@@ -29,10 +29,10 @@
 		border: 1px solid red;
 	}
 </style>
-<script type="application/javascript"> 
+<script type="application/javascript">
 	var timeout;
 	var msgPromise;
-	
+
 	// Display message to the user
 	function displayMessage(text, remove) {
 		if (msgPromise != null) {
@@ -47,17 +47,18 @@
 			}, 5000);
 		}
 	}
-	
-	Homey.setTitle(__('pair.panel.name')); 
+
+	Homey.setTitle(__('pair.panel.name'));
 
 	// Save the network configuration
 	function pmNetworkSave(form) {
 		var ip = $('#pmIp').val();
 		var port = $('#pmPort').val();
+		var model = $('#pmModel').val();
 		var address = ip + ':' + port;
 		// Search for PowerMax
 		displayMessage(__('pair.panel.search.title', { addr: address }), false);
-		Homey.emit('search', { 'ip': ip, 'port': port }, function(err, ok) {
+		Homey.emit('search', { 'ip': ip, 'port': port, 'model': model }, function(err, ok) {
 		});
 		$('#search_button').prop('disabled', true);
 	}
@@ -74,24 +75,34 @@
 			$('#pmIp').val('');
 			$('#pmPort').val('');
 		}
-	}); 
-</script> 
+	});
+</script>
 
-<p data-i18n="pair.panel.explain"></p> 
+<p data-i18n="pair.panel.explain"></p>
 <fieldset id="message" class="message">
 	<legend>Message</legend>
 	<div id="messageContent" class="message-bar">
 	</div>
 </fieldset>
-<fieldset> 
-	<legend data-i18n="pair.panel.network.title"></legend>
-	<img src="../assets/icon.svg" width="400px">
-	<p></p>
-	<form name="networkForm" class="network" action="javascript: pmNetworkSave(networkForm)">
+<img src="../assets/icon.svg" width="400px">
+<p></p>
+<form name="networkForm" class="network" action="javascript: pmNetworkSave(networkForm)">
+	<fieldset>
+		<legend data-i18n="pair.panel.network.title"></legend>
 		<div class="oneline"><label for="network-ip" data-i18n="pair.panel.network.ip"></label><input class="network-input network-ip regular" id="pmIp" placeholder="0.0.0.0" ng-pattern="/^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$/" required/></div>
 		&nbsp;&nbsp;&nbsp;:
 		<div class="oneline"><input class="network-input network-port regular" id="pmPort" placeholder="23" ng-pattern="/^\d+$/" required/></div>
-		<p></p>
-		<button type="submit" id="search_button" class="button" data-i18n="pair.panel.network.submit"></button>
-	</form>
-</fieldset>
+	</fieldset>
+	<fieldset>
+		<legend data-i18n="pair.panel.model.title"></legend>
+		<div class="oneline">
+			<label for="pmModel" data-i18n="pair.panel.model.label"></label><select class="network-input regular" id="pmModel">
+				<option value="auto" data-i18n="pair.panel.model.option.auto"></option>
+				<option value="powermax" data-i18n="pair.panel.model.option.powermax"></option>
+				<option value="powermaster" data-i18n="pair.panel.model.option.powermaster"></option>
+			</select>
+		</div>
+	</fieldset>
+	<p></p>
+	<button type="submit" id="search_button" class="button" data-i18n="pair.panel.submit"></button>
+</form>

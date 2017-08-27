@@ -1,13 +1,22 @@
 {
-    "pair": {
+  "pair": {
 		"panel": {
 			"name": "Add Visonic PowerMax panel",
 			"explain": "This application can connect to a Visonic PowerMax panel that communicates serial data via TCP/IP. Please specify the location of the panel in the network.",
 			"network": {
 				"title": "Network",
-				"ip": "IP address : port",
-				"submit": "Search"
-			},
+				"ip": "IP address : port"
+      },
+      "model": {
+        "title": "Model",
+        "label": "Select the panel model",
+        "option": {
+          "auto": "Auto detect",
+          "powermax": "PowerMax",
+          "powermaster": "PowerMaster"
+        }
+      },
+			"submit": "Search",
 			"search": {
 				"title": "Searching for Visonic PowerMax on __addr__...",
 				"success": "Found your Visonic PowerMax. Device will be added.",
@@ -63,7 +72,7 @@
 			"one": "Panel __panel__ has zone __item__ open.",
 			"more": "Panel __panel__ has the following __cnt__ zones open: __items__."
 		},
-		"status": { 
+		"status": {
 			"general": "The status of panel __panel__ is currently __status__.",
 			"open": {
 				"one": "there is one zone open",

@@ -5,9 +5,18 @@
 			"explain": "Deze applicatie kan verbinding maken met een Visonic PowerMax paneel die seriele data verstuurt via TCP/IP. Geef aan op welk adres in het netwerk het paneel gevonden kan worden.",
 			"network": {
 				"title": "Netwerk",
-				"ip": "IP adres : poort",
-				"submit": "Zoek"
+				"ip": "IP adres : poort"
 			},
+      "model": {
+        "title": "Model",
+        "label": "Selecteer het paneel model",
+        "option": {
+          "auto": "Automatisch detecteren",
+          "powermax": "PowerMax",
+          "powermaster": "PowerMaster"
+        }
+      },
+			"submit": "Zoek",
 			"search": {
 				"title": "Zoeken naar Visonic PowerMax op __addr__...",
 				"success": "Je Visonic PowerMax is gevonden. Paneel wordt toegevoegd.",
@@ -63,7 +72,7 @@
 			"one": "Zone __item__ van __panel__ is open.",
 			"more": "De volgende __cnt__ zones van __panel__ zijn open: __items__."
 		},
-		"status": { 
+		"status": {
 			"general": "De status van paneel __panel__ is momenteel __status__.",
 			"open": {
 				"one": "er is één zone open",

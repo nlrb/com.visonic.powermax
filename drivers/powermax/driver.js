@@ -6,7 +6,7 @@ const pm = require('powermax-api');
 
 
 var self = module.exports = {
-	
+
 	init: function(devices_data, callback) {
 		devices_data.forEach(function(device_data) {
 			// Get device settings
@@ -17,11 +17,11 @@ var self = module.exports = {
 				});
 			});
 		});
-		
+
 		// we're ready
 		callback();
 	},
-	
+
 	capabilities: {
 		homealarm_state: {
 			get: function(device_data, callback) {
@@ -88,7 +88,7 @@ var self = module.exports = {
 			}
 		}
 	},
-	
+
 	added: function(device_data, callback) {
 		// Update panel name when a device is added
 		self.getName(device_data, function(err, name) {
@@ -101,12 +101,12 @@ var self = module.exports = {
 	renamed: function(device_data, new_name) {
 		pm.updatePanelName(device_data.id, new_name);
 	},
-	
+
 	deleted: function(device_data) {
 		// run when the user has deleted the panel from Homey
 		pm.deletePanel(device_data.id);
 	},
-	
+
 	settings: function(device_data, newSettingsObj, oldSettingsObj, changedKeysArr, callback) {
 		// run when the user has changed the device's settings in Homey.
 		// changedKeysArr contains an array of keys that have been changed, for your convenience :)
@@ -115,7 +115,7 @@ var self = module.exports = {
 		self.setSettings(device_data, result.updates);
 		callback(result.msg, null);
 	},
-	
+
 	pair: function(socket) {
 		pm.debug('PowerMax panel pairing has started...');
 		var completed = false;
@@ -129,6 +129,7 @@ var self = module.exports = {
 			var settings = {
 				ip: data.ip,
 				port: Number(data.port),
+				forceModel: data.model,
 				allowArm: 'arm',
 				allowBypass: false,
 				armUser: 1,
@@ -138,20 +139,21 @@ var self = module.exports = {
 			var err = pm.addPanel(self, null, null, settings);
 			callback(err, err == null);
 		});
-		
+
 		// Fully add panel when successful
 		socket.on('completed', function(device, callback) {
 			var device_data = device.data;
 			completed = true;
+			pm.stopPanelSearch(true)
 			// Let the front-end know we are done
 			callback();
 		});
-		
+
 		// Check if the pairing was finished, otherwise remove the panel
 		socket.on('disconnect', function() {
 			if (!completed) {
 				pm.debug('Pairing not completed, closing connection on', panel_ip);
-				pm.cancelPanelSearch();
+				pm.stopPanelSearch(false);
 			}
 		});
 
