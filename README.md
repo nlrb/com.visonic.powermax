@@ -12,7 +12,7 @@ In order for this application to function, Homey needs to be able to read the se
 ![RS232 kit](http://www.visonic.com/Data/Uploads/RSS-32_1.jpg)
 ![USR-TCP232-200](http://www.ramonbaas.nl/Homey/visonic/TCP232-200.png)
 
-2. Directly using the TTL signals of the Visonic PowerMax and interface via a TTL to Ethernet module (e.g. USR-TCP232-E). 
+2. Directly using the TTL signals of the Visonic PowerMax and interface via a TTL to Ethernet module (e.g. USR-TCP232-E).
 ![TTL Interface](http://www.ramonbaas.nl/Homey/visonic/Visonic-TTL.png)
 ![USR-TCP232-E](http://www.ramonbaas.nl/Homey/visonic/TCP232-E.png)
 
@@ -134,18 +134,18 @@ The following actions are available:
 - Zone alarm becomes (active or inactive)
 	* token 'Zone': the zone number
 	* token 'Name': the zone name
-	
+
 	![](http://homey.ramonbaas.nl/visonic/flow_when_zone_alarm.png)
 
 - Panel alarm becomes (active or inactive)
-	* token 'Type', which can be 
+	* token 'Type', which can be
 		- *Intruder*, *Tamper*, *Panic*, *Fire*, *Emergency*, *Gas*, *Flood*
 	* token 'Alarm type name', which is the type of the alarm (see above) in the current language
 
 	![](http://homey.ramonbaas.nl/visonic/flow_when_panel_alarm.png)
 
 - Panel trouble becomes (active or inactive)
-	* token 'Type', which can be 
+	* token 'Type', which can be
 		- *Communication, General, Battery, Power, Jamming, Telephone*
 	* token 'Trouble type name', which is the type of the trouble (see above) in the current language
 
@@ -179,9 +179,10 @@ You can ask Homey a couple of questions regarding your alarm panel(s), e.g.
 Please enter bugs or feature request on [GitHub](https://github.com/nlrb/com.visonic.powermax/issues "GitHub"). For other things you can reach out to "homey.powermax _at_ gmail.com".
 
 ### Version history
-* 1.1.0 Added bypass support, sensor alarm flag, CO sensor support and fixed device flows *(flows might be broken and sensors will need to be paired again)* 
+* 1.2.0 Added option on pairing to select between PowerMax/PowerMaster, various bug fixes
+* 1.1.0 Added bypass support, sensor alarm flag, CO sensor support and fixed device flows *(flows might be broken and sensors will need to be paired again)*
 * 1.0.1 Bug fixes
-* 1.0.0 Added mobile cards, speech, X10/PGM, various fixes & stability improvements 
+* 1.0.0 Added mobile cards, speech, X10/PGM, various fixes & stability improvements
 * 0.3.0 Added flow support, improved pairing feedback, bug fixes
 * 0.2.0 First App store release
 * 0.1.0 Initial release
