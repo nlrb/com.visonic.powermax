@@ -27,7 +27,7 @@ First create an Alarm Panel device. You can add multiple panels if needed.
 ![add device](http://www.ramonbaas.nl/Homey/visonic/add_device.png)
 
 ##### Pairing
-Specify on which IP address and port the serial connection to the Visonic PowerMax can be made and press the 'Search' button.
+Specify on which IP address and port the serial connection to the Visonic PowerMax can be made. It is also possible to select whether the panel is a PowerMax or PowerMaster model. Normally leave this on 'auto detect' and the app will determine the model itself. To start the pairing, press the 'Search' button.
 
 ![add panel](http://www.ramonbaas.nl/Homey/visonic/add_panel.png)
 
@@ -179,7 +179,8 @@ You can ask Homey a couple of questions regarding your alarm panel(s), e.g.
 Please enter bugs or feature request on [GitHub](https://github.com/nlrb/com.visonic.powermax/issues "GitHub"). For other things you can reach out to "homey.powermax _at_ gmail.com".
 
 ### Version history
-* 1.2.0 Added option on pairing to select between PowerMax/PowerMaster, various bug fixes
+* 1.3.0 Event log can now be retrieved under app settings, wired sensors added
+* 1.2.0 Added option on pairing to select between PowerMax/PowerMaster, PowerMaster fixes, bug fixes
 * 1.1.0 Added bypass support, sensor alarm flag, CO sensor support and fixed device flows *(flows might be broken and sensors will need to be paired again)*
 * 1.0.1 Bug fixes
 * 1.0.0 Added mobile cards, speech, X10/PGM, various fixes & stability improvements

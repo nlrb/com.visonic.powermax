@@ -64,7 +64,31 @@
 		"no_pin": "No pin code entered. Settings have not been saved.",
 		"invalid_pin": "Wrong pin code entered. Settings have not been saved.",
 		"invalid_user": "User __user__ does not exist. Settings have not been saved.",
-		"saved": "Device settings have been saved."
+		"saved": "Device settings have been saved.",
+    "app": {
+      "title": "Visonic PowerMax Event Log",
+      "panel": {
+        "description": "This page allows you to look at the last events as stored in the panels log.",
+        "title": "Panel",
+        "select": "Select the panel"
+      },
+      "eventlog": {
+        "description": "The event log shows which notable events have occured in the past.",
+        "title": "Event log",
+        "submit": "Get the event log",
+        "busy": "Busy...",
+        "loading": "Retreiving data...",
+        "time": "Data retrieved on __time__"
+      },
+      "table": {
+        "item": "Item",
+        "date": "Date",
+        "time": "Time",
+        "user": "User/zone",
+        "partition": "Partition",
+        "event": "Event"
+      }
+    }
 	},
 	"speech": {
 		"open": {

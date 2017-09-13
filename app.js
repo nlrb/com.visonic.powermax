@@ -218,10 +218,13 @@ function init() {
 		}
 		callback(matched ? null : true, matched ? true : null);
 	});
+
 }
 
 
 var api = {
+	getPanels: powermax.getPanels,
+	getEventLog: powermax.getEventLog
 }
 
 module.exports = {

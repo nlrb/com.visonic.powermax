@@ -64,7 +64,31 @@
 		"no_pin": "Geen pincode ingevuld. Instellingen zijn niet bijgewerkt.",
 		"invalid_pin": "Verkeerde pincode ingevuld. Instellingen zijn niet bijgewerkt.",
 		"invalid_user": "Gebruiker __user__ bestaat niet. Instellingen zijn niet bijgewerkt.",
-		"saved": "Apparaatinstellingen bijgewerkt."
+		"saved": "Apparaatinstellingen bijgewerkt.",
+    "app": {
+      "title": "Visonic PowerMax Logboek",
+      "panel": {
+        "description": "Op deze pagina kunnen de laatste gebeurtenissen uit het logboek van  het alarmpaneel worden bekeken.",
+        "title": "Paneel",
+        "select": "Selecteer het paneel"
+      },
+      "eventlog": {
+        "description": "Het logboek laat de belangrijkste gebeurtenissen in de afgelopen periode zien.",
+        "title": "Gebeurtenissen",
+        "submit": "Haal gebeurtenissen op",
+        "busy": "Bezig...",
+        "loading": "Data wordt opgehaald...",
+        "time": "Data opgehaald op __time__"
+      },
+      "table": {
+        "item": "Nummer",
+        "date": "Datum",
+        "time": "Tijd",
+        "user": "Gebruiker/zone",
+        "partition": "Partitie",
+        "event": "Gebeurtenis"
+      }
+    }
 	},
 	"speech": {
 		"open": {
