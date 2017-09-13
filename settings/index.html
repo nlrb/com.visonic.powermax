@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+	<head>
+		<style>
+      .oneline {
+        display: inline-flex;
+        align-items: center;
+      }
+      .oddline {
+        background-color: #eee;
+      }
+      .eventlog {
+        font-size: 11px;
+        padding-top: 5px;
+        border-spacing: 0px;
+      }
+      .eventlog td, th {
+        padding: 0px 10px 0px 10px;
+      }
+		</style>
+		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+		<script type="text/javascript" src="/manager/webserver/assets/js/angular.js"></script>
+		<script>
+			angular.module('VisonicPowerMaxApp', [])
+			.controller('EventLogCtrl', ['$scope', '$timeout', function($scope, $timeout) {
+				$scope.panels = [];
+				$scope.logitems = {};
+        $scope.loading = {};
+        $scope.date = {};
+        $scope.selectedPanel;
+        $scope.multiplePanels = false;
+        $scope.button = __('settings.app.eventlog.submit');
+
+        $scope.updateButton = function(loading) {
+          if (loading) {
+            $scope.button = __('settings.app.eventlog.busy');
+          } else {
+            $scope.button = __('settings.app.eventlog.submit');
+          }
+          $('#getlog').prop('disabled', loading);
+        }
+
+				// Actions for back-end triggers
+				Homey.on('eventlog', function(data) {
+					if (data && data.log) {
+            if (data.log.done) {
+              $scope.loading[data.panel] = false;
+              $scope.updateButton(false);
+              let date = new Date(Date.parse(data.log.time));
+              $scope.date[data.panel] = __('settings.app.eventlog.time', { time: date.toLocaleString() });
+            }
+						$scope.logitems[data.panel] = data.log.items;
+						$scope.$apply();
+					}
+				});
+
+        // Disable the button if the panel is busy
+        Homey.on('busy', function(state) {
+          $scope.loading[state.panel] = state.busy
+          if ($scope.selectedPanel.id === state.panel) {
+            $scope.updateButton(state.busy);
+          }
+        });
+
+        // Get the event log (read from the panel or from the cache)
+        $scope.getEventLog = function(force) {
+          Homey.api('PUT', '/getEventLog/', { 'panel': $scope.selectedPanel.id, 'force': force }, function(err, result) {
+            if (force || $scope.logitems[$scope.selectedPanel.id] === undefined) {
+              $scope.loading[$scope.selectedPanel.id] = true;
+              $scope.updateButton(true);
+              if (result) {
+                $scope.date[$scope.selectedPanel.id] = __('settings.app.eventlog.loading');
+              }
+            }
+          });
+        }
+
+        // Update the (busy) button if the panel selection changes
+        $scope.panelChange = function() {
+          $scope.updateButton($scope.loading[$scope.selectedPanel.id]);
+          if ($scope.logitems[$scope.selectedPanel.id] === undefined) {
+            $scope.getEventLog(false);
+          }
+        }
+
+				// Get panel information
+				Homey.api('GET', '/getPanels/', {}, function(err, panels) {
+				if (panels) {
+						$scope.panels = panels;
+            $scope.selectedPanel = panels[0];
+            if (panels.length > 1) {
+              $scope.multiplePanels = true;
+            }
+            panels.forEach(panel => $scope.loading[panel.id] = false)
+            // Retrieve the event log from the cache (and see if the panel is busy)
+            $scope.getEventLog(false);
+					} else {
+            $('#getlog').prop('disabled', true);
+          }
+          $scope.$apply();
+				});
+
+			}]);
+
+			function onHomeyReady(){
+				angular.bootstrap(document, ['VisonicPowerMaxApp']);
+				Homey.ready();
+			}
+		</script>
+	</head>
+
+	<body ng-controller="EventLogCtrl">
+		<div id="application">
+			<h1 data-i18n="settings.app.title"></h1>
+      <div ng-show="multiplePanels">
+  			<p data-i18n="settings.app.panel.description"></p>
+  			<fieldset>
+  				<legend data-i18n="settings.app.panel.title"></legend>
+  				<form name="panelForm">
+  					<div class="oneline">
+              <label style="padding-right:10px" for="selectedPanel" data-i18n="settings.app.panel.select"></label>
+              <select ng-model="selectedPanel" ng-options="x.hname for x in panels track by x.id" ng-change="panelChange()"></select>
+            </div>
+  				</form>
+  			</fieldset>
+      </div>
+			<p data-i18n="settings.app.eventlog.description"></p>
+			<fieldset>
+				<legend data-i18n="settings.app.eventlog.title"></legend>
+				<form ng-submit="getEventLog(true)">
+					<button type="submit" id="getlog" class="btn btn-default" ng-click="submitted=true;">{{button}}</button>
+        </form>
+        <table class="eventlog">
+          <tr><th colspan="6">{{date[selectedPanel.id]}}</th></tr>
+          <tr>
+            <th data-i18n="settings.app.table.item"></th>
+            <th data-i18n="settings.app.table.date">Date</th>
+            <th data-i18n="settings.app.table.time">Time</th>
+            <th data-i18n="settings.app.table.user">User</th>
+            <th data-i18n="settings.app.table.partition">Partition</th>
+            <th data-i18n="settings.app.table.event">Event</th>
+          </tr>
+          <tr ng-repeat="item in logitems[selectedPanel.id]" ng-class-odd="'oddline'">
+            <td align="right">{{$index+1}}</td><td>{{item.date}}</td><td>{{item.time}}</td><td>{{item.zone}}</td><td>{{item.partition}}</td><td>{{item.event}}</td>
+          </tr>
+        </table>
+      </fieldset>
+		</div>
+	</body>
+</html>
