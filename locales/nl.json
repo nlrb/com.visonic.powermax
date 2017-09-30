@@ -78,6 +78,7 @@
         "submit": "Haal gebeurtenissen op",
         "busy": "Bezig...",
         "loading": "Data wordt opgehaald...",
+        "denied": "Toegang tot logboek geweigerd.",
         "time": "Data opgehaald op __time__"
       },
       "table": {

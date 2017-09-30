@@ -46,8 +46,12 @@
             if (data.log.done) {
               $scope.loading[data.panel] = false;
               $scope.updateButton(false);
-              let date = new Date(Date.parse(data.log.time));
-              $scope.date[data.panel] = __('settings.app.eventlog.time', { time: date.toLocaleString() });
+							if (data.log.denied) {
+								$scope.date[data.panel] = __('settings.app.eventlog.denied');
+							} else {
+	              let date = new Date(Date.parse(data.log.time));
+	              $scope.date[data.panel] = __('settings.app.eventlog.time', { time: date.toLocaleString() });
+							}
             }
 						$scope.logitems[data.panel] = data.log.items;
 						$scope.$apply();
@@ -59,6 +63,7 @@
           $scope.loading[state.panel] = state.busy
           if ($scope.selectedPanel.id === state.panel) {
             $scope.updateButton(state.busy);
+						$scope.$apply();
           }
         });
 
@@ -66,11 +71,12 @@
         $scope.getEventLog = function(force) {
           Homey.api('PUT', '/getEventLog/', { 'panel': $scope.selectedPanel.id, 'force': force }, function(err, result) {
             if (force || $scope.logitems[$scope.selectedPanel.id] === undefined) {
-              $scope.loading[$scope.selectedPanel.id] = true;
-              $scope.updateButton(true);
+							$scope.loading[$scope.selectedPanel.id] = true;
+							$scope.updateButton(true);
               if (result) {
-                $scope.date[$scope.selectedPanel.id] = __('settings.app.eventlog.loading');
+								$scope.date[$scope.selectedPanel.id] = __('settings.app.eventlog.loading');
               }
+							$scope.$apply();
             }
           });
         }

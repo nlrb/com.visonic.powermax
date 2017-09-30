@@ -78,6 +78,7 @@
         "submit": "Get the event log",
         "busy": "Busy...",
         "loading": "Retreiving data...",
+        "denied": "Access to event log denied.",
         "time": "Data retrieved on __time__"
       },
       "table": {
