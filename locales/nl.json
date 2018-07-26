@@ -28,6 +28,7 @@
 			"name": "Registreer paneel in PowerLink mode & lees instellingen",
 			"explain": "Om te zorgen dat de applicatie alle sensorsen en andere informatie kan vinden, moet de applicatie geregisteerd worden met het paneel. Dit werkt via de PowerLink mode. Nieuwere versies van de Visonic PowerMax (beginnend met de PowerMax Pro met partities) gaat de registratie automatisch. Bij oudere modellen moet dit handmatig via het paneel menu gebeuren. Lees de Visonic gebruikershandleiding voor instructies als het niet automatisch werkt. Zodra de applicatie geregistreerd is, worden de instelling van het paneel opgehaald.",
 			"wait": "Wachten tot dat registratie voltooid is...",
+      "failed": "Registratie is niet op tijd voltooid. Probeer om het paneel opniew toe te voegen.",
 			"download": "Registratie voltooid. Paneel informatie wordt opgehaald... Even wachten a.u.b.",
 			"complete": "Alle informatie is opgehaald. Het paneel kan nu toegevoegd worden.",
 			"config": "Paneel informatie",
@@ -48,6 +49,11 @@
 			"name": "Voeg Visonic PowerMax rookdetector toe",
 			"title": "Paneel",
 			"explain": "Selecteer het paneel waar rookdetectors voor moeten worden toegevoegd."
+		},
+    "gas": {
+			"name": "Voeg Visonic PowerMax gasdetector toe",
+			"title": "Paneel",
+			"explain": "Selecteer het paneel waar gasdetectors voor moeten worden toegevoegd."
 		},
 		"pgm": {
 			"name": "Voeg Visonic PowerMax programmeerbare uitgang (PGM) toe",

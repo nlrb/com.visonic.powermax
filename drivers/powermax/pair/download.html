@@ -3,10 +3,10 @@
 NOTE: We inherit everything from the previous page. So we re-use those styles & use message(Content)2.
 
 -->
-<script type="application/javascript"> 
+<script type="application/javascript">
 	var msgPromise;
 	var device;
-	
+
 	// Display message to the user
 	function displayMessage(text, remove) {
 		if (msgPromise != null) {
@@ -21,12 +21,12 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 			}, 5000);
 		}
 	}
-	
+
 	// Add the device when the user gives the OK
 	function addDevice() {
 		Homey.addDevice(device, function(err, result) {
-			if (err) { 
-				console.log(err); 
+			if (err) {
+				console.log(err);
 				Homey.done();
 			} else {
 				Homey.emit('completed', device, function() {
@@ -35,8 +35,17 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 			}
 		});
 	}
-	
-	Homey.setTitle(__('pair.download.name')); 
+
+	Homey.setTitle(__('pair.download.name'));
+
+	Homey.on("found", function(data) {
+		console.log("found", data);
+		if (!data.found && data.id == null) {
+			// Enrollment timed out
+			displayMessage(__('pair.download.failed'), false);
+			$('#config').hide();
+		}
+	});
 
 	Homey.on("download", function(data) {
 		// data.state: download state ('enroll', 'failed', 'start', 'done', 'process:...', 'received:...')
@@ -63,17 +72,17 @@ NOTE: We inherit everything from the previous page. So we re-use those styles & 
 				}
 			}
 		}
-		if (data.state == 'done') { 
+		if (data.state == 'done') {
 			displayMessage(__('pair.download.complete'), true);
 			$('#add_button').show();
 			$('#received').hide();
 			device = data.device;
 		}
-	}); 
-</script> 
+	});
+</script>
 
 <div id="all">
-	<img src="../assets/icon.svg" align="left" style="margin-right: 10px;" width="150px"><p data-i18n="pair.download.explain"></p> 
+	<img src="../assets/icon.svg" align="left" style="margin-right: 10px;" width="150px"><p data-i18n="pair.download.explain"></p>
 	<fieldset id="message2" class="message">
 		<legend>Message</legend>
 		<div id="messageContent2" class="message-bar">

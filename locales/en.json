@@ -28,6 +28,7 @@
 			"name": "Enroll the panel in PowerLink mode & download settings",
 			"explain": "In order for the application to be able to find all sensors and other information, the panel will need to operate in PowerLink mode. Newer panels (starting with the PowerMax Pro with partition support) enroll automatically. Older models require manual interaction to enroll. In case the enrollment procedure does not continue automatically, please consult the user manual on how to enroll. When the panel is enrolled, the settings will be downloaded.",
 			"wait": "Waiting for enrollment to complete...",
+      "failed": "Enrollment not completed in time. Please try pairing again.",
 			"download": "Enrollment complete. Downloading panel information... Please wait...",
 			"complete": "Download completed. The panel can now be added.",
 			"config": "Panel information",
@@ -48,6 +49,11 @@
 			"name": "Add Visonic PowerMax smoke detector",
 			"title": "Panel",
 			"explain": "Select the panel for which to add smoke detectors."
+		},
+    "gas": {
+			"name": "Add Visonic PowerMax gas detector",
+			"title": "Panel",
+			"explain": "Select the panel for which to add gas detectors."
 		},
 		"pgm": {
 			"name": "Add Visonic PowerMax programmable output (PGM)",
