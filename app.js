@@ -196,6 +196,11 @@ function init() {
 		callback(null, ok);
 	});
 
+	Homey.manager('flow').on('action.setState', function(callback, args) {
+		powermax.debug('Action setState ' + args.device.id, args.state);
+		powermax.setPanelState(args.device.id, args.state, (err, ok) => callback(err, ok));
+	});
+
 	Homey.manager('flow').on('action.bypassOn', function(callback, args) {
 		powermax.debug('Action bypass ' + args.device.id);
 		let ok = powermax.setZoneBypass(args.device.panel, args.device.zone, true);

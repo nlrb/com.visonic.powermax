@@ -1210,13 +1210,38 @@
 				}
 			]
 		}],
-		"actions": [{
+		"actions": [
+		{
 			"id": "setClock",
 			"title": {
 				"en": "Set current time",
 				"nl": "Zet huidige tijd"
 			},
 			"args": [{
+				"name": "device",
+				"type": "device",
+				"filter": "driver_id=powermax"
+			}]
+		},
+		{
+			"id": "setState",
+			"title": {
+				"en": "Set arm state to",
+				"nl": "Zet de status op"
+			},
+			"args": [
+			{
+				"name": "state",
+				"type": "dropdown",
+				"values": [
+					{ "id": "Disarmed", "label": { "en": "Disarmed", "nl": "Uitgeschakeld" } },
+					{ "id": "Stay", "label": { "en": "Armed Home", "nl": "Deel ingeschakeld" } },
+					{ "id": "Armed", "label": { "en": "Armed Away", "nl": "Totaal ingeschakeld" } },
+					{ "id": "StayInstant", "label": { "en": "Armed Home Instant", "nl": "Direct Deel" } },
+					{ "id": "ArmedInstant", "label": { "en": "Armed Away Instant", "nl": "Direct Totaal" } }
+				]
+			},
+			{
 				"name": "device",
 				"type": "device",
 				"filter": "driver_id=powermax"
