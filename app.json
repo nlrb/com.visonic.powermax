@@ -1221,6 +1221,30 @@
 				"type": "device",
 				"filter": "driver_id=powermax"
 			}]
+		},
+		{
+			"id": "bypassOn",
+			"title": {
+				"en": "Enable sensor bypass",
+				"nl": "Sensor uitschakelen"
+			},
+			"args": [{
+				"name": "device",
+				"type": "device",
+				"filter": "driver_id=contact|gas|motion|smoke"
+			}]
+		},
+		{
+			"id": "bypassOff",
+			"title": {
+				"en": "Disable sensor bypass",
+				"nl": "Sensor inschakelen"
+			},
+			"args": [{
+				"name": "device",
+				"type": "device",
+				"filter": "driver_id=contact|gas|motion|smoke"
+			}]
 		}]
 	},
 	"permissions": [

@@ -179,7 +179,7 @@ You can ask Homey a couple of questions regarding your alarm panel(s), e.g.
 Please enter bugs or feature request on [GitHub](https://github.com/nlrb/com.visonic.powermax/issues "GitHub"). For other things you can reach out to "homey.powermax _at_ gmail.com".
 
 ### Version history
-* 1.4.0 Add option to arm instant (device setting for UI, additional option in flows)
+* 1.4.0 Add option to arm instant (device setting for UI, additional option in flows), add sensor bypass in flows
 * 1.3.0 Event log can now be retrieved under app settings, wired sensors added
 * 1.2.0 Added option on pairing to select between PowerMax/PowerMaster, PowerMaster fixes, bug fixes
 * 1.1.0 Added bypass support, sensor alarm flag, CO sensor support and fixed device flows *(flows might be broken and sensors will need to be paired again)*

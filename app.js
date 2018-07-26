@@ -171,7 +171,7 @@ const speechTriggers = [
 // Start of the app
 function init() {
 	Homey.log("Starting PowerMax app!");
-	//powermax.setDebug(true);
+	powermax.setDebug(true);
 
 	// Catch triggers
 	for (let i = 0; i < triggers.length; i++) {
@@ -194,6 +194,18 @@ function init() {
 		powermax.debug('Action setClock ' + args.device.id);
 		let ok = powermax.setClock(args.device.id);
 		callback(null, ok);
+	});
+
+	Homey.manager('flow').on('action.bypassOn', function(callback, args) {
+		powermax.debug('Action bypass ' + args.device.id);
+		let ok = powermax.setZoneBypass(args.device.panel, args.device.zone, true);
+		callback((ok ? null : 'Not allowed'), ok);
+	});
+
+	Homey.manager('flow').on('action.bypassOff', function(callback, args) {
+		powermax.debug('Action bypass ' + args.device.id);
+		let ok = powermax.setZoneBypass(args.device.panel, args.device.zone, false);
+		callback((ok ? null : 'Not allowed'), ok);
 	});
 
 	// Register speech actions
