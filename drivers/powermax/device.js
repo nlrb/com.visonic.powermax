@@ -11,6 +11,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 const Homey = require('homey')
 const pm = require('powermax-api')
 
+const triggers = [
+  { id: 'status', check: false },
+  { id :'panelalarm', check: true },
+  { id: 'paneltrouble', check: true },
+  { id: 'event', check: false },
+  { id: 'zoneTripAlarm', check: true },
+  { id: 'zoneBattery', check: true }
+]
+
 class PanelDevice extends Homey.Device {
 
   onInit() {
@@ -20,11 +29,18 @@ class PanelDevice extends Homey.Device {
     this.log('Starting device', this.id)
     this.powermax = new pm.PowerMax(this.locale, this.getSettings(), this.log, true)
     this.Trigger = {}
-    const triggers = ['status', 'panelalarm', 'paneltrouble', 'event', 'zoneTripAlarm', 'zoneBattery']
     // Create flow triggers
     for (let t in triggers) {
-      this.Trigger[triggers[t]] = new Homey.FlowCardTrigger(triggers[t])
-        .register()
+      this.Trigger[triggers[t].id] = new Homey.FlowCardTriggerDevice(triggers[t].id)
+      // Register flow condition checks
+      if (triggers[t].check) {
+        this.Trigger[triggers[t].id].registerRunListener((args, state) => {
+          let result = (state.state === false) != (args.values === 'on')
+          this.log('>> Checked action', triggers[t].id, 'for', state.state,'=', args.values + ', result =', result)
+          return Promise(result)
+        })
+      }
+      this.Trigger[triggers[t].id].register()
       this.log('Tigger', triggers[t], 'registered')
     }
     this.registerEvents()
@@ -187,41 +203,40 @@ class PanelDevice extends Homey.Device {
         }
         let detail = newVal.nr.toString()
         let detailTxt = pm.Tables.sysStatus[this.locale][detail]
-        this.state = { arm: state, detail: detail }
-        try {
-          this.setCapabilityValue('homealarm_state', state)
-          this.setCapabilityValue('arm_state', detailTxt)
-        } catch(err) {
-          this.error(err)
+        // Only act on state changes
+        if (this.getCapabilityValue('arm_state') !== detailTxt) {
+          try {
+            this.setCapabilityValue('homealarm_state', state)
+            this.setCapabilityValue('arm_state', detailTxt)
+          } catch(err) {
+            this.error(err)
+          }
+          this.Trigger.status
+          .trigger(this, { status: newVal.txt }, { panel: this.id, status: newVal.nr })
+            .catch(this.error)
+            .then(x => this.log('Result >status trigger<', x))
         }
-        this.Trigger.status
-        .trigger({ status: newVal.txt })
-          .catch(this.error)
-          .then(x => this.log('Result status trigger', x))
-        //Homey.ManagerFlow.triggerDevice('status', { status: newVal.txt }, { panel: id, status: newVal.nr }, device);
       } else if (field === 'alarmType') { // e.g. Intruder, Tamper, Panic, Fire, Emergency, Gas, Flood
         let text = newVal.txt || ''
         this.Trigger.panelalarm
-        .trigger({ type: newVal.nr, name: text })
+        .trigger(this, { type: newVal.nr, name: text }, { state: text != '' })
           .catch(this.error)
-          .then(x => this.log('Result panelalarm trigger', x))
-        //Homey.manager('flow').triggerDevice('panelalarm', { type: newVal.nr, name: text }, { state: text != '' }, device);
+          .then(x => this.log('Result >panelalarm trigger<', x))
       } else if (field === 'troubleType') { // e.g. Communication, General, Battery, Power, Jamming, Telephone
         let text = newVal.txt || ''
         this.log('Triggering device trouble', text);
         this.Trigger.paneltrouble
-        .trigger({ type: newVal.nr, name: text })
+        .trigger(this, { type: newVal.nr, name: text }, { state: text != '' })
           .catch(this.error)
-          .then(x => this.log('Result paneltrouble trigger', x))
-        //Homey.manager('flow').triggerDevice('paneltrouble', { type: newVal.nr, name: text }, { state: text != '' }, device);
+          .then(x => this.log('Result >paneltrouble trigger<', x))
       } else if (field === 'event') {
         let text = newVal.userText + ': ' + newVal.type + ' (' + new Date().toLocaleString(this.locale) + ')';
         this.log('Triggering device event', text)
         this.Trigger.event
-          .trigger({ type: newVal.type, trigger: newVal.userText })
+          .trigger(this, { type: newVal.type, trigger: newVal.userText }, { state: text != '' })
             .catch(this.error)
-            .then(x => this.log('Result event trigger', x))
-        //Homey.manager('flow').triggerDevice('event', , { state: text != '' }, device)
+            .then(x => this.log('Result >event trigger<', x))
+        // Show last event in the settings
         this.setSettings({ event: text })
       } else { // alarm, ready, memory, trouble are panel capabilities
         this.setCapabilityValue(field, newVal)
@@ -232,18 +247,18 @@ class PanelDevice extends Homey.Device {
     this.powermax.events.on('zoneTripAlarm', (data) => {
       let name = this.getZoneName(data.zone)
       this.Trigger.zoneTripAlarm
-        .trigger({ zone: data.zone, name: name })
+        .trigger(this, { zone: data.zone, name: name }, { state: data.state })
           .catch(this.error)
-          .then(x => this.log('Result zoneTripAlarm trigger', x))
+          .then(x => this.log('Result >zoneTripAlarm trigger<', x))
     })
 
     // Catch battery events
     this.powermax.events.on('zoneBattery', (data) => {
       let name = this.getZoneName(data.zone);
       this.Trigger.zoneBattery
-        .trigger({ zone: data.zone, name: name })
+        .trigger(this, { zone: data.zone, name: name }, { state: data.state })
           .catch(this.error)
-          .then(x => this.log('Result zoneBattery trigger', x))
+          .then(x => this.log('Result >zoneBattery trigger<', x))
     })
 
     // Handle events for the app settings page

@@ -15,7 +15,6 @@ module.exports = [
     description: 'Get all the available panels',
     method: 'GET',
     path: '/getPanels/',
-    requires_authorizaton: true,
     public: false,
     fn: function(args, callback) {
       var getPanels = Homey.app.getPanels;
