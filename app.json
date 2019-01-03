@@ -1,11 +1,12 @@
 {
-	"id": "com.visonic.powermax",
-	"name": {
-		"en": "Visonic PowerMax"
-	},
-	"version": "1.4.0",
-	"compatibility": ">=1.0.0",
-	"description": {
+  "id": "com.visonic-powermax",
+  "version": "2.0.0",
+  "compatibility": ">=1.5.0",
+  "sdk": 2,
+  "name": {
+    "en": "Visonic PowerMax"
+  },
+  "description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
 	},
@@ -13,8 +14,11 @@
 		"name": "Ramón Baas",
 		"website": "http://www.visonic.com/"
 	},
-	"category": "security",
-	"images": {
+  "category": [
+    "security"
+  ],
+  "permissions": [],
+  "images": {
 		"large": "assets/images/large.png",
 		"small": "assets/images/small.png"
 	},
@@ -95,11 +99,11 @@
 			"setable": true
 		}
 	},
-	"drivers": [{
+  "drivers": [{
 			"id": "powermax",
 			"name": {
-				"en": "Alarm Panel",
-				"nl": "Alarmsysteem"
+				"en": "Panel",
+				"nl": "Paneel"
 			},
 			"class": "homealarm",
 			"capabilities": ["homealarm_state", "arm_state", "ready", "trouble", "alarm", "memory"],
@@ -367,16 +371,15 @@
 			]
 		},
 		{
-			"id": "contact",
+			"id": "sensor",
 			"name": {
-				"en": "Door/Window Sensor",
-				"nl": "Deur-/Raamsensor"
+				"en": "Sensor"
 			},
 			"class": "sensor",
 			"capabilities": [],
 			"images": {
-				"large": "drivers/contact/assets/images/large.png",
-				"small": "drivers/contact/assets/images/small.png"
+				"large": "drivers/sensor/assets/images/large.png",
+				"small": "drivers/sensor/assets/images/small.png"
 			},
 			"pair": [{
 					"id": "select",
@@ -477,416 +480,15 @@
 			]
 		},
 		{
-			"id": "motion",
+			"id": "x10pgm",
 			"name": {
-				"en": "Motion Sensor",
-				"nl": "Bewegingssensor"
-			},
-			"class": "sensor",
-			"capabilities": [],
-			"images": {
-				"large": "drivers/motion/assets/images/large.png",
-				"small": "drivers/motion/assets/images/small.png"
-			},
-			"pair": [{
-					"id": "select",
-					"navigation": {
-						"next": "list_devices"
-					}
-				},
-				{
-					"id": "list_devices",
-					"template": "list_devices",
-					"navigation": {
-						"next": "add_sensors"
-					}
-				},
-				{
-					"id": "add_sensors",
-					"template": "add_devices"
-				}
-			],
-			"settings": [{
-					"type": "group",
-					"label": {
-						"en": "Sensor information",
-						"nl": "Sensor informatie"
-					},
-					"children": [{
-							"id": "zone",
-							"type": "label",
-							"label": {
-								"en": "Zone number",
-								"nl": "Zone nummer"
-							},
-							"value": ""
-						},
-						{
-							"id": "trip",
-							"type": "label",
-							"label": {
-								"en": "Last motion alarm",
-								"nl": "Laaste bewegingsalarm"
-							},
-							"value": ""
-						},
-						{
-							"id": "battery",
-							"type": "label",
-							"label": {
-								"en": "Last low battery alarm",
-								"nl": "Laaste batterij alarm"
-							},
-							"value": ""
-						},
-						{
-							"id": "tamper",
-							"type": "label",
-							"label": {
-								"en": "Last tamper alarm",
-								"nl": "Laatste sabotage alarm"
-							},
-							"value": ""
-						}
-					]
-				},
-				{
-					"type": "group",
-					"label": {
-						"en": "Sensor configuration",
-						"nl": "Sensor configuratie"
-					},
-					"children": [{
-							"id": "location",
-							"type": "label",
-							"label": {
-								"en": "Location",
-								"nl": "Locatie"
-							},
-							"value": ""
-						},
-						{
-							"id": "type",
-							"type": "label",
-							"label": {
-								"en": "Type"
-							},
-							"value": ""
-						},
-						{
-							"id": "chime",
-							"type": "label",
-							"label": {
-								"en": "Chime",
-								"nl": "Deurbel"
-							},
-							"value": ""
-						},
-						{
-							"id": "partition",
-							"type": "label",
-							"label": {
-								"en": "Partition",
-								"nl": "Partitie"
-							},
-							"value": ""
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "smoke",
-			"name": {
-				"en": "Smoke Detector",
-				"nl": "Rookmelder"
-			},
-			"class": "sensor",
-			"capabilities": [],
-			"images": {
-				"large": "drivers/smoke/assets/images/large.png",
-				"small": "drivers/smoke/assets/images/small.png"
-			},
-			"pair": [{
-					"id": "select",
-					"navigation": {
-						"next": "list_devices"
-					}
-				},
-				{
-					"id": "list_devices",
-					"template": "list_devices",
-					"navigation": {
-						"next": "add_sensors"
-					}
-				},
-				{
-					"id": "add_sensors",
-					"template": "add_devices"
-				}
-			],
-			"settings": [{
-					"type": "group",
-					"label": {
-						"en": "Sensor information",
-						"nl": "Sensor informatie"
-					},
-					"children": [{
-							"id": "zone",
-							"type": "label",
-							"label": {
-								"en": "Zone number",
-								"nl": "Zone nummer"
-							},
-							"value": ""
-						},
-						{
-							"id": "trip",
-							"type": "label",
-							"label": {
-								"en": "Last smoke alarm",
-								"nl": "Laaste rookmelding"
-							},
-							"value": ""
-						},
-						{
-							"id": "battery",
-							"type": "label",
-							"label": {
-								"en": "Last low battery alarm",
-								"nl": "Laaste batterij alarm"
-							},
-							"value": ""
-						},
-						{
-							"id": "tamper",
-							"type": "label",
-							"label": {
-								"en": "Last tamper alarm",
-								"nl": "Laatste sabotage alarm"
-							},
-							"value": ""
-						}
-					]
-				},
-				{
-					"type": "group",
-					"label": {
-						"en": "Sensor configuration",
-						"nl": "Sensor configuratie"
-					},
-					"children": [{
-							"id": "location",
-							"type": "label",
-							"label": {
-								"en": "Location",
-								"nl": "Locatie"
-							},
-							"value": ""
-						},
-						{
-							"id": "type",
-							"type": "label",
-							"label": {
-								"en": "Type"
-							},
-							"value": ""
-						},
-						{
-							"id": "chime",
-							"type": "label",
-							"label": {
-								"en": "Chime",
-								"nl": "Deurbel"
-							},
-							"value": ""
-						},
-						{
-							"id": "partition",
-							"type": "label",
-							"label": {
-								"en": "Partition",
-								"nl": "Partitie"
-							},
-							"value": ""
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "gas",
-			"name": {
-				"en": "CO Detector",
-				"nl": "CO Melder"
-			},
-			"class": "sensor",
-			"capabilities": [],
-			"images": {
-				"large": "drivers/gas/assets/images/large.png",
-				"small": "drivers/gas/assets/images/small.png"
-			},
-			"pair": [{
-					"id": "select",
-					"navigation": {
-						"next": "list_devices"
-					}
-				},
-				{
-					"id": "list_devices",
-					"template": "list_devices",
-					"navigation": {
-						"next": "add_sensors"
-					}
-				},
-				{
-					"id": "add_sensors",
-					"template": "add_devices"
-				}
-			],
-			"settings": [{
-					"type": "group",
-					"label": {
-						"en": "Sensor information",
-						"nl": "Sensor informatie"
-					},
-					"children": [{
-							"id": "zone",
-							"type": "label",
-							"label": {
-								"en": "Zone number",
-								"nl": "Zone nummer"
-							},
-							"value": ""
-						},
-						{
-							"id": "trip",
-							"type": "label",
-							"label": {
-								"en": "Last CO alarm",
-								"nl": "Laaste CO melding"
-							},
-							"value": ""
-						},
-						{
-							"id": "battery",
-							"type": "label",
-							"label": {
-								"en": "Last low battery alarm",
-								"nl": "Laaste batterij alarm"
-							},
-							"value": ""
-						},
-						{
-							"id": "tamper",
-							"type": "label",
-							"label": {
-								"en": "Last tamper alarm",
-								"nl": "Laatste sabotage alarm"
-							},
-							"value": ""
-						}
-					]
-				},
-				{
-					"type": "group",
-					"label": {
-						"en": "Sensor configuration",
-						"nl": "Sensor configuratie"
-					},
-					"children": [{
-							"id": "location",
-							"type": "label",
-							"label": {
-								"en": "Location",
-								"nl": "Locatie"
-							},
-							"value": ""
-						},
-						{
-							"id": "type",
-							"type": "label",
-							"label": {
-								"en": "Type"
-							},
-							"value": ""
-						},
-						{
-							"id": "chime",
-							"type": "label",
-							"label": {
-								"en": "Chime",
-								"nl": "Deurbel"
-							},
-							"value": ""
-						},
-						{
-							"id": "partition",
-							"type": "label",
-							"label": {
-								"en": "Partition",
-								"nl": "Partitie"
-							},
-							"value": ""
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "pgm",
-			"name": {
-				"en": "Programmable output",
-				"nl": "Programmeerbare uitgang"
-			},
-			"class": "socket",
-			"capabilities": ["onoff"],
-			"mobile": {
-				"components": [{
-						"id": "icon",
-						"capabilities": ["onoff"]
-					},
-					{
-						"id": "toggle",
-						"capabilities": ["onoff"]
-					}
-				]
-			},
-			"images": {
-				"large": "drivers/pgm/assets/images/large.png",
-				"small": "drivers/pgm/assets/images/small.png"
-			},
-			"pair": [{
-					"id": "select",
-					"navigation": {
-						"next": "list_devices"
-					}
-				},
-				{
-					"id": "list_devices",
-					"template": "list_devices",
-					"navigation": {
-						"next": "add_pgm"
-					}
-				},
-				{
-					"id": "add_pgm",
-					"template": "add_devices"
-				}
-			]
-		},
-		{
-			"id": "x10",
-			"name": {
-				"en": "X10 Device",
-				"nl": "X10 Apparaat"
+				"en": "X10/PGM"
 			},
 			"class": "socket",
 			"capabilities": ["onoff", "dim_oneway"],
 			"mobile": {
 				"components": [{
-						"id": "icon",
-						"capabilities": ["onoff"]
+						"id": "icon"
 					},
 					{
 						"id": "toggle",
@@ -906,8 +508,8 @@
 				]
 			},
 			"images": {
-				"large": "drivers/x10/assets/images/large.png",
-				"small": "drivers/x10/assets/images/small.png"
+				"large": "drivers/x10pgm/assets/images/large.png",
+				"small": "drivers/x10pgm/assets/images/small.png"
 			},
 			"pair": [{
 					"id": "select",
@@ -919,11 +521,11 @@
 					"id": "list_devices",
 					"template": "list_devices",
 					"navigation": {
-						"next": "add_x10"
+						"next": "add_x10pgm"
 					}
 				},
 				{
-					"id": "add_x10",
+					"id": "add_x10pgm",
 					"template": "add_devices"
 				}
 			]
@@ -1272,7 +874,7 @@
 			}]
 		}]
 	},
-	"permissions": [
+  "permissions": [
 		"homey:manager:speech-input",
 		"homey:manager:speech-output"
 	],
