@@ -80,8 +80,8 @@
 	"speech": {
 		"open": {
 			"none": "__panel__ heeft geen open zones.",
-			"one": "Zone __item__ van __panel__ is open.",
-			"more": "De volgende __cnt__ zones van __panel__ zijn open: __items__."
+			"one": "Zone __zone__ van __panel__ is open.",
+			"more": "De volgende __cnt__ zones van __panel__ zijn open: __zones__."
 		},
 		"status": {
 			"general": "De status van paneel __panel__ is momenteel __status__.",

@@ -17,6 +17,7 @@ class SensorDriver extends Homey.Driver {
   onInit() {
     this.log('SensorDriver Init')
 		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
+    this.initQueue = []
   }
 
   // Generic sensor pairing

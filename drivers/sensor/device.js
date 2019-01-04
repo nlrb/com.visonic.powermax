@@ -36,7 +36,7 @@ class SensorDevice extends Homey.Device {
       this.registerListeners()
     } else {
       this.setUnavailable(Homey.__('error.no_panel'))
-      this.panelDriver.addToInitQueue(this)
+      this.getDriver().initQueue.push(this)
     }
   }
 
@@ -78,6 +78,11 @@ class SensorDevice extends Homey.Device {
       let result = this.panelDevice.setZoneBypass(this.getData().zone, !value) // invert for bypass
       callback(result ? null : Homey.__('no_bypass'), result)
     })
+  }
+
+  getTripStatus() {
+    let capability = sensorTripMap[this.did[0]]
+    return this.getCapabilityValue(capability)
   }
 
 }

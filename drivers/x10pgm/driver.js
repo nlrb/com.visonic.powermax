@@ -17,6 +17,7 @@ class X10PgmDriver extends Homey.Driver {
 	onInit() {
 		this.log('X10PgmDriver Init')
 		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
+		this.initQueue = {}
 	}
 
 	onPair(socket) {

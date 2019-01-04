@@ -22,7 +22,7 @@ class X10PgmDevice extends Homey.Device {
       this.registerListeners()
     } else {
       this.setUnavailable(Homey.__('error.no_panel'))
-      this.panelDriver.addToInitQueue(this)
+      this.getDriver().initQueue.push(this)
     }
   }
 

@@ -858,7 +858,7 @@
 			"args": [{
 				"name": "device",
 				"type": "device",
-				"filter": "driver_id=contact|gas|motion|smoke"
+				"filter": "driver_id=sensor"
 			}]
 		},
 		{
@@ -870,7 +870,7 @@
 			"args": [{
 				"name": "device",
 				"type": "device",
-				"filter": "driver_id=contact|gas|motion|smoke"
+				"filter": "driver_id=sensor"
 			}]
 		}]
 	},
@@ -890,16 +890,16 @@
 			"id": "zone",
 			"importance": 0.5,
 			"triggers": {
-				"en": ["zone", "zones", "sensor", "sensors"],
-				"nl": ["zone", "zones", "zonde", "zoons", "sensor", "sensors", "sensoren"]
+				"en": ["zone", "zones", "sensor", "sensors", "detector", "detectors"],
+				"nl": ["zone", "zones", "zonde", "zoons", "zonen", "sensor", "sensors", "sensoren", "detector", "detectors", "detectoren"]
 			}
 		},
 		{
 			"id": "open",
 			"importance": 0.5,
 			"triggers": {
-				"en": ["open"],
-				"nl": ["open"]
+				"en": ["open", "alarm", "tripped"],
+				"nl": ["open", "alarm", "verstoord"]
 			}
 		},
 		{

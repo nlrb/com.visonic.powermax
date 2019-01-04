@@ -19,12 +19,7 @@ class PanelDriver extends Homey.Driver {
     this.log('PanelDriver Init')
     this.locale = locale
     this.panelSearch
-    this.initQueue = []
-  }
-
-  addToInitQueue(device) {
-    this.log('Adding', device.getName(), 'to init queue')
-    this.this.initQueue.push(device)
+    this.registerFlowConditonsAndActions()
   }
 
   // Generic sensor pairing
@@ -78,6 +73,73 @@ class PanelDriver extends Homey.Driver {
 		Homey.on('download', data => {
 			socket.emit('download', data)
 		})
+  }
+
+  // Get the status of a panel variable
+	getPanelValue(device, name) {
+		let result
+		if (device !== undefined && device.State !== undefined) {
+			result = device.State[name]
+		}
+		return result
+	}
+
+  registerFlowConditonsAndActions() {
+    // Check flow conditions
+    let condition = new Homey.FlowCardCondition('sysflags')
+    condition.registerRunListener((args, state, callback) => {
+      // Get status of ready, trouble, alarm, memory
+  		let check = this.getPanelValue(args.device, args.flag)
+      this.log('FlowCardCondition sysflags', args.flag, state, 'result =', check)
+      callback(null, check)
+  	})
+    condition.register()
+
+    // Register flow actions
+    let action = new Homey.FlowCardAction('setClock')
+    action.registerRunListener((args, state, callback) => {
+      this.log('Action setClock', args.device.id)
+      let ok = args.device.setClock()
+  		callback(null, ok)
+    })
+    action.register()
+
+    action = new Homey.FlowCardAction('setState')
+    action.registerRunListener((args, state, callback) => {
+  		this.log('Action setState', args.device.id, args.state)
+      if (args.device !== undefined) {
+        args.device.setPanelState(args.state, (err, ok) => callback(err, ok))
+      } else {
+        return Promise.reject('Panel not available')
+      }
+  	})
+    action.register()
+
+    action = new Homey.FlowCardAction('bypassOn')
+    action.registerRunListener((args, state, callback) => {
+  		this.log('Action bypass', args.device.getData().id)
+      if (args.device !== undefined) {
+        let panelDevice = args.device.panelDevice
+    		let ok = panelDevice.setZoneBypass(args.device.getData().zone, true)
+    		callback((ok ? null : 'Not allowed'), ok)
+      } else {
+        return Promise.reject('Panel not available')
+      }
+  	})
+    action.register()
+
+    action = new Homey.FlowCardAction('bypassOff')
+    action.registerRunListener((args, state, callback) => {
+  		this.log('Action bypass', args.device.getData().id)
+      if (args.device !== undefined) {
+        let panelDevice = args.device.panelDevice
+  		  let ok = panelDevice.setZoneBypass(args.device.getData().zone, false)
+    		callback((ok ? null : 'Not allowed'), ok)
+      } else {
+        return Promise.reject('Panel not available')
+      }
+  	})
+    action.register()
   }
 
   getPanelDeviceById(id) {
@@ -197,49 +259,40 @@ class PanelDriver extends Homey.Driver {
 		return list
 	}
 
-	// Get the status of a panel variable
-	getPanelValue(panel, name) {
-		var result;
-		if (panels[panel] != null && panels[panel].pm.zone.system != null) {
-			result = panels[panel].pm.zone.system[name];
-		}
-		return result;
-	}
-
 	// Get a list of issues with the panel
 	getPanelTrouble(panel) {
-		var result = { panel: [], alarm: [], battery: [], tamper: [] };
-		if (panels[panel] != null) {
+		let result = { panel: [], alarm: [], battery: [], tamper: [] };
+    let panelDevice= this.getPanelDeviceById(panel)
+		if (panelDevice !== undefined) {
 			// Check panel trouble status
-			var t = self.getPanelValue(panel, 'troubleType');
-			if (t != null && t.txt != null) {
-				result.panel.push([{ txt: t.txt }]);
+			let t = this.getPanelValue(panelDevice, 'troubleType')
+			if (t !== undefined && t.txt !== undefined) {
+				result.panel.push([{ txt: t.txt }])
 			}
 			// List alarms also as trouble
-			t = self.getPanelValue(panel, 'alarmType');
-			if (t != null && t.txt != null) {
-				result.panel.push({ txt: t.txt });
+			t = this.getPanelValue(panelDevice, 'alarmType');
+      if (t !== undefined && t.txt !== undefined) {
+				result.panel.push({ txt: t.txt })
 			}
 			// Check sensor issues
 			// We only look at sensors that are visible in Homey
-			for (var i = 0; i < panels[panel].children.length; i++) {
-				if (panels[panel].children[i].type == 'sensor') {
-					var zonenr = panels[panel].children[i].device.zone;
-					var name = panels[panel].children[i].name;
-					var zone = panels[panel].pm.zone['zone.' + zonenr];
-					if (zone != null) {
-						if (zone.battery) {
-							result.battery.push({ nr: zonenr, txt: name });
-						} else if (zone.alarm || zone.memory) {
-							result.alarm.push({ nr: zonenr, txt: name });
-						} else if (zone.tamper) {
-							result.tamper.push({ nr: zonenr, txt: name });
-						}
+      let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
+      sensors.forEach((sensorDevice, key) => {
+        let zonenr = sensorDevice.getData().zone
+        let zone = panelDevice.powermax.zone['zone.' + zonenr]
+				let name = sensorDevice.getName()
+				if (zone !== undefined) {
+					if (zone.battery) {
+						result.battery.push({ nr: zonenr, txt: name })
+					} else if (zone.alarm || zone.memory) {
+						result.alarm.push({ nr: zonenr, txt: name })
+					} else if (zone.tamper) {
+						result.tamper.push({ nr: zonenr, txt: name })
 					}
 				}
-			}
+			})
 		}
-		return result;
+		return result
 	}
 
   // Get the event log for a panel (use cache if !force)

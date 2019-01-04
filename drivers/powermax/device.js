@@ -29,28 +29,25 @@ class PanelDevice extends Homey.Device {
     this.log('Starting device', this.id)
     this.powermax = new pm.PowerMax(this.locale, this.getSettings(), this.log, true)
     this.Trigger = {}
-    // Create flow triggers
-    for (let t in triggers) {
-      this.Trigger[triggers[t].id] = new Homey.FlowCardTriggerDevice(triggers[t].id)
-      // Register flow condition checks
-      if (triggers[t].check) {
-        this.Trigger[triggers[t].id].registerRunListener((args, state) => {
-          let result = (state.state === false) != (args.values === 'on')
-          this.log('>> Checked action', triggers[t].id, 'for', state.state,'=', args.values + ', result =', result)
-          return Promise(result)
-        })
-      }
-      this.Trigger[triggers[t].id].register()
-      this.log('Tigger', triggers[t], 'registered')
-    }
+    this.State = {}
+    this.registerFlowTriggers()
     this.registerEvents()
     this.registerListeners()
     // Check if there are devices in the queue that still need to be initialized
-    for (let i = 0; i < this.driver.initQueue.length; i++) {
-      let device = this.driver.initQueue[i]
-      this.log('Initializing device')
-      device.onInit()
-      device.setAvailable()
+    let sensorDriver = Homey.ManagerDrivers.getDriver('sensor')
+    let x10pgmDriver = Homey.ManagerDrivers.getDriver('x10pgm')
+    let initQueue = []
+    if (sensorDriver.initQueue !== undefined) {
+      initQueue = sensorDriver.initQueue
+    }
+    if (x10pgmDriver.initQueue !== undefined) {
+      initQueue = initQueue.concat(x10pgmDriver.initQueue)
+    }
+    for (let i = 0; i < initQueue; i++) {
+      let device = this.driver
+      this.log('Initializing device', initQueue[i].getName())
+      initQueue[i].onInit()
+      initQueue[i].setAvailable()
     }
   }
 
@@ -147,6 +144,23 @@ class PanelDevice extends Homey.Device {
     children.forEach((device, key) => { device.setUnavailable(Homey.__('error.no_panel')) })
   }
 
+  registerFlowTriggers() {
+    // Create flow triggers
+    for (let t in triggers) {
+      this.Trigger[triggers[t].id] = new Homey.FlowCardTriggerDevice(triggers[t].id)
+      // Register flow condition checks
+      if (triggers[t].check) {
+        this.Trigger[triggers[t].id].registerRunListener((args, state) => {
+          let result = (state.state === false) != (args.values === 'on')
+          this.log('>> Checked action', triggers[t].id, 'for', state.state,'=', args.values + ', result =', result)
+          return Promise(result)
+        })
+      }
+      this.Trigger[triggers[t].id].register()
+      this.log('Tigger', triggers[t], 'registered')
+    }
+  }
+
   // Register events to listen to
   registerEvents() {
     // Handle 'found' event: mark panel (and sensors) as active or inactive
@@ -194,6 +208,7 @@ class PanelDevice extends Homey.Device {
     // Handle 'system' events: changes in system status
     this.powermax.events.on('system', (field, newVal) => {
       this.log('Received system event for field', field, 'with value', newVal)
+      this.State[field] = newVal
       if (field === 'status') {
         let state = 'disarmed';
         if (newVal.nr === 4) { // Armed Home
@@ -276,20 +291,10 @@ class PanelDevice extends Homey.Device {
     this.registerCapabilityListener('homealarm_state', (value, opts, callback) => {
       this.setPanelState(value, (err, success) => {
         this.log('setPanelState', err)
-        callback('Update follows', null)
+        callback(err, success)
       })
     })
   }
-
-  // Get the name of the zone
-	getZoneName(zone) {
-		let name = this.locale === 'en' ? 'Unknown' : 'Onbekend'
-		let zones = this.powermax.settings.zones
-		if (zones !== undefined && zones[zone] !== undefined) {
-			name = zones[zone].zname
-		}
-		return name
-	}
 
   // Set the state of the panel
 	setPanelState(state, callback) {
@@ -327,7 +332,7 @@ class PanelDevice extends Homey.Device {
 
   // Get the panel status
 	getPanelStatus() {
-		return this.powermax.zone.system
+		return this.State
 	}
 
   // Get all sensors the panel has registered
@@ -365,7 +370,6 @@ class PanelDevice extends Homey.Device {
 						capabilities: capabilities,
 						settings: setting,
             icon: iconPath + 'motion.svg'
-
 					})
 				} else if (type === 'smoke' && elem.stype === 'Smoke') {
 					items.push({
@@ -397,8 +401,8 @@ class PanelDevice extends Homey.Device {
     let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
     sensors.forEach(sensorDevice => {
       let zonenr = sensorDevice.getData().zone
-      let zone = this.powermax.zone['zone.' + zonenr]
-      if (zone !== undefined && zone.trip) {
+      let tripped = sensorDevice.getTripStatus()
+      if (sensorDevice.getAvailable() && tripped) {
         zones.push({ nr: zonenr, name: sensorDevice.getName() })
       }
     })
