@@ -183,23 +183,26 @@ class PanelDevice extends Homey.Device {
       } else if (state === 'done') {
         // Mark all available again, download is done
         this.setAvailable()
-        let list = this.powermax.settings.zones;
+        let list = this.powermax.settings.zones
         let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
         sensors.forEach((device, key) => {
           let elem = list[device.getData().zone]
-          if (elem === undefined) {
-            // Sensor has been removed from panel
-            device.setUnavailable(Homey.__('error.sensor_removed'))
-          } else {
-            device.setAvailable()
-            // Update sensor setting info
-            var setting = {
-              location: elem.zname,
-              type: elem.ztypeName,
-              chime: elem.zchime,
-              partition: elem.partition.join(', ')
+          let panelId = device.getData().panel
+          if (panelId === this.id) {
+            if (elem === undefined) {
+              // Sensor has been removed from panel
+              device.setUnavailable(Homey.__('error.sensor_removed'))
+            } else {
+              device.setAvailable()
+              // Update sensor setting info
+              var setting = {
+                location: elem.zname,
+                type: elem.ztypeName,
+                chime: elem.zchime,
+                partition: elem.partition.join(', ')
+              }
+              device.setSettings(setting)
             }
-            device.setSettings(setting)
           }
         })
       }
