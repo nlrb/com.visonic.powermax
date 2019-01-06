@@ -27,7 +27,7 @@ class PanelDevice extends Homey.Device {
     this.locale = this.driver.locale
     this.id = this.getData().id
     this.log('Starting device', this.id)
-    this.powermax = new pm.PowerMax(this.locale, this.getSettings(), this.log, true)
+    this.powermax = new pm.PowerMax(this.locale, this.getSettings(), this.log)
     this.Trigger = {}
     this.State = {}
     this.registerFlowTriggers()
@@ -151,9 +151,9 @@ class PanelDevice extends Homey.Device {
       // Register flow condition checks
       if (triggers[t].check) {
         this.Trigger[triggers[t].id].registerRunListener((args, state) => {
-          let result = (state.state === false) != (args.values === 'on')
-          this.log('>> Checked action', triggers[t].id, 'for', state.state,'=', args.values + ', result =', result)
-          return Promise(result)
+          let result = (state.state === false) !== (args.values === 'on')
+          this.log('>> Checked action', triggers[t].id, 'for state', state.state,'=', args.values + ', result =', result)
+          return Promise.resolve(result)
         })
       }
       this.Trigger[triggers[t].id].register()
@@ -272,7 +272,7 @@ class PanelDevice extends Homey.Device {
 
     // Catch battery events
     this.powermax.events.on('zoneBattery', (data) => {
-      let name = this.getZoneName(data.zone);
+      let name = this.getZoneName(data.zone)
       this.Trigger.zoneBattery
         .trigger(this, { zone: data.zone, name: name }, { state: data.state })
           .catch(this.error)
@@ -281,10 +281,10 @@ class PanelDevice extends Homey.Device {
 
     // Handle events for the app settings page
     this.powermax.events.on('eventLog', () => {
-      Homey.ManagerApi.realtime('eventlog', { panel: this.id, log: this.powermax.eventLog });
+      Homey.ManagerApi.realtime('eventlog', { panel: this.id, log: this.powermax.eventLog })
     })
     this.powermax.events.on('busy', (state) => {
-      Homey.ManagerApi.realtime('busy', { panel: this.id, busy: state });
+      Homey.ManagerApi.realtime('busy', { panel: this.id, busy: state })
     })
 
   }
@@ -433,6 +433,19 @@ class PanelDevice extends Homey.Device {
 			return false
 		}
 	}
+
+  // Get the name of the zone
+  // TODO: should we return the Homey name instead?
+  getZoneName(zone) {
+    let name = this.locale === 'en' ? 'Unknown' : 'Onbekend'
+    if (this.powermax !== undefined) {
+      let zones = this.powermax.settings.zones
+      if (zones !== undefined && zones[zone] !== undefined) {
+        name = zones[zone].zname
+      }
+    }
+    return name
+  }
 
   // Get all X10 & PGM devices the panel has registered
 	getX10Devices() {
