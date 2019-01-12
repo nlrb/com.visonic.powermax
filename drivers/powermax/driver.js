@@ -167,11 +167,11 @@ class PanelDriver extends Homey.Driver {
 		let powermax = new pm.PowerMax(locale, settings, this.log)
 		this.panelSearch = powermax
 		// Add event handlers
-    powermax.events.on('found', this.foundHandler = (data) => {
+    powermax.on('found', this.foundHandler = (data) => {
       id = data.id
       Homey.emit('found', data)
     })
-		powermax.events.on('download', this.downloadHandler = (state) => {
+		powermax.on('download', this.downloadHandler = (state) => {
 			// Only relevant when we are searching for a panel
 			if (this.panelSearch != null) {
 				let data = {
@@ -237,8 +237,8 @@ class PanelDriver extends Homey.Driver {
     if (this.panelSearch != null) {
 			this.panelSearch.found = 'no' // make sure we don't re-open the connection
 			this.panelSearch.closeConnection()
-      this.panelSearch.events.removeListener('found', this.foundHandler)
-      this.panelSearch.events.removeListener('download', this.downloadHandler)
+      this.panelSearch.removeListener('found', this.foundHandler)
+      this.panelSearch.removeListener('download', this.downloadHandler)
       this.panelSearch = null
     }
 	}

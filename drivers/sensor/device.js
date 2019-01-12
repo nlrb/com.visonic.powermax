@@ -45,11 +45,11 @@ class SensorDevice extends Homey.Device {
   }
 
   onDeleted() {
-    this.panelDevice.powermax.events.removeAllListeners('zone.' + this.did[1])
+    this.panelDevice.powermax.removeAllListeners('zone.' + this.did[1])
   }
 
   registerEvents() {
-    this.panelDevice.powermax.events.on('zone.' + this.did[1], (field, newVal) => {
+    this.panelDevice.powermax.on('zone.' + this.did[1], (field, newVal) => {
 			this.log('Zone event', field, 'with value', newVal)
 			let now = new Date().toLocaleString(this.panelDriver.locale)
       let capability = sensorMap[field]

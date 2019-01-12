@@ -164,7 +164,7 @@ class PanelDevice extends Homey.Device {
   // Register events to listen to
   registerEvents() {
     // Handle 'found' event: mark panel (and sensors) as active or inactive
-    this.powermax.events.on('found', (data) => {
+    this.powermax.on('found', (data) => {
 			if (!data.found) {
 				this.log('Marking panel', this.id, 'as unavailable')
         this.setUnavailable()
@@ -175,7 +175,7 @@ class PanelDevice extends Homey.Device {
 		})
 
     // Handle 'download' event: happens e.g. after installer menu exit
-    this.powermax.events.on('download', (state) => {
+    this.powermax.on('download', (state) => {
       // Regular download, not for adding panel
       if (state === 'start') {
         // Panel and sensors cannot be used during a download
@@ -209,7 +209,7 @@ class PanelDevice extends Homey.Device {
     })
 
     // Handle 'system' events: changes in system status
-    this.powermax.events.on('system', (field, newVal) => {
+    this.powermax.on('system', (field, newVal) => {
       this.log('Received system event for field', field, 'with value', newVal)
       this.State[field] = newVal
       if (field === 'status') {
@@ -262,7 +262,7 @@ class PanelDevice extends Homey.Device {
     })
 
     // Zone trip alarm event
-    this.powermax.events.on('zoneTripAlarm', (data) => {
+    this.powermax.on('zoneTripAlarm', (data) => {
       let name = this.getZoneName(data.zone)
       this.Trigger.zoneTripAlarm
         .trigger(this, { zone: data.zone, name: name }, { state: data.state })
@@ -271,7 +271,7 @@ class PanelDevice extends Homey.Device {
     })
 
     // Catch battery events
-    this.powermax.events.on('zoneBattery', (data) => {
+    this.powermax.on('zoneBattery', (data) => {
       let name = this.getZoneName(data.zone)
       this.Trigger.zoneBattery
         .trigger(this, { zone: data.zone, name: name }, { state: data.state })
@@ -280,10 +280,10 @@ class PanelDevice extends Homey.Device {
     })
 
     // Handle events for the app settings page
-    this.powermax.events.on('eventLog', () => {
+    this.powermax.on('eventLog', () => {
       Homey.ManagerApi.realtime('eventlog', { panel: this.id, log: this.powermax.eventLog })
     })
-    this.powermax.events.on('busy', (state) => {
+    this.powermax.on('busy', (state) => {
       Homey.ManagerApi.realtime('busy', { panel: this.id, busy: state })
     })
 
