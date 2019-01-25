@@ -28,29 +28,34 @@ class PowerMaxApp extends Homey.App {
 		// Register speech actions
 		Homey.ManagerSpeechInput.on('speechEval', (speech, callback) => {
 			let matched = false
-			this.log('Received speech trigger', speech.triggers)
-			for (let i = 0; i < speechTriggers.length; i++) {
-				let match = 0
-				speech.triggers.forEach((trigger) => {
-					for (let m = 0; m < speechTriggers[i].says.length; m++) {
-						if (trigger.id === speechTriggers[i].says[m]) {
-							match++
+			if (speech.triggers) {
+				this.log('Received speech trigger', speech.triggers)
+				for (let i = 0; i < speechTriggers.length; i++) {
+					let match = 0
+					speech.triggers.forEach((trigger) => {
+						for (let m = 0; m < speechTriggers[i].says.length; m++) {
+							if (trigger.id === speechTriggers[i].says[m]) {
+								match++
+							}
+						}
+					})
+					matched = match === speechTriggers[i].says.length
+					if (matched) {
+						this.log('Match on', speechTriggers[i].says)
+						let session = { session: speech.session }
+						if (speechTriggers[i].handler === 'open') {
+							this.openZoneSpeechHandler(i, session)
+						} else if (speechTriggers[i].handler === 'status') {
+							this.statusSpeechHandler(i, session)
+						} else if (speechTriggers[i].handler === 'trouble') {
+							this.troubleSpeechHandler(i, session)
+						} else {
+							this.defaultSpeechHandler(i, session)
 						}
 					}
-				})
-				matched = match === speechTriggers[i].says.length
-				if (matched) {
-					this.log('Match on', speechTriggers[i].says)
-					if (speechTriggers[i].handler === 'open') {
-						this.openZoneSpeechHandler(i, speech.session)
-					} else if (speechTriggers[i].handler === 'status') {
-						this.statusSpeechHandler(i, speech.session)
-					} else if (speechTriggers[i].handler === 'trouble') {
-						this.troubleSpeechHandler(i, speech.session)
-					} else {
-						this.defaultSpeechHandler(i, speech.session)
-					}
 				}
+			} else {
+				this.error('No speech triggers received')
 			}
 			callback(matched ? null : true, matched ? true : null)
 		})
