@@ -135,7 +135,7 @@ class PowerMaxApp extends Homey.App {
 			let panelDevice = this.panelDriver.getPanelDeviceById(id)
 			let result = panelDevice.getPanelStatus()
 			this.log(result)
-			if (result != null) {
+			if (result !== undefined && result.status !== undefined) {
 				let txt = Homey.__('speech.status.general', { panel: name, status: result.status.txt })
 				// Check how many zones are open
 				let opencnt = panelDevice.getOpenZones().length
@@ -197,11 +197,17 @@ class PowerMaxApp extends Homey.App {
 					}
 				}
 			}
-			let txt = Homey.__('speech.trouble.none', { panel: name })
-			if (state.length > 0) {
-				txt = state.join(Homey.__('speech.status.and'))
-				// Make a neat sentence
-				txt = txt[0].toUpperCase() + txt.slice(1) + '.'
+			let txt
+			if (result.trouble) {
+				if (state.length === 0) {
+				txt = Homey.__('speech.trouble.unknown', { panel: name })
+				} else {
+					txt = state.join(Homey.__('speech.status.and'))
+					// Make a neat sentence
+					txt = txt[0].toUpperCase() + txt.slice(1) + '.'
+				}
+			} else {
+				txt = Homey.__('speech.trouble.none', { panel: name })
 			}
 			this.log(txt)
 			Homey.ManagerSpeechOutput.say(txt, session)

@@ -29,7 +29,6 @@ class PanelDevice extends Homey.Device {
     this.log('Starting device', this.id)
     this.powermax = new pm.PowerMax(this.locale, this.getSettings(), this.log)
     this.Trigger = {}
-    this.State = {}
     this.registerFlowTriggers()
     this.registerEvents()
     this.registerListeners()
@@ -211,7 +210,6 @@ class PanelDevice extends Homey.Device {
     // Handle 'system' events: changes in system status
     this.powermax.on('system', (field, newVal) => {
       this.log('Received system event for field', field, 'with value', newVal)
-      this.State[field] = newVal
       if (field === 'status') {
         let state = 'disarmed';
         if (newVal.nr === 4) { // Armed Home
@@ -335,7 +333,11 @@ class PanelDevice extends Homey.Device {
 
   // Get the panel status
 	getPanelStatus() {
-		return this.State
+    let result
+    if (this.powermax !== undefined) {
+      result = this.powermax.getStatus('system')
+    }
+		return result
 	}
 
   // Get all sensors the panel has registered

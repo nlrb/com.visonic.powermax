@@ -78,8 +78,8 @@ class PanelDriver extends Homey.Driver {
   // Get the status of a panel variable
 	getPanelValue(device, name) {
 		let result
-		if (device !== undefined && device.State !== undefined) {
-			result = device.State[name]
+		if (device !== undefined && name !== undefined && device.powermax !== undefined) {
+			result = device.powermax.getStatus('system', name)
 		}
 		return result
 	}
@@ -262,12 +262,13 @@ class PanelDriver extends Homey.Driver {
 	// Get a list of issues with the panel
 	getPanelTrouble(panel) {
 		let result = { panel: [], alarm: [], battery: [], tamper: [] };
-    let panelDevice= this.getPanelDeviceById(panel)
+    let panelDevice = this.getPanelDeviceById(panel)
 		if (panelDevice !== undefined) {
 			// Check panel trouble status
-			let t = this.getPanelValue(panelDevice, 'troubleType')
+      result.trouble = this.getPanelValue(panelDevice, 'trouble')
+      let t = this.getPanelValue(panelDevice, 'troubleType')
 			if (t !== undefined && t.txt !== undefined) {
-				result.panel.push([{ txt: t.txt }])
+        let t = this.getPanelValue(panelDevice, 'troubleType')
 			}
 			// List alarms also as trouble
 			t = this.getPanelValue(panelDevice, 'alarmType');
@@ -279,7 +280,7 @@ class PanelDriver extends Homey.Driver {
       let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
       sensors.forEach((sensorDevice, key) => {
         let zonenr = sensorDevice.getData().zone
-        let zone = panelDevice.powermax.zone['zone.' + zonenr]
+        let zone = panelDevice.powermax.getStatus('zone.' + zonenr)
 				let name = sensorDevice.getName()
 				if (zone !== undefined) {
 					if (zone.battery) {

@@ -97,6 +97,7 @@
 		},
 		"trouble": {
 			"none": "Voor zover ik weet is er geen probleem met __panel__.",
+      "unknown": "__panel__ heeft een probleem, maar ik weet niet wat het is.",
 			"panel": {
 				"one": "__panel__ heeft een __type__ probleem",
 				"more": "__panel__ heeft de volgende problemen: __type__"
