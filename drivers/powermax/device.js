@@ -110,7 +110,7 @@ class PanelDevice extends Homey.Device {
       }
 		}
     // Make sure Homey doesn't change the settings - we do that!
-		callback(result.msg, null)
+		callback(new Error(result.msg), null)
     // Update the device settings
     if (result.update) {
       for (let item in result.updates) {

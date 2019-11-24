@@ -1,6 +1,6 @@
 {
   "id": "com.visonic.powermax",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "compatibility": ">=1.5.0",
   "sdk": 2,
   "name": {
@@ -17,7 +17,7 @@
   "contributing": {
     "donate": {
       "paypal": {
-        "username": "rjwbaas"
+        "username": "rjwbaas1"
       }
     }
   },
@@ -119,6 +119,11 @@
 			},
 			"class": "homealarm",
 			"capabilities": ["homealarm_state", "arm_state", "ready", "trouble", "alarm", "memory"],
+      "energy": {
+        "approximation": {
+          "usageConstant": 2
+        }
+      },
 			"mobile": {
 				"components": [{
 						"id": "icon",
