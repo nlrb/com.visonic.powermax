@@ -14,15 +14,15 @@ class X10PgmDevice extends Homey.Device {
 
   onInit() {
     this.panelId = this.getData().panel
-    this.panelDriver = this.getDriver().panelDriver
+    this.panelDriver = this.driver.panelDriver
     this.panelDevice = this.panelDriver.getPanelDeviceById(this.panelId)
     this.did = this.getData().id.split(':')
     if (this.panelDevice.powermax) {
       this.registerEvents()
       this.registerListeners()
     } else {
-      this.setUnavailable(Homey.__('error.no_panel'))
-      this.getDriver().initQueue.push(this)
+      this.setUnavailable(this.homey.__('error.no_panel'))
+      this.driver.initQueue.push(this)
     }
   }
 

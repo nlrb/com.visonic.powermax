@@ -16,7 +16,7 @@ class X10PgmDriver extends Homey.Driver {
 
 	onInit() {
 		this.log('X10PgmDriver Init')
-		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
+		this.panelDriver = this.homey.drivers.getDriver('powermax')
 		this.initQueue = []
 	}
 
@@ -27,23 +27,23 @@ class X10PgmDriver extends Homey.Driver {
 		// Let the front-end know which panels there are
 		let panels = this.panelDriver.getPanels()
 		// Make sure the page has fully loaded
-		socket.on('loaded', () => {
+		socket.setHandler('loaded', () => {
 			socket.emit('start', panels)
 		})
 
-		socket.on('selected', (id, callback) => {
+		socket.setHandler('selected', (id, callback) => {
 			selectedPanel = id
 			callback(null, id)
 		})
 
 		// this method is run when Homey.emit('list_devices') is run on the front-end
 		// which happens when you use the template `list_devices`
-		socket.on('list_devices', (data, callback) => {
+		socket.setHandler('list_devices', async (data) => {
 			this.log('Selected panel', selectedPanel)
       let panelDevice = this.panelDriver.getPanelDeviceById(selectedPanel)
 			let devices = panelDevice.getX10Devices()
 			// err, result style
-			callback(null, devices)
+			return devices
 		})
 	}
 

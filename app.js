@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 const Homey = require('homey')
-const locale = Homey.ManagerI18n.getLanguage() == 'nl' ? 'nl' : 'en' // only Dutch & English supported
+const locale = 'en' // only Dutch & English supported
 const pm = require('powermax-api')
 
 // Speech ids and actions
@@ -23,204 +23,139 @@ class PowerMaxApp extends Homey.App {
 
 	onInit() {
 		this.log('PowerMaxApp is running...')
-		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
-
-		// Register speech actions
-		Homey.ManagerSpeechInput.on('speechEval', (speech, callback) => {
-			let matched = false
-			if (speech.triggers) {
-				this.log('Received speech trigger', speech.triggers)
-				for (let i = 0; i < speechTriggers.length; i++) {
-					let match = 0
-					speech.triggers.forEach((trigger) => {
-						for (let m = 0; m < speechTriggers[i].says.length; m++) {
-							if (trigger.id === speechTriggers[i].says[m]) {
-								match++
-							}
-						}
-					})
-					matched = match === speechTriggers[i].says.length
-					if (matched) {
-						this.log('Match on', speechTriggers[i].says)
-						let session = { session: speech.session }
-						if (speechTriggers[i].handler === 'open') {
-							this.openZoneSpeechHandler(i, session)
-						} else if (speechTriggers[i].handler === 'status') {
-							this.statusSpeechHandler(i, session)
-						} else if (speechTriggers[i].handler === 'trouble') {
-							this.troubleSpeechHandler(i, session)
-						} else {
-							this.defaultSpeechHandler(i, session)
-						}
-					}
-				}
-			} else {
-				this.error('No speech triggers received')
-			}
-			callback(matched ? null : true, matched ? true : null)
-		})
+		// this.panelDriver = this.homey.drivers.getDriver('powermax')
 	}
 
-	// Handler for open zones question
-	openZoneSpeechHandler(id, session) {
-		// Check for each alarm panel
-		let panels = this.panelDriver.getPanels()
-		for (let p = 0; p < panels.length; p++) {
-			let id = panels[p].id
-			let name = panels[p].hname
-			let panelDevice = this.panelDriver.getPanelDeviceById(id)
-			let openz = panelDevice.getOpenZones()
-			let cnt = openz.length
-			let zones = ''
-			for (let i in openz) {
-				zones += openz[i].name + ', '
-			}
-			let txt
-			if (cnt === 0) {
-				txt = Homey.__('speech.open.none', { panel: name })
-			} else {
-				zones = zones.slice(0, -2) // remove last ', ';
-				if (cnt === 1) {
-					txt = Homey.__('speech.open.one', {  panel: name, zone: zones })
-				} else {
-					txt = Homey.__('speech.open.more', {  panel: name, cnt: cnt, zones: zones })
-				}
-			}
-			this.log(txt)
-			Homey.ManagerSpeechOutput.say(txt, session)
-		}
-	}
+	// // Default handler for speech input: talk back
+	// defaultSpeechHandler(idx, session) {
+	// 	// Check for each alarm panel
+	// 	let panels = this.panelDriver.getPanels()
+	// 	for (let p = 0; p < panels.length; p++) {
+	// 		let id = panels[p].id
+	// 		let name = panels[p].hname
+	// 		let panelDevice = this.panelDriver.getPanelDeviceById(id)
+	// 		let result = panelDevice.getOpenZones()
+	// 		let cnt = result.length
+	// 		let items = ''
+	// 		for (let i in result) {
+	// 			items += result[i].name + ', ';
+	// 		}
+	// 		let word = 'speech.' + speechTriggers[idx].word
+	// 		if (cnt === 0) {
+	// 			let txt = this.homey.__(word + '.none', { panel: name })
+	// 			this.log(txt)
+	// 			Homey.ManagerSpeechOutput.say(txt, session)
+	// 		} else {
+	// 			items = items.slice(0, -2) // remove last ', ';
+	// 			let txt
+	// 			if (cnt === 1) {
+	// 				txt = this.homey.__(word + '.one', {  panel: name, item: items })
+	// 			} else {
+	// 				txt = this.homey.__(word + '.more', {  panel: name, cnt: cnt, items: items })
+	// 			}
+	// 			this.log(txt)
+	// 			Homey.ManagerSpeechOutput.say(txt, session)
+	// 		}
+	// 	}
+	// }
 
-	// Default handler for speech input: talk back
-	defaultSpeechHandler(idx, session) {
-		// Check for each alarm panel
-		let panels = this.panelDriver.getPanels()
-		for (let p = 0; p < panels.length; p++) {
-			let id = panels[p].id
-			let name = panels[p].hname
-			let panelDevice = this.panelDriver.getPanelDeviceById(id)
-			let result = panelDevice.getOpenZones()
-			let cnt = result.length
-			let items = ''
-			for (let i in result) {
-				items += result[i].name + ', ';
-			}
-			let word = 'speech.' + speechTriggers[idx].word
-			if (cnt === 0) {
-				let txt = Homey.__(word + '.none', { panel: name })
-				this.log(txt)
-				Homey.ManagerSpeechOutput.say(txt, session)
-			} else {
-				items = items.slice(0, -2) // remove last ', ';
-				let txt
-				if (cnt === 1) {
-					txt = Homey.__(word + '.one', {  panel: name, item: items })
-				} else {
-					txt = Homey.__(word + '.more', {  panel: name, cnt: cnt, items: items })
-				}
-				this.log(txt)
-				Homey.ManagerSpeechOutput.say(txt, session)
-			}
-		}
-	}
+	// // statusSpeechHandler
+ 	// statusSpeechHandler(idx, session) {
+	// 	const flags = [ 'ready', 'trouble', 'alarm', 'memory' ]
+	// 	// Check for each alarm panel
+	// 	let panels = this.panelDriver.getPanels()
+	// 	for (let p = 0; p < panels.length; p++) {
+	// 		let id = panels[p].id
+	// 		let name = panels[p].hname
+	// 		let panelDevice = this.panelDriver.getPanelDeviceById(id)
+	// 		let result = panelDevice.getPanelStatus()
+	// 		this.log(result)
+	// 		if (result !== undefined && result.status !== undefined) {
+	// 			let txt = this.homey.__('speech.status.general', { panel: name, status: result.status.txt })
+	// 			// Check how many zones are open
+	// 			let opencnt = panelDevice.getOpenZones().length
+	// 			let state = []
+	// 			if (opencnt === 1) {
+	// 				state.push(this.homey.__('speech.status.open.one'))
+	// 			} else if (opencnt > 1) {
+	// 				state.push(this.homey.__('speech.status.open.more', { cnt: opencnt }))
+	// 			}
+	// 			for (let i = 0; i < flags.length; i++) {
+	// 				if (result[flags[i]]) {
+	// 					state.push(this.homey.__('speech.status.' + flags[i]))
+	// 				}
+	// 			}
+	// 			if (state.length > 0) {
+	// 				let nextline = state.join(this.homey.__('speech.status.and'));
+	// 				// Make a neat sentence
+	// 				nextline = nextline[0].toUpperCase() + nextline.slice(1) + '.'
+	// 				txt += ' ' + nextline
+	// 			}
+	// 			this.log(txt)
+	// 			Homey.ManagerSpeechOutput.say(txt, session)
+	// 		}
+	// 	}
+	// }
 
-	// statusSpeechHandler
- 	statusSpeechHandler(idx, session) {
-		const flags = [ 'ready', 'trouble', 'alarm', 'memory' ]
-		// Check for each alarm panel
-		let panels = this.panelDriver.getPanels()
-		for (let p = 0; p < panels.length; p++) {
-			let id = panels[p].id
-			let name = panels[p].hname
-			let panelDevice = this.panelDriver.getPanelDeviceById(id)
-			let result = panelDevice.getPanelStatus()
-			this.log(result)
-			if (result !== undefined && result.status !== undefined) {
-				let txt = Homey.__('speech.status.general', { panel: name, status: result.status.txt })
-				// Check how many zones are open
-				let opencnt = panelDevice.getOpenZones().length
-				let state = []
-				if (opencnt === 1) {
-					state.push(Homey.__('speech.status.open.one'))
-				} else if (opencnt > 1) {
-					state.push(Homey.__('speech.status.open.more', { cnt: opencnt }))
-				}
-				for (let i = 0; i < flags.length; i++) {
-					if (result[flags[i]]) {
-						state.push(Homey.__('speech.status.' + flags[i]))
-					}
-				}
-				if (state.length > 0) {
-					let nextline = state.join(Homey.__('speech.status.and'));
-					// Make a neat sentence
-					nextline = nextline[0].toUpperCase() + nextline.slice(1) + '.'
-					txt += ' ' + nextline
-				}
-				this.log(txt)
-				Homey.ManagerSpeechOutput.say(txt, session)
-			}
-		}
-	}
-
-	// Trouble handler
-	troubleSpeechHandler(idx, session) {
-		const items = {
-			panel: { en: 'panel', nl: 'paneel' },
-			alarm: { en: 'alarm', nl: 'alarm' },
-			battery: { en: 'low battery', nl: 'lage batterijspanning' },
-			tamper: { en: 'tamper', nl: 'sabotage' }
-		};
-		// Check for each alarm panel
-		let panels = this.panelDriver.getPanels()
-		for (let p = 0; p < panels.length; p++) {
-			let id = panels[p].id
-			let name = panels[p].hname
-			let result = this.panelDriver.getPanelTrouble(id)
-			this.log(result)
-			let state = []
-			for (let i in items) {
-				let elem = result[i]
-				this.log(i, elem)
-				if (elem !== undefined && elem.length > 0) {
-					let x = []
-					for (let j = 0; j < elem.length; j++) {
-						x.push(elem[j].txt)
-					}
-					let cnt = x.length
-					let nr = (cnt === 1 ? 'one' : 'more')
-					x.join(Homey.__('speech.status.and'))
-					this.log(x)
-					if (i === 'panel') {
-						state.push(Homey.__('speech.trouble.panel.' + nr, { panel: name, type: x }))
-					} else {
-						state.push(Homey.__('speech.trouble.sensor.' + nr, { panel: name, type: items[i][locale], sensor: x }))
-					}
-				}
-			}
-			let txt
-			if (result.trouble) {
-				if (state.length === 0) {
-				txt = Homey.__('speech.trouble.unknown', { panel: name })
-				} else {
-					txt = state.join(Homey.__('speech.status.and'))
-					// Make a neat sentence
-					txt = txt[0].toUpperCase() + txt.slice(1) + '.'
-				}
-			} else {
-				txt = Homey.__('speech.trouble.none', { panel: name })
-			}
-			this.log(txt)
-			Homey.ManagerSpeechOutput.say(txt, session)
-		}
-	}
+	// // Trouble handler
+	// troubleSpeechHandler(idx, session) {
+	// 	const items = {
+	// 		panel: { en: 'panel', nl: 'paneel' },
+	// 		alarm: { en: 'alarm', nl: 'alarm' },
+	// 		battery: { en: 'low battery', nl: 'lage batterijspanning' },
+	// 		tamper: { en: 'tamper', nl: 'sabotage' }
+	// 	};
+	// 	// Check for each alarm panel
+	// 	let panels = this.panelDriver.getPanels()
+	// 	for (let p = 0; p < panels.length; p++) {
+	// 		let id = panels[p].id
+	// 		let name = panels[p].hname
+	// 		let result = this.panelDriver.getPanelTrouble(id)
+	// 		this.log(result)
+	// 		let state = []
+	// 		for (let i in items) {
+	// 			let elem = result[i]
+	// 			this.log(i, elem)
+	// 			if (elem !== undefined && elem.length > 0) {
+	// 				let x = []
+	// 				for (let j = 0; j < elem.length; j++) {
+	// 					x.push(elem[j].txt)
+	// 				}
+	// 				let cnt = x.length
+	// 				let nr = (cnt === 1 ? 'one' : 'more')
+	// 				x.join(this.homey.__('speech.status.and'))
+	// 				this.log(x)
+	// 				if (i === 'panel') {
+	// 					state.push(this.homey.__('speech.trouble.panel.' + nr, { panel: name, type: x }))
+	// 				} else {
+	// 					state.push(this.homey.__('speech.trouble.sensor.' + nr, { panel: name, type: items[i][locale], sensor: x }))
+	// 				}
+	// 			}
+	// 		}
+	// 		let txt
+	// 		if (result.trouble) {
+	// 			if (state.length === 0) {
+	// 			txt = this.homey.__('speech.trouble.unknown', { panel: name })
+	// 			} else {
+	// 				txt = state.join(this.homey.__('speech.status.and'))
+	// 				// Make a neat sentence
+	// 				txt = txt[0].toUpperCase() + txt.slice(1) + '.'
+	// 			}
+	// 		} else {
+	// 			txt = this.homey.__('speech.trouble.none', { panel: name })
+	// 		}
+	// 		this.log(txt)
+	// 		Homey.ManagerSpeechOutput.say(txt, session)
+	// 	}
+	// }
 
 	// External API: get an array of panels (for panel selection)
 	getPanels() {
-		return Homey.ManagerDrivers.getDriver('powermax').getPanels()
+		return this.homey.drivers.getDriver('powermax').getPanels()
 	}
 
 	getEventLog(panel, force) {
-		return Homey.ManagerDrivers.getDriver('powermax').getEventLog(panel, force)
+		return this.homey.drivers.getDriver('powermax').getEventLog(panel, force)
 	}
 
 }

@@ -16,7 +16,7 @@ class SensorDriver extends Homey.Driver {
 
   onInit() {
     this.log('SensorDriver Init')
-		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
+		this.panelDriver = this.homey.drivers.getDriver('powermax')
     this.initQueue = []
   }
 
@@ -28,18 +28,18 @@ class SensorDriver extends Homey.Driver {
     // Let the front-end know which panels there are
     let panels = this.panelDriver.getPanels()
     // Make sure the page has fully loaded
-    socket.on('loaded', () => {
+    socket.setHandler('loaded', () => {
       socket.emit('start', panels)
     })
 
-    socket.on('selected', (id, callback) => {
+    socket.setHandler('selected', (id) => {
       selectedPanel = id
-      callback(null, id)
+      socket.emit(null, id)
     })
 
     // this method is run when Homey.emit('list_devices') is run on the front-end
     // which happens when you use the template `list_devices`
-    socket.on('list_devices', (data, callback) => {
+    socket.setHandler('list_devices', async (data) => {
       let devices = []
       let panel = this.panelDriver.getPanelDeviceById(selectedPanel)
       this.log('Selected panel', selectedPanel)
@@ -47,8 +47,7 @@ class SensorDriver extends Homey.Driver {
       for (let t in sensorTypes) {
         devices = devices.concat(panel.getPanelSensors(sensorTypes[t]))
       }
-      // err, result style
-      callback(null, devices)
+      return devices
     })
   }
 

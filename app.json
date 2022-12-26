@@ -1,8 +1,9 @@
 {
   "id": "com.visonic.powermax",
-  "version": "2.0.4",
-  "compatibility": ">=1.5.0",
-  "sdk": 2,
+  "version": "2.1.0",
+  "compatibility": ">=5.0.0",
+  "brandColor": "#26478c",
+  "sdk": 3,
   "name": {
     "en": "Visonic PowerMax"
   },
@@ -562,6 +563,7 @@
 				}],
 				"tokens": [{
 					"name": "status",
+					"type": "string",
 					"title": {
 						"en": "Status"
 					}
@@ -580,6 +582,7 @@
 				}],
 				"tokens": [{
 						"name": "type",
+						"type": "string",
 						"title": {
 							"en": "Event",
 							"nl": "Gebeurtenis"
@@ -587,6 +590,7 @@
 					},
 					{
 						"name": "trigger",
+						"type": "string",
 						"title": {
 							"en": "Triggered by",
 							"nl": "Veroorzaakt door"
@@ -600,6 +604,10 @@
 					"en": "Panel alarm becomes",
 					"nl": "Paneel alarm wordt"
 				},
+				"titleFormatted": {
+					"en": "Panel alarm becomes [[values]]",
+					"nl": "Paneel alarm wordt [[values]]"
+				},
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -627,12 +635,14 @@
 				],
 				"tokens": [{
 						"name": "type",
+						"type": "string",
 						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
+						"type": "string",
 						"title": {
 							"en": "Alarm type name",
 							"nl": "Naam alarm type"
@@ -646,6 +656,10 @@
 					"en": "Panel trouble becomes",
 					"nl": "Paneel probleem wordt"
 				},
+				"titleFormatted": {
+					"en": "Panel trouble becomes [[values]]",
+					"nl": "Paneel probleem wordt [[values]]"
+				},
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -673,12 +687,14 @@
 				],
 				"tokens": [{
 						"name": "type",
+						"type": "string",
 						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
+						"type": "string",
 						"title": {
 							"en": "Trouble type name",
 							"nl": "Naam probleem"
@@ -692,53 +708,9 @@
 					"en": "Zone alarm becomes",
 					"nl": "Zone alarm wordt"
 				},
-				"args": [{
-						"name": "device",
-						"type": "device",
-						"filter": "driver_id=powermax"
-					},
-					{
-						"name": "values",
-						"type": "dropdown",
-						"values": [{
-								"id": "on",
-								"label": {
-									"en": "active",
-									"nl": "actief"
-								}
-							},
-							{
-								"id": "off",
-								"label": {
-									"en": "inactive",
-									"nl": "inactief"
-								}
-							}
-						]
-					}
-				],
-				"tokens": [{
-						"name": "zone",
-						"type": "number",
-						"title": {
-							"en": "Zone number",
-							"nl": "Zone nummer"
-						}
-					},
-					{
-						"name": "name",
-						"title": {
-							"en": "Name zone",
-							"nl": "Naam zone"
-						}
-					}
-				]
-			},
-			{
-				"id": "zoneBattery",
-				"title": {
-					"en": "Low battery",
-					"nl": "Lage batterijspanning"
+				"titleFormatted": {
+					"en": "Zone alarm becomes [[values]]",
+					"nl": "Zone alarm wordt [[values]]"
 				},
 				"args": [{
 						"name": "device",
@@ -775,6 +747,60 @@
 					},
 					{
 						"name": "name",
+						"type": "string",
+						"title": {
+							"en": "Name zone",
+							"nl": "Naam zone"
+						}
+					}
+				]
+			},
+			{
+				"id": "zoneBattery",
+				"title": {
+					"en": "Low battery",
+					"nl": "Lage batterijspanning"
+				},
+				"titleFormatted": {
+					"en": "Low battery [[values]]",
+					"nl": "Lage batterijspanning [[values]]"
+				},
+				"args": [{
+						"name": "device",
+						"type": "device",
+						"filter": "driver_id=powermax"
+					},
+					{
+						"name": "values",
+						"type": "dropdown",
+						"values": [{
+								"id": "on",
+								"label": {
+									"en": "active",
+									"nl": "actief"
+								}
+							},
+							{
+								"id": "off",
+								"label": {
+									"en": "inactive",
+									"nl": "inactief"
+								}
+							}
+						]
+					}
+				],
+				"tokens": [{
+						"name": "zone",
+						"type": "number",
+						"title": {
+							"en": "Zone number",
+							"nl": "Zone nummer"
+						}
+					},
+					{
+						"name": "name",
+						"type": "string",
 						"title": {
 							"en": "Name zone",
 							"nl": "Naam zone"
@@ -788,6 +814,10 @@
 			"title": {
 				"en": "Panel !{{indicates|doesn't indicate}}",
 				"nl": "Paneel !{{geeft aan|geeft niet aan}}"
+			},
+			"titleFormatted": {
+				"en": "Panel !{{indicates|doesn't indicate}} [[flag]]",
+				"nl": "Paneel !{{geeft aan|geeft niet aan}} [[flag]]"
 			},
 			"args": [{
 					"name": "device",
@@ -848,6 +878,10 @@
 				"en": "Set arm state to",
 				"nl": "Zet de status op"
 			},
+			"titleFormatted": {
+				"en": "Set arm state to [[state]]",
+				"nl": "Zet de status op [[state]]"
+			},
 			"args": [
 			{
 				"name": "state",
@@ -892,7 +926,6 @@
 		}]
 	},
   "permissions": [
-		"homey:manager:speech-input",
 		"homey:manager:speech-output"
 	],
 	"speech": [{

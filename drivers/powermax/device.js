@@ -23,7 +23,7 @@ const triggers = [
 class PanelDevice extends Homey.Device {
 
   onInit() {
-    this.driver = this.getDriver()
+    // this.driver = this.getDriver()
     this.locale = this.driver.locale
     this.id = this.getData().id
     this.log('Starting device', this.id)
@@ -33,8 +33,8 @@ class PanelDevice extends Homey.Device {
     this.registerEvents()
     this.registerListeners()
     // Check if there are devices in the queue that still need to be initialized
-    let sensorDriver = Homey.ManagerDrivers.getDriver('sensor')
-    let x10pgmDriver = Homey.ManagerDrivers.getDriver('x10pgm')
+    let sensorDriver = this.homey.drivers.getDriver('sensor')
+    let x10pgmDriver = this.homey.drivers.getDriver('x10pgm')
     let initQueue = []
     if (sensorDriver.initQueue !== undefined) {
       initQueue = sensorDriver.initQueue
@@ -60,7 +60,7 @@ class PanelDevice extends Homey.Device {
 
   // Update panel configuration settings
 	onSettings(oldSettings, newSettings, changedItems, callback) {
-		let result = { update: true, msg: Homey.__('settings.saved'), updates: {} };
+		let result = { update: true, msg: this.homey.__('settings.saved'), updates: {} };
 		// First check the pin-code before making any changes
 		let p = this.powermax
 		let idx = changedItems.indexOf('pin')
@@ -84,7 +84,7 @@ class PanelDevice extends Homey.Device {
 						if (pin == null) {
               result = {
                 update: false,
-                msg: Homey.__('settings.invalid_user', { user: newVal })
+                msg: this.homey.__('settings.invalid_user', { user: newVal })
               }
 						}
 					}
@@ -100,13 +100,13 @@ class PanelDevice extends Homey.Device {
 			} else {
         result = {
           update: false,
-          msg: Homey.__('settings.invalid_pin')
+          msg: this.homey.__('settings.invalid_pin')
         }
 			}
 		} else {
       result = {
         update: false,
-        msg: Homey.__('settings.no_pin')
+        msg: this.homey.__('settings.no_pin')
       }
 		}
     // Make sure Homey doesn't change the settings - we do that!
@@ -124,8 +124,8 @@ class PanelDevice extends Homey.Device {
   setAvailable() {
     super.setAvailable()
     let children = [].concat(
-      Homey.ManagerDrivers.getDriver('sensor').getDevices(),
-      Homey.ManagerDrivers.getDriver('x10pgm').getDevices(),
+      this.homey.drivers.getDriver('sensor').getDevices(),
+      this.homey.drivers.getDriver('x10pgm').getDevices(),
     )
     children.forEach((device, key) => { device.setAvailable() })
   }
@@ -133,20 +133,20 @@ class PanelDevice extends Homey.Device {
   // Override setUnavailable - mark panel and its sensors as unavailable
   setUnavailable(message) {
     if (message === undefined) {
-      message = Homey.__('error.unreachable', { time: new Date().toLocaleString(this.locale) })
+      message = this.homey.__('error.unreachable', { time: new Date().toLocaleString(this.locale) })
     }
     super.setUnavailable(message)
     let children = [].concat(
-      Homey.ManagerDrivers.getDriver('sensor').getDevices(),
-      Homey.ManagerDrivers.getDriver('x10pgm').getDevices()
+      this.homey.drivers.getDriver('sensor').getDevices(),
+      this.homey.drivers.getDriver('x10pgm').getDevices()
     )
-    children.forEach((device, key) => { device.setUnavailable(Homey.__('error.no_panel')) })
+    children.forEach((device, key) => { device.setUnavailable(this.homey.__('error.no_panel')) })
   }
 
   registerFlowTriggers() {
     // Create flow triggers
     for (let t in triggers) {
-      this.Trigger[triggers[t].id] = new Homey.FlowCardTriggerDevice(triggers[t].id)
+      this.Trigger[triggers[t].id] = this.homey.flow.getTriggerCard(triggers[t].id) // new Homey.FlowCardTriggerDevice
       // Register flow condition checks
       if (triggers[t].check) {
         this.Trigger[triggers[t].id].registerRunListener((args, state) => {
@@ -155,7 +155,7 @@ class PanelDevice extends Homey.Device {
           return Promise.resolve(result)
         })
       }
-      this.Trigger[triggers[t].id].register()
+      // this.Trigger[triggers[t].id].register()
       this.log('Tigger', triggers[t], 'registered')
     }
   }
@@ -178,19 +178,19 @@ class PanelDevice extends Homey.Device {
       // Regular download, not for adding panel
       if (state === 'start') {
         // Panel and sensors cannot be used during a download
-        this.setUnavailable(Homey.__('error.downloading'))
+        this.setUnavailable(this.homey.__('error.downloading'))
       } else if (state === 'done') {
         // Mark all available again, download is done
         this.setAvailable()
         let list = this.powermax.settings.zones
-        let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
+        let sensors = this.homey.drivers.getDriver('sensor').getDevices()
         sensors.forEach((device, key) => {
           let elem = list[device.getData().zone]
           let panelId = device.getData().panel
           if (panelId === this.id) {
             if (elem === undefined) {
               // Sensor has been removed from panel
-              device.setUnavailable(Homey.__('error.sensor_removed'))
+              device.setUnavailable(this.homey.__('error.sensor_removed'))
             } else {
               device.setAvailable()
               // Update sensor setting info
@@ -279,10 +279,10 @@ class PanelDevice extends Homey.Device {
 
     // Handle events for the app settings page
     this.powermax.on('eventLog', () => {
-      Homey.ManagerApi.realtime('eventlog', { panel: this.id, log: this.powermax.eventLog })
+      this.homey.api.realtime('eventlog', { panel: this.id, log: this.powermax.eventLog })
     })
     this.powermax.on('busy', (state) => {
-      Homey.ManagerApi.realtime('busy', { panel: this.id, busy: state })
+      this.homey.api.realtime('busy', { panel: this.id, busy: state })
     })
 
   }
@@ -403,7 +403,7 @@ class PanelDevice extends Homey.Device {
 	getOpenZones() {
 		let zones = []
 		// We only list sensors that are visible in Homey
-    let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
+    let sensors = this.homey.drivers.getDriver('sensor').getDevices()
     sensors.forEach(sensorDevice => {
       let zonenr = sensorDevice.getData().zone
       let tripped = sensorDevice.getTripStatus()
@@ -423,7 +423,7 @@ class PanelDevice extends Homey.Device {
 		} else {
 			this.log('Not allowed to update sensor bypass')
       /* TODO
-      this.setWarning(Homey.__('no_bypass'))
+      this.setWarning(this.homey.__('no_bypass'))
         .catch(this.error)
         .then(() => {
           setTimeout(() => {
