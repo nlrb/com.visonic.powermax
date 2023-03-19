@@ -32,10 +32,14 @@ class SensorDriver extends Homey.Driver {
       socket.emit('start', panels)
     })
 
-    socket.setHandler('selected', (id) => {
+    socket.setHandler('selected', (id, callback) => {
       selectedPanel = id
-      socket.emit(null, id)
+      callback(null, id)
     })
+    // socket.setHandler('selected', (id) => {
+    // selectedPanel = id
+    // socket.emit(null, id)
+    // })
 
     // this method is run when Homey.emit('list_devices') is run on the front-end
     // which happens when you use the template `list_devices`
