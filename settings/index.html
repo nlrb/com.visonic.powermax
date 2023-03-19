@@ -20,99 +20,7 @@
 		</style>
 		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
 		<script type="text/javascript" src="/manager/webserver/assets/js/angular.js"></script>
-		<script>
-			angular.module('VisonicPowerMaxApp', [])
-			.controller('EventLogCtrl', ['$scope', '$timeout', function($scope, $timeout) {
-				$scope.panels = [];
-				$scope.logitems = {};
-        $scope.loading = {};
-        $scope.date = {};
-        $scope.selectedPanel;
-        $scope.multiplePanels = false;
-        $scope.button = __('settings.app.eventlog.submit');
-
-        $scope.updateButton = function(loading) {
-          if (loading) {
-            $scope.button = __('settings.app.eventlog.busy');
-          } else {
-            $scope.button = __('settings.app.eventlog.submit');
-          }
-          $('#getlog').prop('disabled', loading);
-        }
-
-				// Actions for back-end triggers
-				Homey.on('eventlog', function(data) {
-					if (data && data.log) {
-            if (data.log.done) {
-              $scope.loading[data.panel] = false;
-              $scope.updateButton(false);
-							if (data.log.denied) {
-								$scope.date[data.panel] = __('settings.app.eventlog.denied');
-							} else {
-	              let date = new Date(Date.parse(data.log.time));
-	              $scope.date[data.panel] = __('settings.app.eventlog.time', { time: date.toLocaleString() });
-							}
-            }
-						$scope.logitems[data.panel] = data.log.items;
-						$scope.$apply();
-					}
-				});
-
-        // Disable the button if the panel is busy
-        Homey.on('busy', function(state) {
-          $scope.loading[state.panel] = state.busy
-          if ($scope.selectedPanel.id === state.panel) {
-            $scope.updateButton(state.busy);
-						$scope.$apply();
-          }
-        });
-
-        // Get the event log (read from the panel or from the cache)
-        $scope.getEventLog = function(force) {
-          Homey.api('PUT', '/getEventLog/', { 'panel': $scope.selectedPanel.id, 'force': force }, function(err, result) {
-            if (force || $scope.logitems[$scope.selectedPanel.id] === undefined) {
-							$scope.loading[$scope.selectedPanel.id] = true;
-							$scope.updateButton(true);
-              if (result) {
-								$scope.date[$scope.selectedPanel.id] = __('settings.app.eventlog.loading');
-              }
-							$scope.$apply();
-            }
-          });
-        }
-
-        // Update the (busy) button if the panel selection changes
-        $scope.panelChange = function() {
-          $scope.updateButton($scope.loading[$scope.selectedPanel.id]);
-          if ($scope.logitems[$scope.selectedPanel.id] === undefined) {
-            $scope.getEventLog(false);
-          }
-        }
-
-				// Get panel information
-				Homey.api('GET', '/getPanels/', {}, function(err, panels) {
-				if (panels) {
-						$scope.panels = panels;
-            $scope.selectedPanel = panels[0];
-            if (panels.length > 1) {
-              $scope.multiplePanels = true;
-            }
-            panels.forEach(panel => $scope.loading[panel.id] = false)
-            // Retrieve the event log from the cache (and see if the panel is busy)
-            $scope.getEventLog(false);
-					} else {
-            $('#getlog').prop('disabled', true);
-          }
-          $scope.$apply();
-				});
-
-			}]);
-
-			function onHomeyReady(){
-				angular.bootstrap(document, ['VisonicPowerMaxApp']);
-				Homey.ready();
-			}
-		</script>
+		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
 	</head>
 
 	<body ng-controller="EventLogCtrl">
@@ -152,5 +60,108 @@
         </table>
       </fieldset>
 		</div>
+		<script>
+			angular.module('VisonicPowerMaxApp', [])
+			.controller('EventLogCtrl', ['$scope', '$timeout', function($scope, $timeout) {
+				var Homey
+				$scope.panels = [];
+				$scope.logitems = {};
+        $scope.loading = {};
+        $scope.date = {};
+        $scope.selectedPanel;
+        $scope.multiplePanels = false;
+        $scope.button = __('settings.app.eventlog.submit');
+
+				$scope.updateButton = function(loading) {
+          if (loading) {
+            $scope.button = __('settings.app.eventlog.busy');
+          } else {
+            $scope.button = __('settings.app.eventlog.submit');
+          }
+          $('#getlog').prop('disabled', loading);
+        }
+
+				$scope.$on('ready', function($e, Homey_) {
+					console.log('Ready!')
+					Homey = Homey_;
+					$scope.__ = Homey.__;
+
+					// Actions for back-end triggers
+					Homey.on('eventlog', function(data) {
+						if (data && data.log) {
+	            if (data.log.done) {
+	              $scope.loading[data.panel] = false;
+	              $scope.updateButton(false);
+								if (data.log.denied) {
+									$scope.date[data.panel] = __('settings.app.eventlog.denied');
+								} else {
+		              let date = new Date(Date.parse(data.log.time));
+		              $scope.date[data.panel] = __('settings.app.eventlog.time', { time: date.toLocaleString() });
+								}
+	            }
+							$scope.logitems[data.panel] = data.log.items;
+							$scope.$apply();
+						}
+					});
+
+	        // Disable the button if the panel is busy
+	        Homey.on('busy', function(state) {
+	          $scope.loading[state.panel] = state.busy
+	          if ($scope.selectedPanel.id === state.panel) {
+	            $scope.updateButton(state.busy);
+							$scope.$apply();
+	          }
+	        });
+
+	        // Get the event log (read from the panel or from the cache)
+	        $scope.getEventLog = function(force) {
+	          Homey.api('PUT', '/getEventLog/', { 'panel': $scope.selectedPanel.id, 'force': force }, function(err, result) {
+	            if (force || $scope.logitems[$scope.selectedPanel.id] === undefined) {
+								$scope.loading[$scope.selectedPanel.id] = true;
+								$scope.updateButton(true);
+	              if (result) {
+									$scope.date[$scope.selectedPanel.id] = __('settings.app.eventlog.loading');
+	              }
+								$scope.$apply();
+	            }
+	          });
+	        }
+
+	        // Update the (busy) button if the panel selection changes
+	        $scope.panelChange = function() {
+	          $scope.updateButton($scope.loading[$scope.selectedPanel.id]);
+	          if ($scope.logitems[$scope.selectedPanel.id] === undefined) {
+	            $scope.getEventLog(false);
+	          }
+	        }
+
+					// Get panel information
+					Homey.api('GET', '/getPanels/', {}, function(err, panels) {
+						console.log(err, panels)
+						if (panels) {
+							$scope.panels = panels;
+	            $scope.selectedPanel = panels[0];
+	            if (panels.length > 1) {
+	              $scope.multiplePanels = true;
+	            }
+	            panels.forEach(panel => $scope.loading[panel.id] = false)
+	            // Retrieve the event log from the cache (and see if the panel is busy)
+	            $scope.getEventLog(false);
+						} else {
+	            $('#getlog').prop('disabled', true);
+	          }
+	          $scope.$apply();
+					});
+
+					Homey.ready();
+				})
+			}]);
+
+			function onHomeyReady(Homey) {
+				angular.bootstrap(document, ['VisonicPowerMaxApp']);
+				var scope = angular.element(document.body).scope();
+				scope.$emit('ready', Homey);
+			}
+		</script>
 	</body>
 </html>

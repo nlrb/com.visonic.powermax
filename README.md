@@ -179,6 +179,9 @@ You can ask Homey a couple of questions regarding your alarm panel(s), e.g.
 Please enter bugs or feature request on [GitHub](https://github.com/nlrb/com.visonic.powermax/issues "GitHub"). For other things you can reach out to "homey.powermax _at_ gmail.com".
 
 ### Version history
+* 2.0.2 Changed sensor identification (thanks to Peter Hendrix)
+* 2.0.1 Pull request Added icons to panel (RHA)
+* 2.0.0 Rewritten application to Homey SDK v2
 * 1.4.0 Add option to arm instant (device setting for UI, additional option in flows), add sensor bypass in flows
 * 1.3.0 Event log can now be retrieved under app settings, wired sensors added
 * 1.2.0 Added option on pairing to select between PowerMax/PowerMaster, PowerMaster fixes, bug fixes
