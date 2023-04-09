@@ -46,6 +46,7 @@ class X10PgmDevice extends Homey.Device {
     this.registerCapabilityListener('onoff', (value, opts) => {
       this.log('* sending X10 command', this.getData().nr, (value ? 'on' : 'off'))
       this.panelDevice.sendX10Command(this.getData().nr, (value ? 'on' : 'off'))
+      return Promise.resolve();
     })
 
     // PGM does not have dim capability
@@ -56,6 +57,7 @@ class X10PgmDevice extends Homey.Device {
           value = (this.getCapabilityValue('onoff') ? 'off' : 'on')
         }
   			this.panelDevice.sendX10Command(this.getData().nr, value)
+        return Promise.resolve();
       })
     }
   }

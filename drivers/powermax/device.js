@@ -65,7 +65,8 @@ class PanelDevice extends Homey.Device {
 		let p = this.powermax
 		let idx = changedItems.indexOf('pin')
 		if (idx >= 0) {
-			if (p.readAllSettings && newSettings.pin == p.settings.config.masterCode.val) {
+      let checkpin = (p.readAllSettings ? p.settings.config.masterCode.val : '9999');
+			if (newSettings.pin == checkpin) {
 				let restart = false
 				// Remove the pin code
 				changedItems.splice(idx, 1)

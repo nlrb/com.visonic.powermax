@@ -1,6 +1,6 @@
 {
   "id": "com.visonic.powermax",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "compatibility": ">=1.5.0",
   "sdk": 2,
   "name": {
@@ -562,6 +562,7 @@
 				}],
 				"tokens": [{
 					"name": "status",
+          "type": "string",
 					"title": {
 						"en": "Status"
 					}
@@ -580,6 +581,7 @@
 				}],
 				"tokens": [{
 						"name": "type",
+            "type": "string",
 						"title": {
 							"en": "Event",
 							"nl": "Gebeurtenis"
@@ -587,6 +589,7 @@
 					},
 					{
 						"name": "trigger",
+            "type": "string",
 						"title": {
 							"en": "Triggered by",
 							"nl": "Veroorzaakt door"
@@ -627,12 +630,14 @@
 				],
 				"tokens": [{
 						"name": "type",
+            "type": "string",
 						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
+            "type": "string",
 						"title": {
 							"en": "Alarm type name",
 							"nl": "Naam alarm type"
@@ -673,12 +678,14 @@
 				],
 				"tokens": [{
 						"name": "type",
+            "type": "string",
 						"title": {
 							"en": "Type"
 						}
 					},
 					{
 						"name": "name",
+            "type": "string",
 						"title": {
 							"en": "Trouble type name",
 							"nl": "Naam probleem"
@@ -727,6 +734,7 @@
 					},
 					{
 						"name": "name",
+            "type": "string",
 						"title": {
 							"en": "Name zone",
 							"nl": "Naam zone"
@@ -775,6 +783,7 @@
 					},
 					{
 						"name": "name",
+            "type": "string",
 						"title": {
 							"en": "Name zone",
 							"nl": "Naam zone"
