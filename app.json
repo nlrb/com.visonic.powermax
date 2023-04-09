@@ -6,6 +6,7 @@
   "name": {
     "en": "Visonic PowerMax"
   },
+  "brandColor": "#032E58",
   "description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
@@ -24,7 +25,6 @@
   "category": [
     "security"
   ],
-  "permissions": [],
   "images": {
 		"large": "assets/images/large.png",
 		"small": "assets/images/small.png"
@@ -603,6 +603,10 @@
 					"en": "Panel alarm becomes",
 					"nl": "Paneel alarm wordt"
 				},
+        "titleFormatted": {
+          "en": "Panel alarm becomes [[values]]",
+					"nl": "Paneel alarm wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -651,6 +655,10 @@
 					"en": "Panel trouble becomes",
 					"nl": "Paneel probleem wordt"
 				},
+        "titleFormatted": {
+          "en": "Panel trouble becomes [[values]]",
+					"nl": "Paneel probleem wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -699,6 +707,10 @@
 					"en": "Zone alarm becomes",
 					"nl": "Zone alarm wordt"
 				},
+        "titleFormatted": {
+          "en": "Zone alarm becomes [[values]]",
+					"nl": "Zone alarm wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -748,6 +760,10 @@
 					"en": "Low battery",
 					"nl": "Lage batterijspanning"
 				},
+        "titleFormatted": {
+          "en": "Low battery [[values]]",
+					"nl": "Lage batterijspanning [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -798,6 +814,10 @@
 				"en": "Panel !{{indicates|doesn't indicate}}",
 				"nl": "Paneel !{{geeft aan|geeft niet aan}}"
 			},
+      "titleFormatted": {
+        "en": "Panel !{{indicates|doesn't indicate}} [[flag]]",
+        "nl": "Paneel geeft [[flag]] !{{aan|niet aan}}"
+      },
 			"args": [{
 					"name": "device",
 					"type": "device",
@@ -857,6 +877,10 @@
 				"en": "Set arm state to",
 				"nl": "Zet de status op"
 			},
+      "titleFormatted": {
+        "en": "Set arm state to [[state]]",
+        "nl": "Verander de status naar [[state]]"
+      },
 			"args": [
 			{
 				"name": "state",
@@ -901,7 +925,6 @@
 		}]
 	},
   "permissions": [
-		"homey:manager:speech-input",
 		"homey:manager:speech-output"
 	],
 	"speech": [{
