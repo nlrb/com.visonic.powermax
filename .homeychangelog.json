@@ -4,5 +4,8 @@
   },
   "2.0.4": {
     "en": "Update sensor table & recognition"
+  },
+  "2.1.0": {
+    "en": "Improve PowerMaster support"
   }
 }
