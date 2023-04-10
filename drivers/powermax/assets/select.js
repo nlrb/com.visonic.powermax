@@ -2,7 +2,7 @@ function startPanelSelection(title) {
 	$('#all').hide();
 	Homey.on('start', function(panels) {
 		if (panels.length > 1) {
-			Homey.setTitle(__(title)); 
+			Homey.setTitle(__(title));
 			for (var i = 0; i < panels.length; i++) {
 				var panel = panels[i];
 				var checked = i == 0 ? ' checked' : '';
@@ -17,7 +17,7 @@ function startPanelSelection(title) {
 			Homey.emit('selected', panels[0].id); // default is first panel
 			$('#all').show();
 		} else if (panels.length == 1) {
-			Homey.emit('selected', panels[0].id, function(err, selection) {
+			  Homey.emit('selected', panels[0].id, function(err, selection) {
 				if (!err) {
 					Homey.showView('list_devices');
 				}
@@ -25,6 +25,7 @@ function startPanelSelection(title) {
 		} else {
 			$('#panelList').text(__('pair.add_panel'));
 			$('#all').show();
+			Homey.setNavigationClose();
 		}
 	});
 	Homey.emit('loaded');

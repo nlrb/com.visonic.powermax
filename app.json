@@ -1,11 +1,12 @@
 {
   "id": "com.visonic.powermax",
-  "version": "2.1.0",
-  "compatibility": ">=1.5.0",
-  "sdk": 2,
+  "version": "3.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
   "name": {
     "en": "Visonic PowerMax"
   },
+  "brandColor": "#032E58",
   "description": {
 		"en": "Control your Visonic PowerMax via Homey",
 		"nl": "Bestuur je Visonic PowerMax met Homey"
@@ -14,6 +15,16 @@
 		"name": "Ramón Baas",
 		"website": "http://www.visonic.com/"
 	},
+  "contributors": {
+    "developers": [
+      {
+        "name": "phict"
+      },
+      {
+        "name": "Peter Hendrix"
+      }
+    ]
+  },
   "contributing": {
     "donate": {
       "paypal": {
@@ -24,7 +35,6 @@
   "category": [
     "security"
   ],
-  "permissions": [],
   "images": {
 		"large": "assets/images/large.png",
 		"small": "assets/images/small.png"
@@ -603,6 +613,10 @@
 					"en": "Panel alarm becomes",
 					"nl": "Paneel alarm wordt"
 				},
+        "titleFormatted": {
+          "en": "Panel alarm becomes [[values]]",
+					"nl": "Paneel alarm wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -651,6 +665,10 @@
 					"en": "Panel trouble becomes",
 					"nl": "Paneel probleem wordt"
 				},
+        "titleFormatted": {
+          "en": "Panel trouble becomes [[values]]",
+					"nl": "Paneel probleem wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -699,6 +717,10 @@
 					"en": "Zone alarm becomes",
 					"nl": "Zone alarm wordt"
 				},
+        "titleFormatted": {
+          "en": "Zone alarm becomes [[values]]",
+					"nl": "Zone alarm wordt [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -748,6 +770,10 @@
 					"en": "Low battery",
 					"nl": "Lage batterijspanning"
 				},
+        "titleFormatted": {
+          "en": "Low battery [[values]]",
+					"nl": "Lage batterijspanning [[values]]"
+        },
 				"args": [{
 						"name": "device",
 						"type": "device",
@@ -798,6 +824,10 @@
 				"en": "Panel !{{indicates|doesn't indicate}}",
 				"nl": "Paneel !{{geeft aan|geeft niet aan}}"
 			},
+      "titleFormatted": {
+        "en": "Panel !{{indicates|doesn't indicate}} [[flag]]",
+        "nl": "Paneel geeft [[flag]] !{{aan|niet aan}}"
+      },
 			"args": [{
 					"name": "device",
 					"type": "device",
@@ -857,6 +887,10 @@
 				"en": "Set arm state to",
 				"nl": "Zet de status op"
 			},
+      "titleFormatted": {
+        "en": "Set arm state to [[state]]",
+        "nl": "Verander de status naar [[state]]"
+      },
 			"args": [
 			{
 				"name": "state",
@@ -901,52 +935,20 @@
 		}]
 	},
   "permissions": [
-		"homey:manager:speech-input",
+    "homey:manager:api",
 		"homey:manager:speech-output"
 	],
-	"speech": [{
-			"id": "panel",
-			"importance": 0.5,
-			"triggers": {
-				"en": ["alarm", "panel"],
-				"nl": ["alarm", "paneel", "alarmpaneel"]
-			}
-		},
-		{
-			"id": "zone",
-			"importance": 0.5,
-			"triggers": {
-				"en": ["zone", "zones", "sensor", "sensors", "detector", "detectors"],
-				"nl": ["zone", "zones", "zonde", "zoons", "zonen", "sensor", "sensors", "sensoren", "detector", "detectors", "detectoren"]
-			}
-		},
-		{
-			"id": "open",
-			"importance": 0.5,
-			"triggers": {
-				"en": ["open", "alarm", "tripped"],
-				"nl": ["open", "alarm", "verstoord"]
-			}
-		},
-		{
-			"id": "status",
-			"importance": 0.5,
-			"triggers": {
-				"en": ["state", "status"],
-				"nl": ["status"]
-			}
-		},
-		{
-
-			"id": "trouble",
-			"importance": 0.5,
-			"triggers": {
-				"en": ["trouble", "troubles", "broken", "error", "fault", "problem"],
-				"nl": ["fout", "fouten", "kapot", "probleem"]
-			}
-		}
-	],
-	"dependencies": {
-		"visonic-api": "*"
+  "api": {
+    "getPanels": {
+      "method": "get",
+      "path": "/"
+    },
+    "getEventLog": {
+      "method": "put",
+      "path": "/"
+    }
+  },
+  "dependencies": {
+		"powermax-api": "*"
 	}
 }

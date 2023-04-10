@@ -1,7 +1,7 @@
 'use strict'
 
 /*
-Copyright (c) 2018 Ramón Baas
+Copyright (c) 2018-2023 Ramón Baas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -16,34 +16,32 @@ class X10PgmDriver extends Homey.Driver {
 
 	onInit() {
 		this.log('X10PgmDriver Init')
-		this.panelDriver = Homey.ManagerDrivers.getDriver('powermax')
+		this.panelDriver = this.homey.drivers.getDriver('powermax');
 		this.initQueue = []
 	}
 
-	onPair(socket) {
+	onPair(session) {
 		this.log('X10/PGM pairing has started...')
 		let selectedPanel
 
 		// Let the front-end know which panels there are
 		let panels = this.panelDriver.getPanels()
 		// Make sure the page has fully loaded
-		socket.on('loaded', () => {
-			socket.emit('start', panels)
+		session.setHandler('loaded', () => {
+			session.emit('start', panels)
 		})
 
-		socket.on('selected', (id, callback) => {
+		session.setHandler('selected', (id) => {
 			selectedPanel = id
-			callback(null, id)
 		})
 
 		// this method is run when Homey.emit('list_devices') is run on the front-end
 		// which happens when you use the template `list_devices`
-		socket.on('list_devices', (data, callback) => {
-			this.log('Selected panel', selectedPanel)
-      let panelDevice = this.panelDriver.getPanelDeviceById(selectedPanel)
-			let devices = panelDevice.getX10Devices()
-			// err, result style
-			callback(null, devices)
+		session.setHandler('list_devices', () => {
+			this.log('Selected panel', selectedPanel);
+			let panelDevice = this.panelDriver.getPanelDeviceById(selectedPanel);
+			let devices = panelDevice.getX10Devices();
+			return devices;
 		})
 	}
 

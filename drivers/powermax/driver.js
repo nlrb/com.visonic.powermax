@@ -1,7 +1,7 @@
 'use strict'
 
 /*
-Copyright (c) 2018 Ramón Baas
+Copyright (c) 2018-2023 Ramón Baas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -11,25 +11,24 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 const Homey = require('homey')
 const pm = require('powermax-api')
 
-const locale = Homey.ManagerI18n.getLanguage() == 'nl' ? 'nl' : 'en' // only Dutch & English supported
-
 class PanelDriver extends Homey.Driver {
 
   onInit() {
-    this.log('PanelDriver Init')
-    this.locale = locale
-    this.panelSearch
-    this.registerFlowConditonsAndActions()
+    this.log('PanelDriver Init');
+    this.locale = this.homey.app.locale;
+    this.homey.app.panelDriver = this;
+    this.panelSearch;
+    this.registerFlowConditonsAndActions();
   }
 
   // Generic sensor pairing
-  onPair(socket) {
+  onPair(session) {
     this.log('PowerMax panel pairing has started...')
 		let completed = false
 		let panel_ip
 
 		// Search for the PowerMax once we received IP address and port
-		socket.on('search', (data, callback) => {
+		session.setHandler('search', (data, callback) => {
 			panel_ip = data.ip + ':' + data.port
 			this.log('Request to search for PowerMax on', panel_ip)
 			// Add default settings
@@ -43,12 +42,12 @@ class PanelDriver extends Homey.Driver {
 				motionTime: 15,
 				syncTime: true
 			}
-			let err = this.addPanel(settings)
+			let err = this.addPanel(settings, session)
 			callback(err, err == null)
 		})
 
 		// Fully add panel when successful
-		socket.on('completed', (device, callback) => {
+		session.setHandler('completed', (device, callback) => {
       this.log('Completed for device', device, callback)
 			completed = true
 			this.stopPanelSearch(true)
@@ -57,7 +56,7 @@ class PanelDriver extends Homey.Driver {
 		})
 
 		// Check if the pairing was finished, otherwise remove the panel
-		socket.on('disconnect', () => {
+		session.setHandler('disconnect', () => {
 			if (!completed) {
 				this.log('Pairing not completed, closing connection on', panel_ip)
 				this.stopPanelSearch(false)
@@ -65,13 +64,13 @@ class PanelDriver extends Homey.Driver {
 		})
 
 		// Notify the front-end if a PowerMax has been found
-		Homey.on('found', data => {
-			socket.emit('found', data)
+		session.setHandler('found', data => {
+			session.emit('found', data)
 		})
 
 		// Notify the front-end on enrollment/download progress
-		Homey.on('download', data => {
-			socket.emit('download', data)
+		session.setHandler('download', data => {
+			session.emit('download', data)
 		})
   }
 
@@ -86,25 +85,23 @@ class PanelDriver extends Homey.Driver {
 
   registerFlowConditonsAndActions() {
     // Check flow conditions
-    let condition = new Homey.FlowCardCondition('sysflags')
+    let condition = this.homey.flow.getConditionCard('sysflags')
     condition.registerRunListener((args, state, callback) => {
       // Get status of ready, trouble, alarm, memory
   		let check = this.getPanelValue(args.device, args.flag)
       this.log('FlowCardCondition sysflags', args.flag, state, 'result =', check)
       callback(null, check)
   	})
-    condition.register()
 
     // Register flow actions
-    let action = new Homey.FlowCardAction('setClock')
+    let action = this.homey.flow.getActionCard('setClock')
     action.registerRunListener((args, state, callback) => {
       this.log('Action setClock', args.device.id)
       let ok = args.device.setClock()
   		callback(null, ok)
     })
-    action.register()
 
-    action = new Homey.FlowCardAction('setState')
+    action = this.homey.flow.getActionCard('setState')
     action.registerRunListener((args, state, callback) => {
   		this.log('Action setState', args.device.id, args.state)
       if (args.device !== undefined) {
@@ -113,9 +110,8 @@ class PanelDriver extends Homey.Driver {
         return Promise.reject('Panel not available')
       }
   	})
-    action.register()
 
-    action = new Homey.FlowCardAction('bypassOn')
+    action = this.homey.flow.getActionCard('bypassOn')
     action.registerRunListener((args, state, callback) => {
   		this.log('Action bypass', args.device.getData().id)
       if (args.device !== undefined) {
@@ -126,9 +122,8 @@ class PanelDriver extends Homey.Driver {
         return Promise.reject('Panel not available')
       }
   	})
-    action.register()
 
-    action = new Homey.FlowCardAction('bypassOff')
+    action = this.homey.flow.getActionCard('bypassOff')
     action.registerRunListener((args, state, callback) => {
   		this.log('Action bypass', args.device.getData().id)
       if (args.device !== undefined) {
@@ -139,7 +134,6 @@ class PanelDriver extends Homey.Driver {
         return Promise.reject('Panel not available')
       }
   	})
-    action.register()
   }
 
   getPanelDeviceById(id) {
@@ -147,7 +141,7 @@ class PanelDriver extends Homey.Driver {
   }
 
   // Search for a new panel
-	addPanel(settings) {
+	addPanel(settings, session) {
 		// During a search there is no device id yet
     let id = 'searching'
 		let search = settings.ip + ':' + settings.port
@@ -157,19 +151,19 @@ class PanelDriver extends Homey.Driver {
       let pip = device.getSetting('ip') + ':' + device.getSetting('port')
       if (search === pip) {
         search += ' (' + device.getName() + ')'
-        let err = Homey.__('error.already_present', { panel: search })
+        let err = this.homey.__('error.already_present', { panel: search })
         this.error(err)
-        Homey.emit('found', { found: false, err: err })
+        session.emit('found', { found: false, err: err })
         return err
       }
     })
     this.log('Creating new PowerMax instance with settings', settings)
-		let powermax = new pm.PowerMax(locale, settings, this.log)
+		let powermax = new pm.PowerMax(this.locale, settings, this.log)
 		this.panelSearch = powermax
 		// Add event handlers
     powermax.on('found', this.foundHandler = (data) => {
       id = data.id
-      Homey.emit('found', data)
+      session.emit('found', data)
     })
 		powermax.on('download', this.downloadHandler = (state) => {
 			// Only relevant when we are searching for a panel
@@ -189,7 +183,7 @@ class PanelDriver extends Homey.Driver {
 					let item = pm.info[i]
 					let val = powermax.settings.config[item.val]
 					if (val != null) {
-						data.show[i] = { name: item[locale], val: val }
+						data.show[i] = { name: item[this.locale], val: val }
 					}
 				}
 				// If download completed, add panel
@@ -227,7 +221,7 @@ class PanelDriver extends Homey.Driver {
 					}
 				}
 				// Let front-end know of updated info
-				Homey.emit('download', data)
+				session.emit('download', data)
 			}
 		})
 	}
@@ -277,7 +271,7 @@ class PanelDriver extends Homey.Driver {
 			}
 			// Check sensor issues
 			// We only look at sensors that are visible in Homey
-      let sensors = Homey.ManagerDrivers.getDriver('sensor').getDevices()
+      let sensors = this.homey.drivers.getDriver('sensor').getDevices()
       sensors.forEach((sensorDevice, key) => {
         let zonenr = sensorDevice.getData().zone
         let zone = panelDevice.powermax.getStatus('zone.' + zonenr)
