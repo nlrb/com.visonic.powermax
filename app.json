@@ -19,7 +19,9 @@
     "developers": [
       {
         "name": "phict"
-      },
+      }
+    ],
+    "translators": [
       {
         "name": "Peter Hendrix"
       }
@@ -941,11 +943,11 @@
   "api": {
     "getPanels": {
       "method": "get",
-      "path": "/"
+      "path": "/getPanels"
     },
     "getEventLog": {
       "method": "put",
-      "path": "/"
+      "path": "/getEventLog"
     }
   },
   "dependencies": {
