@@ -58,66 +58,73 @@ class PanelDevice extends Homey.Device {
   }
 
   // Update panel configuration settings
-	onSettings(oldSettings, newSettings, changedItems, callback) {
-		let result = { update: true, msg: this.homey.__('settings.saved'), updates: {} };
-		// First check the pin-code before making any changes
-		let p = this.powermax
-		let idx = changedItems.indexOf('pin')
-		if (idx >= 0) {
-      let checkpin = (p.readAllSettings ? p.settings.config.masterCode.val : '9999');
-			if (newSettings.pin == checkpin) {
-				let restart = false
-				// Remove the pin code
-				changedItems.splice(idx, 1)
-				for (let i in changedItems) {
-					let item = changedItems[i]
-					let newVal = newSettings[item]
-					// Check if special action needed
-					if (item == 'ip' || item == 'port') {
-						// We will need to close connection & restart
-						restart = true
-					} else if (item == 'syncTime' && newVal) {
-						p.syncTime()
-					} else if (item == 'armUser') {
-						// Check that there is a pin code for this user
-						var pin = p.settings.config.userCode[newVal - 1]
-						if (pin == null) {
-              result = {
-                update: false,
-                msg: this.homey.__('settings.invalid_user', { user: newVal })
-              }
-						}
-					}
-          if (result.update) {
-  					// Add to results to be updated
-  					result.updates[item] = newVal
+	onSettings(data) {
+    return new Promise((resolve, reject) => {
+      let result = { update: true, msg: this.homey.__('settings.saved'), updates: {} };
+      let changedItems = data.changedKeys;
+  		// First check the pin-code before making any changes
+  		let p = this.powermax
+  		let idx = changedItems.indexOf('pin')
+  		if (idx >= 0) {
+        let checkpin = (p.readAllSettings ? p.settings.config.masterCode.val : '9999');
+  			if (data.newSettings.pin == checkpin) {
+  				let restart = false
+  				// Remove the pin code
+  				changedItems.splice(idx, 1)
+  				for (let i in changedItems) {
+  					let item = changedItems[i]
+  					let newVal = data.newSettings[item]
+  					// Check if special action needed
+  					if (item == 'ip' || item == 'port') {
+  						// We will need to close connection & restart
+  						restart = true
+  					} else if (item == 'syncTime' && newVal) {
+  						p.syncTime()
+  					} else if (item == 'armUser') {
+  						// Check that there is a pin code for this user
+  						var pin = p.settings.config.userCode[newVal - 1]
+  						if (pin == null) {
+                result = {
+                  update: false,
+                  msg: this.homey.__('settings.invalid_user', { user: newVal })
+                }
+  						}
+  					}
+            if (result.update) {
+    					// Add to results to be updated
+    					result.updates[item] = newVal
+            }
+  				}
+  				if (restart) {
+  					p.found = 'inactive'
+  					p.handleCommException('IP address changed')
+  				}
+  			} else {
+          result = {
+            update: false,
+            msg: this.homey.__('settings.invalid_pin')
           }
-				}
-				if (restart) {
-					p.found = 'inactive'
-					p.handleCommException('IP address changed')
-				}
-			} else {
+  			}
+  		} else {
         result = {
           update: false,
-          msg: this.homey.__('settings.invalid_pin')
+          msg: this.homey.__('settings.no_pin')
         }
-			}
-		} else {
-      result = {
-        update: false,
-        msg: this.homey.__('settings.no_pin')
+  		}
+      // Make sure Homey doesn't change the settings - we do that!
+  		reject(new Error(result.msg))
+      // Update the device settings
+      if (result.update) {
+        for (let item in result.updates) {
+          p.devSettings[item] = result.updates[item] // TODO: store only in one place
+        }
+        this.homey.setTimeout(() => {
+          this.setSettings(result.updates)
+            .then(this.log('Updated settings saved', result.updates))
+            .catch(this.error)
+        }, 1000)
       }
-		}
-    // Make sure Homey doesn't change the settings - we do that!
-		callback(new Error(result.msg), null)
-    // Update the device settings
-    if (result.update) {
-      for (let item in result.updates) {
-        p.devSettings[item] = result.updates[item] // TODO: store only in one place
-      }
-      this.setSettings(result.updates)
-    }
+    })
 	}
 
   // Override setAvailable - mark panel and its sensors as available
@@ -229,28 +236,28 @@ class PanelDevice extends Homey.Device {
           this.Trigger.status
           .trigger(this, { status: newVal.txt }, { panel: this.id, status: newVal.nr })
             .catch(this.error)
-            .then(x => this.log('Result >status trigger<', x))
+            .then(this.log('>status trigger< completed'))
         }
       } else if (field === 'alarmType') { // e.g. Intruder, Tamper, Panic, Fire, Emergency, Gas, Flood
         let text = newVal.txt || ''
         this.Trigger.panelalarm
         .trigger(this, { type: newVal.nr, name: text }, { state: text != '' })
           .catch(this.error)
-          .then(x => this.log('Result >panelalarm trigger<', x))
+          .then(this.log('>panelalarm trigger< completed'))
       } else if (field === 'troubleType') { // e.g. Communication, General, Battery, Power, Jamming, Telephone
         let text = newVal.txt || ''
         this.log('Triggering device trouble', text);
         this.Trigger.paneltrouble
         .trigger(this, { type: newVal.nr, name: text }, { state: text != '' })
           .catch(this.error)
-          .then(x => this.log('Result >paneltrouble trigger<', x))
+          .then(this.log('>paneltrouble trigger< completed'))
       } else if (field === 'event') {
         let text = newVal.userText + ': ' + newVal.type + ' (' + new Date().toLocaleString(this.locale) + ')';
         this.log('Triggering device event', text)
         this.Trigger.event
           .trigger(this, { type: newVal.type, trigger: newVal.userText }, { state: text != '' })
             .catch(this.error)
-            .then(x => this.log('Result >event trigger<', x))
+            .then(this.log('>event trigger< completed'))
         // Show last event in the settings
         this.setSettings({ event: text })
       } else { // alarm, ready, memory, trouble are panel capabilities
@@ -264,7 +271,7 @@ class PanelDevice extends Homey.Device {
       this.Trigger.zoneTripAlarm
         .trigger(this, { zone: data.zone, name: name }, { state: data.state })
           .catch(this.error)
-          .then(x => this.log('Result >zoneTripAlarm trigger<', x))
+          .then(this.log('>zoneTripAlarm trigger< completed'))
     })
 
     // Catch battery events
@@ -273,7 +280,7 @@ class PanelDevice extends Homey.Device {
       this.Trigger.zoneBattery
         .trigger(this, { zone: data.zone, name: name }, { state: data.state })
           .catch(this.error)
-          .then(x => this.log('Result >zoneBattery trigger<', x))
+          .then(this.log('>zoneBattery trigger< completed'))
     })
 
     // Handle events for the app settings page
@@ -288,46 +295,45 @@ class PanelDevice extends Homey.Device {
 
   // Register Homey capbility listeners
   registerListeners() {
-    this.registerCapabilityListener('homealarm_state', (value, opts, callback) => {
-      this.setPanelState(value, (err, success) => {
-        this.log('setPanelState', err)
-        callback(err, success)
-      })
+    this.registerCapabilityListener('homealarm_state', async (value, opts) => {
+      return this.setPanelState(value)
     })
   }
 
   // Set the state of the panel
-	setPanelState(state, callback) {
-    this.log('setPanelState requested to', state)
-		let newState = (state === 'partially_armed' ? 'Stay' : state[0].toUpperCase() + state.slice(1))
-		let armCode = pm.Tables.armMode[newState]
-		let allowed = true
-		let allowArming = this.powermax.settings.allowArm
+	setPanelState(state) {
+    return new Promise((resolve, reject) => {
+      this.log('setPanelState requested to', state)
+  		let newState = (state === 'partially_armed' ? 'Stay' : state[0].toUpperCase() + state.slice(1))
+  		let armCode = pm.Tables.armMode[newState]
+  		let allowed = true
+  		let allowArming = this.powermax.devSettings.allowArm
 
-		this.log('setPanelState', (state || 'N/A'))
-		if (armCode != null) {
-			if (allowArming === 'none') {
-				allowed = false
-			} else if (allowArming === 'arm') {
-				allowed = (armCode & 0x4) === 0x4 // allow 0x04/0x14 & 0x05/0x15
-			} else if (allowArming === 'stay') {
-				allowed = (armCode & 0x5) === 0x4 // allow 0x04 / 0x14
-			}
-			if (allowed && this.powermax.readAllSettings) {
-				let user = this.getSetting('armUser') || 1
-				let instant = this.getSetting('armInstant') || false
-				if (instant && (armCode & 0x4) === 0x4) {
-					armCode += 0x10
-				}
-				let pin = this.powermax.settings.config.userCode[user - 1]
-				this.powermax.sendMessage("MSG_ARM", { arm: [ armCode ], pin: pin })
-				callback(null, true)
-			} else {
-				callback('Not allowed', false)
-			}
-		} else {
-			callback('Invalid state requested', false)
-		}
+  		this.log('setPanelState', (state || 'N/A'), allowArming)
+  		if (armCode != null) {
+  			if (allowArming === 'none') {
+  				allowed = false
+  			} else if (allowArming === 'arm') {
+  				allowed = (armCode & 0x4) === 0x4 // allow 0x04/0x14 & 0x05/0x15
+  			} else if (allowArming === 'stay') {
+  				allowed = (armCode & 0x5) === 0x4 // allow 0x04 / 0x14
+  			}
+  			if (allowed && this.powermax.readAllSettings) {
+  				let user = this.getSetting('armUser') || 1
+  				let instant = this.getSetting('armInstant') || false
+  				if (instant && (armCode & 0x4) === 0x4) {
+  					armCode += 0x10
+  				}
+  				let pin = this.powermax.settings.config.userCode[user - 1]
+  				this.powermax.sendMessage("MSG_ARM", { arm: [ armCode ], pin: pin })
+  				resolve(true)
+  			} else {
+  				reject(new Error('Not allowed'))
+  			}
+  		} else {
+  			reject(new Error('Invalid state requested'))
+  		}
+    })
 	}
 
   // Get the panel status

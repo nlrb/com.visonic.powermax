@@ -28,7 +28,7 @@ class PanelDriver extends Homey.Driver {
 		let panel_ip
 
 		// Search for the PowerMax once we received IP address and port
-		session.setHandler('search', (data, callback) => {
+		session.setHandler('search', (data) => {
 			panel_ip = data.ip + ':' + data.port
 			this.log('Request to search for PowerMax on', panel_ip)
 			// Add default settings
@@ -43,16 +43,14 @@ class PanelDriver extends Homey.Driver {
 				syncTime: true
 			}
 			let err = this.addPanel(settings, session)
-			callback(err, err == null)
+			return err
 		})
 
 		// Fully add panel when successful
-		session.setHandler('completed', (device, callback) => {
-      this.log('Completed for device', device, callback)
+		session.setHandler('completed', (device) => {
+      this.log('Completed for device', device)
 			completed = true
 			this.stopPanelSearch(true)
-			// Let the front-end know we are done
-			callback()
 		})
 
 		// Check if the pairing was finished, otherwise remove the panel
@@ -86,40 +84,44 @@ class PanelDriver extends Homey.Driver {
   registerFlowConditonsAndActions() {
     // Check flow conditions
     let condition = this.homey.flow.getConditionCard('sysflags')
-    condition.registerRunListener((args, state, callback) => {
+    condition.registerRunListener((args, state) => {
       // Get status of ready, trouble, alarm, memory
   		let check = this.getPanelValue(args.device, args.flag)
       this.log('FlowCardCondition sysflags', args.flag, state, 'result =', check)
-      callback(null, check)
+      return check
   	})
 
     // Register flow actions
     let action = this.homey.flow.getActionCard('setClock')
-    action.registerRunListener((args, state, callback) => {
+    action.registerRunListener((args, state) => {
       this.log('Action setClock', args.device.id)
       let ok = args.device.setClock()
-  		callback(null, ok)
+  		return ok
     })
 
     action = this.homey.flow.getActionCard('setState')
-    action.registerRunListener((args, state, callback) => {
+    action.registerRunListener((args, state) => {
   		this.log('Action setState', args.device.id, args.state)
       if (args.device !== undefined) {
-        args.device.setPanelState(args.state, (err, ok) => callback(err, ok))
+        return args.device.setPanelState(args.state)
       } else {
-        return Promise.reject('Panel not available')
+        return Promise.reject(new Error('Panel not available'))
       }
   	})
 
     action = this.homey.flow.getActionCard('bypassOn')
-    action.registerRunListener((args, state, callback) => {
+    action.registerRunListener((args, state) => {
   		this.log('Action bypass', args.device.getData().id)
       if (args.device !== undefined) {
         let panelDevice = args.device.panelDevice
     		let ok = panelDevice.setZoneBypass(args.device.getData().zone, true)
-    		callback((ok ? null : 'Not allowed'), ok)
+        if (ok) {
+          return Promise.resolve()
+        }  else {
+          return Promise.reject(new Error('Not allowed'))
+        }
       } else {
-        return Promise.reject('Panel not available')
+        return Promise.reject(new Error('Panel not available'))
       }
   	})
 
@@ -129,9 +131,13 @@ class PanelDriver extends Homey.Driver {
       if (args.device !== undefined) {
         let panelDevice = args.device.panelDevice
   		  let ok = panelDevice.setZoneBypass(args.device.getData().zone, false)
-    		callback((ok ? null : 'Not allowed'), ok)
+        if (ok) {
+          return Promise.resolve()
+        }  else {
+          return Promise.reject(new Error('Not allowed'))
+        }
       } else {
-        return Promise.reject('Panel not available')
+        return Promise.reject(new Error('Panel not available'))
       }
   	})
   }
