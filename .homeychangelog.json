@@ -10,5 +10,8 @@
   },
   "3.0.0": {
     "en": "Supports SDK v3"
+  },
+  "3.0.1": {
+    "en": "Fix flow handling and device settings"
   }
 }
