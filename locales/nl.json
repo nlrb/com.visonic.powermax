@@ -110,6 +110,9 @@
 	},
 	"error": {
 		"no_panel": "Paneel niet beschikbaar",
+    "bypass_not_allowed": "Niet toegestaan om sensor te omzeilen",
+    "arm_not_allowed": "Niet toegestaan om status aan te passen naar __state__",
+    "arm_invalid_state": "Onbekende toestand",
 		"invalid_panel": "Paneel __panel__ bestaat niet!",
 		"already_present": "Paneel __panel__ bestaat al!",
 		"unreachable": "Verbinding verbroken sinds __time__",

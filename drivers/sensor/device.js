@@ -65,18 +65,17 @@ class SensorDevice extends Homey.Device {
         if (capability === 'onoff') {
           newVal = !newVal
         }
-        this.setCapabilityValue(capability, newVal, (err, success) => {
-					this.log('Value', field, 'update zone', this.did[1] + ':', (err ? err : 'OK'))
-				})
+        this.setCapabilityValue(capability, newVal)
+          .then(this.log('Value', field, 'update zone', this.did[1], 'set'))
+          .catch(e => this.error('Error setting value', newVal, 'for', field, e))
       }
     })
   }
 
   // Register capbility listeners
   registerListeners() {
-    this.registerCapabilityListener('onoff', (value, opts, callback) => {
-      let result = this.panelDevice.setZoneBypass(this.getData().zone, !value) // invert for bypass
-      callback(result ? null : this.homey.__('no_bypass'), result)
+    this.registerCapabilityListener('onoff', async (value, opts) => {
+      return this.panelDevice.setZoneBypass(this.getData().zone, !value); // invert for bypass
     })
   }
 

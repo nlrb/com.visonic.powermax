@@ -328,10 +328,10 @@ class PanelDevice extends Homey.Device {
   				this.powermax.sendMessage("MSG_ARM", { arm: [ armCode ], pin: pin })
   				resolve(true)
   			} else {
-  				reject(new Error('Not allowed'))
+  				reject(new Error(this.homey.__('error.arm_not_allowed', { state: state })));
   			}
   		} else {
-  			reject(new Error('Invalid state requested'))
+  			reject(new Error(this.homey.__('error.arm_invalid_state')));
   		}
     })
 	}
@@ -421,24 +421,16 @@ class PanelDevice extends Homey.Device {
 
   // Set the sensor bypass
 	setZoneBypass(zonenr, state) {
-		if (this.getSetting('allowBypass')) {
-			let user = this.getSetting('armUser') || 1
-			this.powermax.setBypass(user, [ zonenr ], state)
-			return true
-		} else {
-			this.log('Not allowed to update sensor bypass')
-      /* TODO
-      this.setWarning(Homey.__('no_bypass'))
-        .catch(this.error)
-        .then(() => {
-          setTimeout(() => {
-            this.unsetWarning()
-              .catch(this.error)
-          }, 3000)
-        })
-      */
-			return false
-		}
+    return new Promise((resolve, reject) => {
+      if (this.getSetting('allowBypass')) {
+  			let user = this.getSetting('armUser') || 1;
+  			this.powermax.setBypass(user, [ zonenr ], state);
+  			resolve();
+  		} else {
+  			this.log('Not allowed to update sensor bypass');
+        reject(new Error(this.homey.__('error.bypass_not_allowed')));
+      }
+    })
 	}
 
   // Get the name of the zone

@@ -105,7 +105,7 @@ class PanelDriver extends Homey.Driver {
       if (args.device !== undefined) {
         return args.device.setPanelState(args.state)
       } else {
-        return Promise.reject(new Error('Panel not available'))
+        return Promise.reject(new Error(this.homey.__('error.no_panel')))
       }
   	})
 
@@ -114,30 +114,20 @@ class PanelDriver extends Homey.Driver {
   		this.log('Action bypass', args.device.getData().id)
       if (args.device !== undefined) {
         let panelDevice = args.device.panelDevice
-    		let ok = panelDevice.setZoneBypass(args.device.getData().zone, true)
-        if (ok) {
-          return Promise.resolve()
-        }  else {
-          return Promise.reject(new Error('Not allowed'))
-        }
+    		return panelDevice.setZoneBypass(args.device.getData().zone, true)
       } else {
-        return Promise.reject(new Error('Panel not available'))
+        return Promise.reject(new Error(this.homey.__('error.no_panel')))
       }
   	})
 
     action = this.homey.flow.getActionCard('bypassOff')
-    action.registerRunListener((args, state, callback) => {
+    action.registerRunListener((args, state) => {
   		this.log('Action bypass', args.device.getData().id)
       if (args.device !== undefined) {
         let panelDevice = args.device.panelDevice
-  		  let ok = panelDevice.setZoneBypass(args.device.getData().zone, false)
-        if (ok) {
-          return Promise.resolve()
-        }  else {
-          return Promise.reject(new Error('Not allowed'))
-        }
+  		  return panelDevice.setZoneBypass(args.device.getData().zone, false)
       } else {
-        return Promise.reject(new Error('Panel not available'))
+        return Promise.reject(new Error(this.homey.__('error.no_panel')))
       }
   	})
   }

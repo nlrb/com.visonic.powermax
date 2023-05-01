@@ -35,8 +35,9 @@ class X10PgmDevice extends Homey.Device {
     this.panelDevice.powermax.on('x10.' + this.did[1], (field, newVal) => {
       this.log('x10 event for', this.did[1], 'with data', field, newVal)
       if (field === 'on') {
-        this.setCapabilityValue('onoff', newVal, (err, success) => {
-          this.log('Value on/off update x10', this.did[1] + ':', (err ? err : 'OK'))
+        this.setCapabilityValue('onoff', newVal)
+          .then(this.log('Value on/off update x10', this.did[1]))
+          .catch(this.error)
         })
       }
     })

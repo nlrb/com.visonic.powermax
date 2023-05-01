@@ -13,5 +13,8 @@
   },
   "3.0.1": {
     "en": "Fix flow handling and device settings"
+  },
+  "3.0.2": {
+    "en": "Fix setting bypass and improve error handling"
   }
 }

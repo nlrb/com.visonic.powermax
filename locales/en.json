@@ -110,6 +110,9 @@
 	},
 	"error": {
 		"no_panel": "Panel not available",
+    "bypass_not_allowed": "Not allowed to bypass sensor",
+    "arm_not_allowed": "Not allowed to change arm state to __state__",
+    "arm_invalid_state": "Invalid arm state requested",
 		"invalid_panel": "Panel __panel__ does not exist!",
 		"already_present": "Panel __panel__ already exists!",
 		"unreachable": "Communication lost since __time__",
