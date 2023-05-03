@@ -16,5 +16,8 @@
   },
   "3.0.2": {
     "en": "Fix setting bypass and improve error handling"
+  },
+  "3.0.3": {
+    "en": "Remove unneeded API permission"
   }
-}
+}}

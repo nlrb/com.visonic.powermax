@@ -1,6 +1,6 @@
 {
   "id": "com.visonic.powermax",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -1037,7 +1037,6 @@
     ]
   },
   "permissions": [
-    "homey:manager:api",
     "homey:manager:speech-output"
   ],
   "api": {
