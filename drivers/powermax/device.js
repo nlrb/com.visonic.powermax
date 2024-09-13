@@ -129,7 +129,7 @@ class PanelDevice extends Homey.Device {
 
   // Override setAvailable - mark panel and its sensors as available
   setAvailable() {
-    super.setAvailable()
+    super.setAvailable().catch(this.error)
     let children = [].concat(
       this.homey.drivers.getDriver('sensor').getDevices(),
       this.homey.drivers.getDriver('x10pgm').getDevices(),
@@ -142,7 +142,7 @@ class PanelDevice extends Homey.Device {
     if (message === undefined) {
       message = this.homey.__('error.unreachable', { time: new Date().toLocaleString(this.locale) })
     }
-    super.setUnavailable(message)
+    super.setUnavailable(message).catch(this.error)
     let children = [].concat(
       this.homey.drivers.getDriver('sensor').getDevices(),
       this.homey.drivers.getDriver('x10pgm').getDevices()

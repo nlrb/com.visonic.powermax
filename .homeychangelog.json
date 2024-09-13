@@ -19,5 +19,8 @@
   },
   "3.0.3": {
     "en": "Remove unneeded API permission"
+  },
+  "3.0.4": {
+    "en": "Improve device error handling"
   }
 }
