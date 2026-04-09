@@ -1,0 +1,119 @@
+{
+  "pair": {
+		"panel": {
+			"name": "Add Visonic PowerMax panel",
+			"explain": "This application can connect to a Visonic PowerMax panel that communicates serial data via TCP/IP. Please specify the location of the panel in the network.",
+			"network": {
+				"title": "Network",
+				"ip": "IP address : port"
+      },
+      "model": {
+        "title": "Model",
+        "label": "Select the panel model",
+        "option": {
+          "auto": "Auto detect",
+          "powermax": "PowerMax",
+          "powermaster": "PowerMaster"
+        }
+      },
+			"submit": "Search",
+			"search": {
+				"title": "Searching for Visonic PowerMax on __addr__...",
+				"success": "Found your Visonic PowerMax. Device will be added.",
+				"failed": "Unable to locate the Visonic PowerMax on __addr__!"
+			},
+			"add": "Add panel"
+		},
+		"download": {
+			"name": "Enroll the panel in PowerLink mode & download settings",
+			"explain": "In order for the application to be able to find all sensors and other information, the panel will need to operate in PowerLink mode. Newer panels (starting with the PowerMax Pro with partition support) enroll automatically. Older models require manual interaction to enroll. In case the enrollment procedure does not continue automatically, please consult the user manual on how to enroll. When the panel is enrolled, the settings will be downloaded.",
+			"wait": "Waiting for enrollment to complete...",
+      "failed": "Enrollment not completed in time. Please try pairing again.",
+			"download": "Enrollment complete. Downloading panel information... Please wait...",
+			"complete": "Download completed. The panel can now be added.",
+			"config": "Panel information",
+			"receive": "Receiving panel settings: "
+		},
+		"add_panel": "Please pair a panel first before adding something else.",
+		"sensor": {
+			"name": "Add Visonic PowerMax sensor",
+			"title": "Panel",
+			"explain": "Select the panel for which to add sensors."
+		},
+		"x10pgm": {
+			"name": "Add Visonic PowerMax programmable output (PGM) or X10 device",
+			"title": "Panel",
+			"explain": "Select the panel for which to add the programmable output/X10 device."
+		}
+	},
+	"settings": {
+		"no_pin": "No pin code entered. Settings have not been saved.",
+		"invalid_pin": "Wrong pin code entered. Settings have not been saved.",
+		"invalid_user": "User __user__ does not exist. Settings have not been saved.",
+		"saved": "Device settings have been saved.",
+    "app": {
+      "title": "Visonic PowerMax Event Log",
+      "panel": {
+        "description": "This page allows you to look at the last events as stored in the panels log.",
+        "title": "Panel",
+        "select": "Select the panel"
+      },
+      "eventlog": {
+        "description": "The event log shows which notable events have occured in the past.",
+        "title": "Event log",
+        "submit": "Get the event log",
+        "busy": "Busy...",
+        "loading": "Retreiving data...",
+        "denied": "Access to event log denied.",
+        "time": "Data retrieved on __time__"
+      },
+      "table": {
+        "item": "Item",
+        "date": "Date",
+        "time": "Time",
+        "user": "User/zone",
+        "partition": "Partition",
+        "event": "Event"
+      }
+    }
+	},
+	"speech": {
+		"open": {
+			"none": "Panel __panel__ has no open zones.",
+      "one": "Panel __panel__ has zone __zone__ open.",
+			"more": "Panel __panel__ has the following __cnt__ zones open: __zones__."
+		},
+		"status": {
+			"general": "The status of panel __panel__ is currently __status__.",
+			"open": {
+				"one": "there is one zone open",
+				"more": "there are __cnt__ zones open"
+			},
+			"ready": "it is ready for use",
+			"trouble": "it has a problem",
+			"alarm": "there is an alarm active",
+			"memory": "there is an alarm in memory",
+			"and": " and "
+		},
+		"trouble": {
+			"none": "There is no problem with __panel__ that I'm aware of.",
+      "unknown": "__panel__ has a problem, but I don't know what it is.",
+			"panel": {
+				"one": "__panel__ has a __type__ problem",
+				"more": "__panel__ has the following problems: __type__"
+			},
+			"sensor": {
+				"one": "Sensor __sensor__ of __panel__ has a __type__ problem",
+				"more": "These sensors of __panel__ have a __type__ problem: __sensor__"
+			}
+		}
+	},
+	"error": {
+		"no_panel": "Panel not available",
+		"invalid_panel": "Panel __panel__ does not exist!",
+		"already_present": "Panel __panel__ already exists!",
+		"unreachable": "Communication lost since __time__",
+		"sensor_removed": "The sensor is no longer enrolled.",
+    "downloading": "Currently downloading..."
+	}
+}
