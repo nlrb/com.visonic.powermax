@@ -35,35 +35,15 @@
 			"receive": "Instellingen ophalen: "
 		},
 		"add_panel": "Er moet eerst een paneel aanwezig zijn voor er verder iets kan worden toegevoegd.",
-		"contact": {
-			"name": "Voeg Visonic PowerMax raam-/deursensor toe",
+		"sensor": {
+			"name": "Voeg Visonic PowerMax sensor toe",
 			"title": "Paneel",
-			"explain": "Selecteer het paneel waar raam-/deursensoren voor moeten worden toegevoegd."
+			"explain": "Selecteer het paneel waar sensoren voor moeten worden toegevoegd."
 		},
-		"motion": {
-			"name": "Voeg Visonic PowerMax bewegingssensor toe",
+		"x10pgm": {
+			"name": "Voeg Visonic PowerMax programmeerbare uitgang (PGM) of X10 apparaat toe",
 			"title": "Paneel",
-			"explain": "Selecteer het paneel waar bewegingssensoren voor moeten worden toegevoegd."
-		},
-		"smoke": {
-			"name": "Voeg Visonic PowerMax rookdetector toe",
-			"title": "Paneel",
-			"explain": "Selecteer het paneel waar rookdetectors voor moeten worden toegevoegd."
-		},
-    "gas": {
-			"name": "Voeg Visonic PowerMax gasdetector toe",
-			"title": "Paneel",
-			"explain": "Selecteer het paneel waar gasdetectors voor moeten worden toegevoegd."
-		},
-		"pgm": {
-			"name": "Voeg Visonic PowerMax programmeerbare uitgang (PGM) toe",
-			"title": "Paneel",
-			"explain": "Selecteer het paneel waar de programmeerbare uitgang voor moeten worden toegevoegd."
-		},
-		"x10": {
-			"name": "Voeg Visonic PowerMax X10 apparaat toe",
-			"title": "Paneel",
-			"explain": "Selecteer het paneel waar de X10 apparaten voor moeten worden toegevoegd."
+			"explain": "Selecteer het paneel waar de programmeerbare uitgang/X10 apparaat voor moeten worden toegevoegd."
 		}
 	},
 	"settings": {
@@ -100,8 +80,8 @@
 	"speech": {
 		"open": {
 			"none": "__panel__ heeft geen open zones.",
-			"one": "Zone __item__ van __panel__ is open.",
-			"more": "De volgende __cnt__ zones van __panel__ zijn open: __items__."
+			"one": "Zone __zone__ van __panel__ is open.",
+			"more": "De volgende __cnt__ zones van __panel__ zijn open: __zones__."
 		},
 		"status": {
 			"general": "De status van paneel __panel__ is momenteel __status__.",
@@ -117,6 +97,7 @@
 		},
 		"trouble": {
 			"none": "Voor zover ik weet is er geen probleem met __panel__.",
+      "unknown": "__panel__ heeft een probleem, maar ik weet niet wat het is.",
 			"panel": {
 				"one": "__panel__ heeft een __type__ probleem",
 				"more": "__panel__ heeft de volgende problemen: __type__"
@@ -132,6 +113,7 @@
 		"invalid_panel": "Paneel __panel__ bestaat niet!",
 		"already_present": "Paneel __panel__ bestaat al!",
 		"unreachable": "Verbinding verbroken sinds __time__",
-		"sensor_removed": "De sensor is niet meer met het paneel verbonden."
+		"sensor_removed": "De sensor is niet meer met het paneel verbonden.",
+    "downloading": "Aan het downloaden..."
 	}
 }

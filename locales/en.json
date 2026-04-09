@@ -35,35 +35,15 @@
 			"receive": "Receiving panel settings: "
 		},
 		"add_panel": "Please pair a panel first before adding something else.",
-		"contact": {
-			"name": "Add Visonic PowerMax door/window sensor",
+		"sensor": {
+			"name": "Add Visonic PowerMax sensor",
 			"title": "Panel",
-			"explain": "Select the panel for which to add door/window sensors."
+			"explain": "Select the panel for which to add sensors."
 		},
-		"motion": {
-			"name": "Add Visonic PowerMax motion sensor",
+		"x10pgm": {
+			"name": "Add Visonic PowerMax programmable output (PGM) or X10 device",
 			"title": "Panel",
-			"explain": "Select the panel for which to add motion sensors."
-		},
-		"smoke": {
-			"name": "Add Visonic PowerMax smoke detector",
-			"title": "Panel",
-			"explain": "Select the panel for which to add smoke detectors."
-		},
-    "gas": {
-			"name": "Add Visonic PowerMax gas detector",
-			"title": "Panel",
-			"explain": "Select the panel for which to add gas detectors."
-		},
-		"pgm": {
-			"name": "Add Visonic PowerMax programmable output (PGM)",
-			"title": "Panel",
-			"explain": "Select the panel for which to add the programmable output."
-		},
-		"x10": {
-			"name": "Add Visonic PowerMax X10 device",
-			"title": "Panel",
-			"explain": "Select the panel for which to add X10 devices."
+			"explain": "Select the panel for which to add the programmable output/X10 device."
 		}
 	},
 	"settings": {
@@ -100,8 +80,8 @@
 	"speech": {
 		"open": {
 			"none": "Panel __panel__ has no open zones.",
-			"one": "Panel __panel__ has zone __item__ open.",
-			"more": "Panel __panel__ has the following __cnt__ zones open: __items__."
+      "one": "Panel __panel__ has zone __zone__ open.",
+			"more": "Panel __panel__ has the following __cnt__ zones open: __zones__."
 		},
 		"status": {
 			"general": "The status of panel __panel__ is currently __status__.",
@@ -117,6 +97,7 @@
 		},
 		"trouble": {
 			"none": "There is no problem with __panel__ that I'm aware of.",
+      "unknown": "__panel__ has a problem, but I don't know what it is.",
 			"panel": {
 				"one": "__panel__ has a __type__ problem",
 				"more": "__panel__ has the following problems: __type__"
@@ -132,6 +113,7 @@
 		"invalid_panel": "Panel __panel__ does not exist!",
 		"already_present": "Panel __panel__ already exists!",
 		"unreachable": "Communication lost since __time__",
-		"sensor_removed": "The sensor is no longer enrolled."
+		"sensor_removed": "The sensor is no longer enrolled.",
+    "downloading": "Currently downloading..."
 	}
 }
